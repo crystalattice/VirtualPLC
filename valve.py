@@ -40,6 +40,7 @@ class Valve:
         If new position is not an integer, an error is raised.
 
         :param new_position Value indicating valve's position.
+        :except TypeError Exception if non-integer value used
         """
         try:
             if type(new_position) != int:

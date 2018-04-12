@@ -13,22 +13,25 @@ Date: 4/12/18
 Version 0.1
     Initial build
 """
-# from pymodbus.client.sync import ModbusTcpClient
 import math
+
+# from pymodbus.client.sync import ModbusTcpClient
+
 
 class Pump:
     """Generic class for pumps.
 
     Default parameters: Volumetric flow rate, required head pressure, outlet pressure, pump speed
 
-    Provides base methods to change pump speed control, read the pump speed, read the outlet pressure and flow rate.
+    Provides base methods to change pump speed control, calculate changes to pump parameters based on speed changes,
+    read the pump speed, outlet pressure, and flow rate.
     """
     def __init__(self, flow_rate, pump_head, press_out, pump_speed, power):
         """Set initial parameters."""
-        self.flow_rate = flow_rate
+        self.flow_rate = flow_rate  #gallons per minute
         self.head = pump_head
         self.outlet_pressure = press_out
-        self.speed = pump_speed
+        self.speed = pump_speed  # rpm
         self.power = power
 
     def speed_control(cls, new_speed):
@@ -61,3 +64,31 @@ class Pump:
         cls.P2 = cls.P1 * math.pow((cls.n2 / cls.n1), 3)  # New pump power
 
         return cls.V2, cls.Hp2, cls.P2
+
+    def cls_read_speed(self):
+        """Get the current speed of the pump.
+
+        :return int Pump speed
+        """
+        return self.speed
+
+    def cls_read_press(self):
+        """Get the current outlet pressure of the pump.
+
+        :return int Outlet pressure
+        """
+        return self.outlet_pressure
+
+    def cls_read_flow(self):
+        """Get the current outlet flow rate of the pump.
+
+        :return int Outlet flow rate
+        """
+        return self.flow_rate
+
+
+class Centrif_Pump(Pump):
+    """Defines a variable-displacement, centrifugal-style pump."""
+    def __init__(self):
+        """Set default pump parameters."""
+        super.__init__()
