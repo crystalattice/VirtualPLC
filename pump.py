@@ -29,9 +29,9 @@ class Pump:
     def __init__(self, flow_rate, pump_head_in, press_out, pump_speed, power):
         """Set initial parameters.
 
-        :param int Flow rate (gpm)
-        :param int Input pump head (feet)
-        :param int Output pressure (psi)
+        :param float Flow rate (gpm)
+        :param float Input pump head (feet)
+        :param float Output pressure (psi)
         :param int Pump speed (rpm)
         :param float Power (kw)
         """
@@ -41,18 +41,22 @@ class Pump:
         self.speed = pump_speed
         self.power = power
 
-    def cls_speed_control(cls, new_speed):
-        """Change the pump speed."""
+    def speed_control(self, new_speed):
+        """Change the pump speed.
+
+        :param int New speed setting
+        :except TypeError Exception if non-integer argument used
+        """
         try:
-            cls.speed = new_speed
-            if type(cls.speed) != int:
+            if type(self.speed) != int:
                 raise TypeError
         except TypeError:
             return "Integer values only."
         else:
-            return "Pump speed changed to {speed}%".format(speed=cls.speed)
+            self.speed = new_speed
+            return "Pump speed changed to {speed}%".format(speed=self.speed)
 
-    def cls_pump_laws(cls, old_speed, new_speed, old_flow_rate, old_press_out, old_pump_power):
+    def pump_laws(self, old_speed, new_speed, old_flow_rate, old_press_out, old_pump_power):
         """Defines pump characteristics that are based on pump speed.
 
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
@@ -60,17 +64,17 @@ class Pump:
         :param int Pump speed
         :return tuple Volumetric flow rate, pump head, and pressure
         """
-        cls.n1 = old_speed
-        cls.n2 = new_speed
-        cls.V1 = old_flow_rate
-        cls.Hp1 = old_press_out
-        cls.P1 = old_pump_power
+        self.n1 = old_speed
+        self.n2 = new_speed
+        self.V1 = old_flow_rate
+        self.Hp1 = old_press_out
+        self.P1 = old_pump_power
 
-        cls.V2 = cls.V1 * (cls.n2 / cls.n1)  # New flow rate
-        cls.Hp2 = cls.Hp1 * math.pow((cls.n2 / cls.n1), 2)  # New outlet pressure
-        cls.P2 = cls.P1 * math.pow((cls.n2 / cls.n1), 3)  # New pump power
+        self.V2 = self.V1 * (self.n2 / self.n1)  # New flow rate
+        self.Hp2 = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
+        self.P2 = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
 
-        return cls.V2, cls.Hp2, cls.P2
+        return self.V2, self.Hp2, self.P2
 
     def cls_read_speed(self):
         """Get the current speed of the pump.
@@ -82,14 +86,14 @@ class Pump:
     def cls_read_press(self):
         """Get the current outlet pressure of the pump.
 
-        :return int Outlet pressure
+        :return float Outlet pressure
         """
         return self.outlet_pressure
 
     def cls_read_flow(self):
         """Get the current outlet flow rate of the pump.
 
-        :return int Outlet flow rate
+        :return float Outlet flow rate
         """
         return self.flow_rate
 
@@ -135,4 +139,22 @@ class Centrif_Pump(Pump):
         """
         return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
 
-    
+    def change_speed(self, new_speed):
+        """Modify the speed of the pump.
+
+        :param int New pump speed
+        """
+        self.new_speed = new_speed
+        self.n1 = self.speed
+        self.V1 = self.flow_rate
+        self.Hp1 = self.outlet_pressure
+        self.P1 = self.power
+
+        self.speed_control(self.new_speed)
+        self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(self.n1, self.new_speed, self.V1, self.Hp1,
+                                                                          self.P1)
+
+        # print("Old parameters: {speed}, {flow}, {press}, {power}".format(speed=self.n1, flow=self.V1, press=self.Hp1,
+        #                                                                  power=self.P1))
+        # print("New parameters: {speed}, {flow}, {press}, {power}".format(speed=self.new_speed, flow=self.flow_rate,
+        #                                                                  press=self.outlet_pressure, power=self.power))
