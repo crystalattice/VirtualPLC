@@ -3,7 +3,8 @@
 """
 VirtualPLC-valve.py
 
-Purpose: Creates a simple open/shut valve for PLC-controlled SCADA systems.
+Purpose: Creates a generic Valve class for PLC-controlled SCADA systems. Two subclasses provide on/off valves and
+throttle valves for system use.
 
 Author: Cody Jackson
 
@@ -16,39 +17,53 @@ Version 0.1
 
 
 class Valve:
+    """Generic class for valves.
+
+    Default parameters: initial valve position
+
+    Base methods: Read valve position and changing the position.
+    """
     def __init__(self, position):
         """Initialize valve"""
         self.position = position
 
-    def get_position(self):
+    def cls_get_position(self):
         """Get position of valve, in percent open.
 
         :return int value of position
         """
         return self.position
 
-    def change_position(self, new_position):
+    def cls_change_position(self, new_position):
         """Change the valve's position.
+
+        If new position is not an integer, an error is raised.
 
         :param new_position Value indicating valve's position.
         """
         try:
-            self.position = new_position
-            if type(self.position) != int:
+            if type(new_position) != int:
                 raise TypeError
         except TypeError:
             return "Integer values only."
         else:
+            self.position = new_position
             return "Valve changed position to {position}% open".format(position=self.position)
 
     def open(self):
-        """Open the valve"""
-        self.change_position(100)
+        """Open the valve
+
+        :return str Indicates valve is open
+        """
+        self.cls_change_position(100)
         return "The valve is open."
 
     def close(self):
-        """Close the valve"""
-        self.change_position(0)
+        """Close the valve
+
+        :return str Indicates valve is closed
+        """
+        self.cls_change_position(0)
         return "The valve is closed."
 
 class Gate(Valve):
@@ -62,9 +77,9 @@ class Gate(Valve):
 
         :return string The open/closed status of the valve.
         """
-        if self.get_position() == 0:
+        if self.cls_get_position() == 0:
             return "The valve is closed."
-        elif self.get_position() == 100:
+        elif self.cls_get_position() == 100:
             return "The valve is open."
         else:   # bad condition
             return "Warning: The valve is partially open."
@@ -94,11 +109,11 @@ class Globe(Valve):
 
         :return string The percent open of the valve.
         """
-        return "The valve is {position}% open.".format(position=self.get_position())
+        return "The valve is {position}% open.".format(position=self.cls_get_position())
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
         
         :param int New valve position
         """
-        print(self.change_position(new_position))
+        print(self.cls_change_position(new_position))
