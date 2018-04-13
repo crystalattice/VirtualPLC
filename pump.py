@@ -198,12 +198,11 @@ class Pos_Displacement(Pump):
         """Modify the speed of the pump.
 
         :param int New pump speed
-        :return str New pump speed and new flow rate
         """
         self.speed_diff = new_speed / self.speed
         self.flow_rate = self.flow_rate * self.speed_diff
         self.power = self.power * self.speed_diff
         self.speed = new_speed
-        return "The new speed is {speed} rpm, the new flow rate is {flow:.0f} gpm, " \
-               "and the new power usage is {pow:.1f} kW.".format(speed=self.speed, flow=self.flow_rate,
-                                                                 pow=self.power)
+        # print("The new speed is {speed} rpm, the new flow rate is {flow:.0f} gpm, " \
+        #        "and the new power usage is {pow:.1f} kW.".format(speed=self.speed, flow=self.flow_rate,
+        #                                                          pow=self.power))
