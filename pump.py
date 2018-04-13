@@ -114,28 +114,28 @@ class Centrif_Pump(Pump):
     def get_speed(self):
         """Get the current speed of the pump
 
-        :return int Current rotational speed, in rpm
+        :return str Current rotational speed, in rpm
         """
         return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
 
-        :return int Current flow rate, in gpm
+        :return str Current flow rate, in gpm
         """
         return "The pump is pushing {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
         """Get the current output pressure for the pump.
 
-        :return int Current outlet pressure, in psi
+        :return str Current outlet pressure, in psi
         """
         return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
         """Get the current power draw for the pump.
 
-        :return float Current power requirement, in kW
+        :return str Current power requirement, in kW
         """
         return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
 
@@ -169,28 +169,28 @@ class Pos_Displacement(Pump):
     def get_speed(self):
         """Get the current speed of the pump
 
-        :return int Current rotational speed, in rpm
+        :return str Current rotational speed, in rpm
         """
         return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
 
-        :return int Current flow rate, in gpm
+        :return str Current flow rate, in gpm
         """
         return "The pump is pushing {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
         """Get the current output pressure for the pump.
 
-        :return int Current outlet pressure, in psi
+        :return str Current outlet pressure, in psi
         """
         return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
         """Get the current power draw for the pump.
 
-        :return float Current power requirement, in kW
+        :return str Current power requirement, in kW
         """
         return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
 
@@ -198,5 +198,12 @@ class Pos_Displacement(Pump):
         """Modify the speed of the pump.
 
         :param int New pump speed
+        :return str New pump speed and new flow rate
         """
-        self.new_speed = new_speed
+        self.speed_diff = new_speed / self.speed
+        self.flow_rate = self.flow_rate * self.speed_diff
+        self.power = self.power * self.speed_diff
+        self.speed = new_speed
+        return "The new speed is {speed} rpm, the new flow rate is {flow:.0f} gpm, " \
+               "and the new power usage is {pow:.1f} kW.".format(speed=self.speed, flow=self.flow_rate,
+                                                                 pow=self.power)
