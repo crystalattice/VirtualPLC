@@ -21,20 +21,31 @@ class Valve:
     """Generic class for valves.
 
     Cv is the valve flow coefficient: number of gallons per minute at 60F through a fully open valve with a press. drop
-    of 1 psi.
+    of 1 psi. For valves 1 inch or less in diameter, Cv is typically < 5.
 
     Default parameters: initial valve position
 
     Base methods: Read valve position and changing the position.
     """
-    def __init__(self, position=0, flow_coeff=15, drop=2):
+    def __init__(self, sys_flow_in, position=0, flow_coeff=30.0, drop=15.0):
         """Initialize valve"""
         self.position = position
-        self.Cv = flow_coeff
-        self.deltaP = drop
+        self.Cv = flow_coeff # Assume 2 inch, valve wide open
+        self.deltaP = drop  # Default assumes valve wide open
+        self.flow_in = sys_flow_in  # Flow rate to valve in gpm (doesn't guarantee flow past valve)
+        self.flow_out = 0.0
 
-    def press_drop(self, flow_rate, spec_grav=1.0):
-        """Calculate the pressure drop across a valve.
+    def calc_coeff(self, diameter):
+        """Roughly calculate Cv based on valve diameter.
+
+        :param float Valve diameter
+        :return float Valve flow coefficient
+        """
+        coeff = 15 * math.pow(diameter, 2)
+        return coeff
+
+    def press_drop(self, spec_grav=1.0):
+        """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
 
@@ -42,16 +53,14 @@ class Valve:
 
         Specific gravity of water is 1.
 
-        :param float System flow rate (gpm)
         :param float Fluid specific gravity
         :return float Pressure drop (psi)
         """
-        x = (flow_rate / self.Cv)
-        drop = math.pow(x, 2) * spec_grav
-        return drop
+        x = (self.flow_out / self.Cv)
+        self.deltaP = math.pow(x, 2) * spec_grav
 
-    def sys_flow_rate(self, flow_coeff, drop, spec_grav=1.0):
-        """Calculate the system flow rate through a valve.
+    def sys_flow_rate(self, flow_coeff, press_drop, spec_grav=1.0):
+        """Calculate the system flow rate through a valve, given a pressure drop.
 
         Flow rate = valve coefficient / sqrt(spec. grav. / press. drop)
 
@@ -59,9 +68,8 @@ class Valve:
         :param float Fluid specific gravity
         :return float System flow rate
         """
-        x = spec_grav / drop
-        flow = flow_coeff / math.sqrt(x)
-        return flow
+        x = spec_grav / press_drop
+        self.flow_out = flow_coeff / math.sqrt(x)
 
 
     def cls_get_position(self):
@@ -86,7 +94,6 @@ class Valve:
             return "Integer values only."
         else:
             self.position = new_position
-            return "Valve changed position to {position}% open".format(position=self.position)
 
     def open(self):
         """Open the valve
@@ -132,7 +139,6 @@ class Gate(Valve):
             return "Warning: Invalid valve position."
 
 
-
 class Globe(Valve):
     """Throttling valve"""
     def read_position(self):
@@ -147,7 +153,30 @@ class Globe(Valve):
         
         :param int New valve position
         """
-        print(self.cls_change_position(new_position))
+        self.cls_change_position(new_position)
+        if self.cls_get_position() == 0:
+            self.flow_out = 0.0
+            self.deltaP = 0.0
+        else:
+            self.flow_out = self.flow_in + (self.flow_in * self.position / 100)
+            self.deltaP = self.press_drop()
+        print("Valve changed position to {position}% open".format(position=self.position))
+        print("The flow rate after the valve is {flow} gpm.".format(flow=self.flow_out))
+
+    def open(self):
+        """Open the valve
+
+        :return str Indicates valve is open
+        """
+        self.turn_handle(100)
+
+    def close(self):
+        """Close the valve
+
+        :return str Indicates valve is closed
+        """
+        self.turn_handle(0)
+
 # TODO: Actually adjust flow rate
 
 
