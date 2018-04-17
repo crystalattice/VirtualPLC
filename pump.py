@@ -26,7 +26,7 @@ class Pump:
     Provides base methods to change pump speed control, calculate changes to pump parameters based on speed changes,
     read the pump speed, outlet pressure, and flow rate.
     """
-    def __init__(self, flow_rate=.00, pump_head_in=0.0, press_out=.00, pump_speed=0, power=0.0):
+    def __init__(self, flow_rate=0.0, pump_head_in=0.0, press_out=.00, pump_speed=0, power=0.0):
         """Set initial parameters.
 
         :param float Flow rate (gpm)
