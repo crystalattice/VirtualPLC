@@ -27,7 +27,7 @@ class Valve:
 
     Base methods: Read valve position and changing the position.
     """
-    def __init__(self, sys_flow_in, position=0, flow_coeff=30.0, drop=15.0):
+    def __init__(self, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0):
         """Initialize valve"""
         self.position = position
         self.Cv = flow_coeff # Assume 2 inch, valve wide open
@@ -44,7 +44,7 @@ class Valve:
         coeff = 15 * math.pow(diameter, 2)
         return coeff
 
-    def press_drop(self, spec_grav=1.0):
+    def press_drop(self, flow, spec_grav=1.0):
         """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
@@ -56,7 +56,7 @@ class Valve:
         :param float Fluid specific gravity
         :return float Pressure drop (psi)
         """
-        x = (self.flow_out / self.Cv)
+        x = (flow / self.Cv)
         self.deltaP = math.pow(x, 2) * spec_grav
 
     def sys_flow_rate(self, flow_coeff, press_drop, spec_grav=1.0):
@@ -159,9 +159,11 @@ class Globe(Valve):
             self.deltaP = 0.0
         else:
             self.flow_out = self.flow_in + (self.flow_in * self.position / 100)
-            self.deltaP = self.press_drop()
-        print("Valve changed position to {position}% open".format(position=self.position))
-        print("The flow rate after the valve is {flow} gpm.".format(flow=self.flow_out))
+            self.press_drop(self.flow_out)
+
+        # print("Valve changed position to {position}% open".format(position=self.position))
+        # print("The flow rate after the valve is {flow} gpm.".format(flow=self.flow_out))
+        # print("The pressure drop across the valve is {press} psi.".format(press=self.deltaP))
 
     def open(self):
         """Open the valve
@@ -176,8 +178,6 @@ class Globe(Valve):
         :return str Indicates valve is closed
         """
         self.turn_handle(0)
-
-# TODO: Actually adjust flow rate
 
 
 class Relief(Valve):
