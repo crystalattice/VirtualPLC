@@ -195,11 +195,17 @@ class Relief(Valve):
             return "Warning! The valve is partially open."
 
     def set_open_pressure(self, open_set):
-        """Set the pressure setpoint where the valve opens."""
+        """Set the pressure setpoint where the valve opens.
+
+        :param int Opening set point
+        """
         self.setpoint_open = open_set
 
     def set_blowdown(self, close_set):
-        """Set the pressure setpoint where the valve closes."""
+        """Set the pressure setpoint where the valve closes.
+
+        :param int Closing set point
+        """
         self.setpoint_close = close_set
 
     def high_press_open(self, press_in):
@@ -217,8 +223,3 @@ class Relief(Valve):
         """
         if press_in <= self.setpoint_close:
             self.close()
-# TODO: Cause an effect on pressure
-
-
-class TXV(Valve):
-    """Thermal expansion valve for A/C and refrigeration."""
