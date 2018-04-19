@@ -25,13 +25,15 @@ class Valve:
 
     Default parameters: Inlet system flow, initial valve position, valve flowrate coefficient, valve pressure drop
     """
-    def __init__(self, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0):
+    def __init__(self, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0, open_press=0, close_press=0):
         """Initialize valve"""
         self.position = position
         self.Cv = flow_coeff  # Assume 2 inch, valve wide open
         self.deltaP = drop  # Default assumes valve wide open
         self.flow_in = sys_flow_in  # Flow rate to valve in gpm (doesn't guarantee flow past valve)
         self.flow_out = 0.0
+        self.setpoint_open = open_press
+        self.setpoint_close = close_press
 
     def calc_coeff(self, diameter):
         """Roughly calculate Cv based on valve diameter.
@@ -211,7 +213,7 @@ class Relief(Valve):
 
         :param press_in: Valve input pressure
         """
-        if press_in > self.setpoint_open:
+        if press_in >= self.setpoint_open:
             self.open()
 
     def low_press_close(self, press_in):
