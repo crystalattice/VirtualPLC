@@ -45,6 +45,7 @@ class Pump:
         """Change the pump speed.
 
         :param new_speed: Requested speed for the pump
+        :return: Pump speed
         :except TypeError Exception if non-integer argument used
         """
         try:
@@ -54,7 +55,6 @@ class Pump:
             return "Integer values only."
         else:
             self.speed = new_speed
-            return "Pump speed changed to {speed}%".format(speed=self.speed)
 
     def pump_laws(self, old_speed, new_speed, old_flow_rate, old_press_out, old_pump_power):
         """Defines pump characteristics that are based on pump speed.
@@ -74,11 +74,11 @@ class Pump:
         self.Hp1 = old_press_out
         self.P1 = old_pump_power
 
-        self.V2 = self.V1 * (self.n2 / self.n1)  # New flow rate
-        self.Hp2 = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
-        self.P2 = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
+        self.flow_rate = self.V1 * (self.n2 / self.n1)  # New flow rate
+        self.press_out = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
+        self.power = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
 
-        return self.V2, self.Hp2, self.P2
+        return self.flow_rate, self.press_out, self.power
 
     def cls_read_speed(self):
         """Get the current speed of the pump.
@@ -120,7 +120,7 @@ class CentrifPump(Pump):
 
         :return: Current rotational speed, in rpm
         """
-        return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
+        return "The pump is running at {speed} rpm.".format(speed=self.speed)
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
