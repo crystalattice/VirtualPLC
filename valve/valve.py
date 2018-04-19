@@ -132,7 +132,7 @@ class Gate(Valve):
             self.close()
         elif new_position == 100:
             self.open()
-        else:
+        else:  # Shouldn't get here
             return "Warning: Invalid valve position."
 
 
