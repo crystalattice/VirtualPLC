@@ -69,8 +69,14 @@ class Valve:
         :param spec_grav: Fluid specific gravity
         :return: Update system flow rate in-place
         """
-        x = spec_grav / press_drop
-        self.flow_out = flow_coeff / math.sqrt(x)
+        try:
+            if flow_coeff < 0 or press_drop < 0:
+                raise ValueError("Input values must be > 0.")
+            else:
+                x = spec_grav / press_drop
+                self.flow_out = flow_coeff / math.sqrt(x)
+        except ValueError:
+            raise
 
     def cls_get_position(self):
         """Get position of valve, in percent open.
