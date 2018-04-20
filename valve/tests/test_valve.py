@@ -1,11 +1,28 @@
+import pytest
 from ..valve import Valve
 
 
 class TestValve:
-    def test_calc_coeff(self):
+    def test_calc_coeff_works(self):
         v = Valve()
         v.calc_coeff(2)
         assert v.Cv == 60.0
+
+    def test_calc_coeff_neg(self):
+        v= Valve()
+        v.calc_coeff(-2)
+        assert v.Cv == 60.0
+
+    def test_calc_coeff_zero(self):
+        v = Valve()
+        v.calc_coeff(0)
+        assert v.Cv == 0.0
+
+    def test_calc_coeff_str(self):
+        """Checks for correct Exception thrown if non-number argument used"""
+        v = Valve()
+        with pytest.raises(TypeError):
+            v.calc_coeff("a")
 
     def test_press_drop(self):
         v = Valve()
