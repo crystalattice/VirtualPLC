@@ -26,7 +26,7 @@ class Pump:
     Provides base methods to change pump speed control, calculate changes to pump parameters based on speed changes,
     read the pump speed, outlet pressure, and flow rate.
     """
-    def __init__(self, flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, power=0.0):
+    def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, power=0.0):
         """Set initial parameters.
 
         :param flow_rate: Flow rate from the pump (gpm)
@@ -35,10 +35,11 @@ class Pump:
         :param pump_speed: Rotational speed of the pump (rpm)
         :param power: Power required to drive the pump at the current speed (kw)
         """
+        self.name = name
         self.flow_rate = float(flow_rate)
         self.head = float(pump_head_in)
         self.outlet_pressure = float(press_out)
-        self.speed = float(pump_speed)
+        self.speed = pump_speed
         self.power = float(power)
 
     def speed_control(self, new_speed):
@@ -127,23 +128,26 @@ class Pump:
 
 class CentrifPump(Pump):
     """Defines a variable-displacement, centrifugal-style pump."""
-    def __init__(self):
-        """Set default pump parameters."""
-        super().__init__(flow_rate=1000.0, pump_head_in=25.0, press_out=45.0, pump_speed=5000, power=1.5)
+    # def __init__(self):
+    #     """Set default pump parameters."""
+    #     super().__init__(name="", flow_rate=1000.0, pump_head_in=25.0, press_out=45.0, pump_speed=5000, power=1.5)
 
     def get_speed(self):
         """Get the current speed of the pump
 
         :return: Current rotational speed, in rpm
         """
-        return "The pump is running at {speed} rpm.".format(speed=self.speed)
+        if self.speed == 0:
+                return "The pump is stopped."
+        else:
+            return "The pump is running at {speed} rpm.".format(speed=self.speed)
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
 
         :return: Current flow rate, in gpm
         """
-        return "The pump is pushing {flow} gpm.".format(flow=self.cls_read_flow())
+        return "The pump output flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
         """Get the current output pressure for the pump.
@@ -167,21 +171,14 @@ class CentrifPump(Pump):
         :param new_speed: New pump speed
         :return: Changes, in-place, the flow rate, output pressure, and pump power requirement
         """
-        self.new_speed = new_speed
-        self.n1 = self.speed
-        self.V1 = self.flow_rate
-        self.Hp1 = self.outlet_pressure
-        self.P1 = self.power
-
-        self.speed_control(self.new_speed)
-        self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(self.new_speed)
+        self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(new_speed)
 
 
 class PositiveDisplacement(Pump):
     """Defines a positive-displacement pump."""
     def __init__(self):
         """Set default pump parameters."""
-        super().__init__(flow_rate=1000.0, press_out=45.0, pump_speed=5000, power=1.5)
+        super().__init__(name="", flow_rate=1000.0, press_out=45.0, pump_speed=5000, power=1.5)
 
     def get_speed(self):
         """Get the current speed of the pump
@@ -223,3 +220,18 @@ class PositiveDisplacement(Pump):
         self.flow_rate = self.flow_rate * self.speed_diff
         self.power = self.power * self.speed_diff
         self.speed = new_speed
+
+
+if __name__ == "__main__":
+    # Functional tests
+    pump1 = CentrifPump("Pumpy pump")
+    print("{} created.".format(pump1.name))
+    print(pump1.get_speed())
+    print(pump1.get_flowrate())
+    print(pump1.get_power())
+    print(pump1.get_pressure())
+    pump1.change_speed(2000)
+    print(pump1.get_speed())
+    print(pump1.get_flowrate())
+    print(pump1.get_power())
+    print(pump1.get_pressure())
