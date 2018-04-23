@@ -174,8 +174,7 @@ class CentrifPump(Pump):
         self.P1 = self.power
 
         self.speed_control(self.new_speed)
-        self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(self.n1, self.new_speed, self.V1, self.Hp1,
-                                                                          self.P1)
+        self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(self.new_speed)
 
 
 class PositiveDisplacement(Pump):
