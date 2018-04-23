@@ -52,7 +52,7 @@ class TestPumpLaws:
     def test_pump_laws_non_int(self):
         p = Pump(100, 300, 70, 45, .25)
         with pytest.raises(TypeError) as excinfo:
-            p.speed_control("a")
+            p.speed_control(85.3)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Integer values only."
 
