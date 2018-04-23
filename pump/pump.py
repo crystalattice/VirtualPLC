@@ -128,19 +128,15 @@ class Pump:
 
 class CentrifPump(Pump):
     """Defines a variable-displacement, centrifugal-style pump."""
-    # def __init__(self):
-    #     """Set default pump parameters."""
-    #     super().__init__(name="", flow_rate=1000.0, pump_head_in=25.0, press_out=45.0, pump_speed=5000, power=1.5)
-
     def get_speed(self):
         """Get the current speed of the pump
 
         :return: Current rotational speed, in rpm
         """
-        if self.speed == 0:
+        if self.cls_read_speed() == 0:
                 return "The pump is stopped."
         else:
-            return "The pump is running at {speed} rpm.".format(speed=self.speed)
+            return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
@@ -176,23 +172,22 @@ class CentrifPump(Pump):
 
 class PositiveDisplacement(Pump):
     """Defines a positive-displacement pump."""
-    def __init__(self):
-        """Set default pump parameters."""
-        super().__init__(name="", flow_rate=1000.0, press_out=45.0, pump_speed=5000, power=1.5)
-
     def get_speed(self):
         """Get the current speed of the pump
 
         :return: Current rotational speed, in rpm
         """
-        return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
+        if self.cls_read_speed() == 0:
+                return "The pump is stopped."
+        else:
+            return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
         """Get the current flow rate of the pump
 
         :return: Current flow rate, in gpm
         """
-        return "The pump is pushing {flow} gpm.".format(flow=self.cls_read_flow())
+        return "The pump outlet flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
         """Get the current output pressure for the pump.
@@ -216,10 +211,29 @@ class PositiveDisplacement(Pump):
         :param new_speed: New pump speed
         :return: Changes, in-place, the flow rate, and pump power requirement
         """
-        self.speed_diff = new_speed / self.speed
-        self.flow_rate = self.flow_rate * self.speed_diff
-        self.power = self.power * self.speed_diff
+        try:
+            if type(new_speed) != int:
+                raise TypeError("Integer values only.")
+            elif new_speed < 0:
+                raise ValueError("Speed must be 0 or greater.")
+        except TypeError:
+            raise  # Re-raise error for testing
+        except ValueError:
+            raise  # Re-raise error for testing
+        else:
+            self.new_speed = new_speed
+
+        if self.speed == 0:
+            self.speed_diff = self.new_speed
+            self.flow_rate = self.speed_diff
+            self.power = self.speed_diff
+        else:
+            self.speed_diff = self.new_speed / self.speed
+            self.flow_rate = self.flow_rate * self.speed_diff
+            self.power = self.power * self.speed_diff
         self.speed = new_speed
+
+        return self.flow_rate, self.power, self.speed
 
 
 if __name__ == "__main__":
