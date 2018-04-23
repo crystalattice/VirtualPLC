@@ -16,14 +16,9 @@ class TestRelief():
         r.set_blowdown(10)
         assert r.setpoint_close == 10
 
-    def test_high_press_open(self):
-        r = Relief()
-        r.set_open_pressure(25)
-        r.high_press_open(25)
+    def test_valve_operation(self):
+        r = Relief(open_press=25, close_press=23)
+        r.valve_operation(25)
         assert r.read_position() == "The valve is open."
-
-    def test_low_press_close(self):
-        r = Relief()
-        r.set_blowdown(10)
-        r.low_press_close(10)
+        r.valve_operation(23)
         assert r.read_position() == "The valve is closed."

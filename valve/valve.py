@@ -25,7 +25,7 @@ class Valve:
 
     Default parameters: Inlet system flow, initial valve position, valve flowrate coefficient, valve pressure drop
     """
-    def __init__(self, name, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0, open_press=0, close_press=0):
+    def __init__(self, name="", sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0, open_press=0, close_press=0):
         """Initialize valve"""
         self.name = name
         self.position = position
@@ -229,24 +229,20 @@ class Relief(Valve):
         """
         self.setpoint_close = close_set
 
-    def high_press_open(self, press_in):
-        """Open the valve if pressure is too high.
+    def valve_operation(self, press_in):
+        """Open the valve if pressure is too high; close the valve when pressure lowers.
 
         :param press_in: Valve input pressure
+        :return: Open/close valve, in-lin
         """
         if press_in >= self.setpoint_open:
             self.open()
-
-    def low_press_close(self, press_in):
-        """Close the valve when pressure lowers.
-
-        :param press_in: Valve input pressure
-        """
-        if press_in <= self.setpoint_close:
+        elif press_in <= self.setpoint_close:
             self.close()
 
 
 if __name__ == "__main__":
+    # Functional tests
     gate1 = Gate("Pump inlet")
     print("{} created".format(gate1.name))
     print(gate1.read_position())
@@ -267,9 +263,17 @@ if __name__ == "__main__":
     globe1.turn_handle(40)
     print(globe1.read_position())
 
-    relief1 = Relief("Pressure relief", open_press=25, close_press=20)
+    relief1 = Relief("\nPressure relief", open_press=25, close_press=20)
     print("{} created".format(relief1.name))
     print(relief1.read_position())
-
-
+    print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
+    print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
+    relief1.set_open_pressure(75)
+    relief1.set_blowdown(73)
+    print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
+    print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
+    relief1.valve_operation(75)
+    print(relief1.read_position())
+    relief1.valve_operation(73)
+    print(relief1.read_position())
 
