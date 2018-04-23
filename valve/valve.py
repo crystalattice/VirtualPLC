@@ -25,8 +25,9 @@ class Valve:
 
     Default parameters: Inlet system flow, initial valve position, valve flowrate coefficient, valve pressure drop
     """
-    def __init__(self, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0, open_press=0, close_press=0):
+    def __init__(self, name, sys_flow_in=100.0, position=0, flow_coeff=30.0, drop=15.0, open_press=0, close_press=0):
         """Initialize valve"""
+        self.name = name
         self.position = position
         self.Cv = flow_coeff  # Assume 2 inch, valve wide open
         self.deltaP = drop  # Default assumes valve wide open
@@ -207,6 +208,20 @@ class Relief(Valve):
         """
         self.setpoint_open = open_set
 
+    def read_open_pressure(self):
+        """Read the high pressure setpoint.
+
+        :return: The value when the valve opens.
+        """
+        return self.setpoint_open
+
+    def read_close_pressure(self):
+        """Read the low pressure setpoint.
+
+        :return: The value when the valve closes.
+        """
+        return self.setpoint_close
+
     def set_blowdown(self, close_set):
         """Set the pressure setpoint where the valve closes.
 
@@ -230,5 +245,31 @@ class Relief(Valve):
         if press_in <= self.setpoint_close:
             self.close()
 
+
 if __name__ == "__main__":
-   pass
+    gate1 = Gate("Pump inlet")
+    print("{} created".format(gate1.name))
+    print(gate1.read_position())
+    gate1.turn_handle(100)
+    print(gate1.read_position())
+    gate1.close()
+    print(gate1.read_position())
+    gate1.open()
+    print(gate1.read_position())
+
+    globe1 = Globe("\nThrottle valve")
+    print("{} created".format(globe1.name))
+    print(globe1.read_position())
+    globe1.open()
+    print(globe1.read_position())
+    globe1.close()
+    print(globe1.read_position())
+    globe1.turn_handle(40)
+    print(globe1.read_position())
+
+    relief1 = Relief("Pressure relief", open_press=25, close_press=20)
+    print("{} created".format(relief1.name))
+    print(relief1.read_position())
+
+
+
