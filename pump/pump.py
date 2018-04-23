@@ -35,11 +35,11 @@ class Pump:
         :param pump_speed: Rotational speed of the pump (rpm)
         :param power: Power required to drive the pump at the current speed (kw)
         """
-        self.flow_rate = flow_rate
-        self.head = pump_head_in
-        self.outlet_pressure = press_out
-        self.speed = pump_speed
-        self.power = power
+        self.flow_rate = float(flow_rate)
+        self.head = float(pump_head_in)
+        self.outlet_pressure = float(press_out)
+        self.speed = float(pump_speed)
+        self.power = float(power)
 
     def speed_control(self, new_speed):
         """Change the pump speed.
@@ -49,14 +49,18 @@ class Pump:
         :except TypeError Exception if non-integer argument used
         """
         try:
-            if type(self.speed) != int:
-                raise TypeError
+            if type(new_speed) != int:
+                raise TypeError("Integer values only.")
+            elif new_speed < 0:
+                raise ValueError("Speed must be 0 or greater.")
         except TypeError:
-            return "Integer values only."
+            raise  # Re-raise error for testing
+        except ValueError:
+            raise  # Re-raise error for testing
         else:
             self.speed = new_speed
 
-    def pump_laws(self, old_speed, new_speed, old_flow_rate, old_press_out, old_pump_power):
+    def pump_laws(self, new_speed):
         """Defines pump characteristics that are based on pump speed.
 
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
@@ -68,17 +72,29 @@ class Pump:
         :param old_pump_power: Current (old) power requirement of the pump
         :return: Volumetric flow rate, pump head, and pressure
         """
-        self.n1 = old_speed
-        self.n2 = new_speed
-        self.V1 = old_flow_rate
-        self.Hp1 = old_press_out
-        self.P1 = old_pump_power
+        try:
+            if type(new_speed) != int:
+                raise TypeError("Integer values only.")
+            elif new_speed < 0:
+                raise ValueError("Speed must be 0 or greater.")
+        except TypeError:
+            raise  # Re-raise error for testing
+        except ValueError:
+            raise  # Re-raise error for testing
+        else:
+            self.n2 = new_speed
+
+        self.n1 = self.speed
+        self.V1 = self.flow_rate
+        self.Hp1 = self.outlet_pressure
+        self.P1 = self.power
 
         self.flow_rate = self.V1 * (self.n2 / self.n1)  # New flow rate
-        self.press_out = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
+        self.outlet_pressure = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
         self.power = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
+        self.speed = self.n2  # Replace old speed with new value
 
-        return self.flow_rate, self.press_out, self.power
+        return self.speed, self.flow_rate, self.outlet_pressure, self.power
 
     def cls_read_speed(self):
         """Get the current speed of the pump.
@@ -161,11 +177,6 @@ class CentrifPump(Pump):
         self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(self.n1, self.new_speed, self.V1, self.Hp1,
                                                                           self.P1)
 
-        # print("Old parameters: {speed}, {flow}, {press}, {power}".format(speed=self.n1, flow=self.V1, press=self.Hp1,
-        #                                                                  power=self.P1))
-        # print("New parameters: {speed}, {flow}, {press}, {power}".format(speed=self.new_speed, flow=self.flow_rate,
-        #                                                                  press=self.outlet_pressure, power=self.power))
-
 
 class PositiveDisplacement(Pump):
     """Defines a positive-displacement pump."""
@@ -213,7 +224,3 @@ class PositiveDisplacement(Pump):
         self.flow_rate = self.flow_rate * self.speed_diff
         self.power = self.power * self.speed_diff
         self.speed = new_speed
-
-        # print("The new speed is {speed} rpm, the new flow rate is {flow:.0f} gpm, " \
-        #        "and the new power usage is {pow:.1f} kW.".format(speed=self.speed, flow=self.flow_rate,
-        #                                                          pow=self.power))

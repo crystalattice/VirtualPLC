@@ -76,7 +76,7 @@ class Valve:
                 x = spec_grav / press_drop
                 self.flow_out = flow_coeff / math.sqrt(x)
         except ValueError:
-            raise
+            raise  # Re-raise error for testing
 
     def cls_get_position(self):
         """Get position of valve, in percent open.
