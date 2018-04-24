@@ -26,23 +26,26 @@ class Pump:
     Provides base methods to change pump speed control, calculate changes to pump parameters based on speed changes,
     read the pump speed, outlet pressure, and flow rate.
     """
-    def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, power=0.0):
+    def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0,
+                 displacement=0.0, hp_coeff=0.0):
         """Set initial parameters.
 
         :param flow_rate: Flow rate from the pump (gpm)
         :param pump_head_in: Necessary pump head into the pump (feet)
         :param press_out: Pressure created by the pump (psi)
         :param pump_speed: Rotational speed of the pump (rpm)
-        :param power: Power required to drive the pump at the current speed (kw)
+        :param hp: Power required to drive the pump at the current speed (kw)
         """
         self.name = name
         self.flow_rate = float(flow_rate)
         self.head = float(pump_head_in)
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
-        self.power = float(power)
+        self.hp = float(hp)
+        self.displacement = float(displacement)
+        self.hp_coeff = float(hp_coeff)
 
-    def speed_control(self, new_speed):
+    def set_speed(self, new_speed):
         """Change the pump speed.
 
         :param new_speed: Requested speed for the pump
@@ -59,43 +62,7 @@ class Pump:
         except ValueError:
             raise  # Re-raise error for testing
         else:
-            self.speed = new_speed
-
-    def pump_laws(self, new_speed):
-        """Defines pump characteristics that are based on pump speed.
-
-        Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
-
-        :param old_speed: Current (old) speed of the pump
-        :param new_speed: Requested (new) speed of the pump
-        :param old_flow_rate: Current (old) flow rate from the pump
-        :param old_press_out: Current (old) pressure from the pump
-        :param old_pump_power: Current (old) power requirement of the pump
-        :return: Volumetric flow rate, pump head, and pressure
-        """
-        try:
-            if type(new_speed) != int:
-                raise TypeError("Integer values only.")
-            elif new_speed < 0:
-                raise ValueError("Speed must be 0 or greater.")
-        except TypeError:
-            raise  # Re-raise error for testing
-        except ValueError:
-            raise  # Re-raise error for testing
-        else:
-            self.n2 = new_speed
-
-        self.n1 = self.speed
-        self.V1 = self.flow_rate
-        self.Hp1 = self.outlet_pressure
-        self.P1 = self.power
-
-        self.flow_rate = self.V1 * (self.n2 / self.n1)  # New flow rate
-        self.outlet_pressure = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
-        self.power = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
-        self.speed = self.n2  # Replace old speed with new value
-
-        return self.speed, self.flow_rate, self.outlet_pressure, self.power
+            return new_speed
 
     def cls_read_speed(self):
         """Get the current speed of the pump.
@@ -123,7 +90,17 @@ class Pump:
 
         :return: Current pump power requirement
         """
-        return self.power
+        self.wattage = self.hp_to_watts(self.hp)
+        return self.wattage
+
+    def hp_to_watts(self, hp):
+        """Convert pump horsepower to watts.
+
+        :param hp: Pump horsepower
+        :return: Pump wattage requirement
+        """
+        watts = hp * 745.699872
+        return watts
 
 
 class CentrifPump(Pump):
@@ -157,9 +134,9 @@ class CentrifPump(Pump):
 
         :return: Current power requirement, in kW
         """
-        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
 
-    def change_speed(self, new_speed):
+    def adjust_speed(self, new_speed):
         """Modify the speed of the pump.
 
         Affects the outlet flow rate, outlet pressure, and power requirements for the pump.
@@ -168,6 +145,33 @@ class CentrifPump(Pump):
         :return: Changes, in-place, the flow rate, output pressure, and pump power requirement
         """
         self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(new_speed)
+
+    def pump_laws(self, new_speed):
+        """Defines pump characteristics that are based on pump speed.
+
+        Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
+
+        :param old_speed: Current (old) speed of the pump
+        :param new_speed: Requested (new) speed of the pump
+        :param old_flow_rate: Current (old) flow rate from the pump
+        :param old_press_out: Current (old) pressure from the pump
+        :param old_pump_power: Current (old) power requirement of the pump
+        :return: Volumetric flow rate, pump head, and pressure
+        """
+        self.n2 = self.set_speed(new_speed)
+
+        self.n1 = self.speed
+        self.V1 = self.flow_rate
+        self.Hp1 = self.outlet_pressure
+        self.P1 = self.hp
+
+        self.flow_rate = self.V1 * (self.n2 / self.n1)  # New flow rate
+        self.outlet_pressure = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
+        self.hp = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
+        self.speed = self.n2  # Replace old speed with new value
+        self.wattage = self.hp_to_watts(self.hp)  # Convert horsepower to watts
+
+        return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
 
 
 class PositiveDisplacement(Pump):
@@ -201,39 +205,33 @@ class PositiveDisplacement(Pump):
 
         :return: Current power requirement, in kW
         """
-        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
 
-    def change_speed(self, new_speed):
-        """Modify the speed of the pump.
+    def set_hp_coeff(self):
+        """Change the horsepower coefficient.
+
+         Simulates a pump curve by calculating the coefficient based on horsepower and pump speed
+
+        :return: Horsepower coefficient
+        """
+        self.hp_coeff = self.hp / self.speed
+        return self.hp_coeff
+
+    def adjust_speed(self, new_speed):
+        """Modify the speed of the pump, assuming constant outlet pressure.
 
         Affects the outlet flow rate and power requirements for the pump.
 
         :param new_speed: New pump speed
-        :return: Changes, in-place, the flow rate, and pump power requirement
+        :return: Flow rate, pump power requirement, and new speed
         """
-        try:
-            if type(new_speed) != int:
-                raise TypeError("Integer values only.")
-            elif new_speed < 0:
-                raise ValueError("Speed must be 0 or greater.")
-        except TypeError:
-            raise  # Re-raise error for testing
-        except ValueError:
-            raise  # Re-raise error for testing
-        else:
-            self.new_speed = new_speed
+        self.speed = self.set_speed(new_speed)
 
-        if self.speed == 0:
-            self.speed_diff = self.new_speed
-            self.flow_rate = self.speed_diff
-            self.power = self.speed_diff
-        else:
-            self.speed_diff = self.new_speed / self.speed
-            self.flow_rate = self.flow_rate * self.speed_diff
-            self.power = self.power * self.speed_diff
-        self.speed = new_speed
+        self.flow_rate = self.speed * self.displacement
+        self.hp = self.speed * self.hp_coeff
+        self.wattage = self.hp_to_watts(self.hp)
 
-        return self.flow_rate, self.power, self.speed
+        return self.flow_rate, self.wattage, self.speed
 
 
 if __name__ == "__main__":
@@ -244,7 +242,7 @@ if __name__ == "__main__":
     print(pump1.get_flowrate())
     print(pump1.get_power())
     print(pump1.get_pressure())
-    pump1.change_speed(2000)
+    pump1.adjust_speed(2000)
     print(pump1.get_speed())
     print(pump1.get_flowrate())
     print(pump1.get_power())

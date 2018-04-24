@@ -27,7 +27,7 @@ class TestPower:
 
 
 class TestSpeedChange:
-    def test_change_speed(self):
+    def test_change_speed_expected(self):
         p = PositiveDisplacement()
-        p.change_speed(25)
-        
+        p.adjust_speed(25)
+
