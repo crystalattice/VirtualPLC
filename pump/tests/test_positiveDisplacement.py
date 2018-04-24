@@ -22,12 +22,21 @@ class TestPress:
 
 class TestPower:
     def test_get_power(self):
-        p = PositiveDisplacement(power=0.45)
-        assert p.get_power() == "The power usage for the pump is 0.45 kW."
+        p = PositiveDisplacement(hp=0.45)
+        assert p.get_power() == "The power usage for the pump is 335.5649424 W."
 
 
-class TestSpeedChange:
-    def test_change_speed_expected(self):
-        p = PositiveDisplacement()
+class TestHpCoeff:
+    def test_set_hp_coeff(self):
+        p = PositiveDisplacement(pump_speed=120, hp=0.12)
+        assert p.set_hp_coeff() == 0.001
+
+
+class TestAdjustSpeed:
+    def test_adjust_speed_expected(self):
+        p = PositiveDisplacement("", 100, 0, 0, 75, 10, 0.09, 0.2)
         p.adjust_speed(25)
+        assert p.flow_rate == 2.25
+        assert p.wattage == 3728.4993600000003
+        assert p.speed == 25
 
