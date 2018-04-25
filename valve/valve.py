@@ -18,8 +18,9 @@ Date: 4/9/18
 Version 0.1
     Initial build
 """
-# from pymodbus.client.sync import ModbusTcpClient
 import math
+
+# from pymodbus.client.sync import ModbusTcpClient
 
 
 class Valve:
@@ -28,7 +29,15 @@ class Valve:
     Cv is the valve flow coefficient: number of gallons per minute at 60F through a fully open valve with a press. drop
     of 1 psi. For valves 1 inch or less in diameter, Cv is typically < 5.
 
-    Variables: name, position, Cv, deltaP, flow_in, flow_out, setpoint_open, setpoint_close
+    Variables:
+        name
+        position
+        Cv
+        deltaP
+        flow_in
+        flow_out
+        setpoint_open
+        setpoint_close
 
     Methods:
         calc_coeff()
@@ -41,12 +50,21 @@ class Valve:
     """
 
     def __init__(self, name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0):
-        """Initialize valve."""
+        """Initialize valve.
+
+        :param name: Instance name
+        :param sys_flow_in: Flow rate into the valve
+        :param position: Percentage valve is open
+        :param flow_coeff: Affect valve has on flow rate; assumes a 2 inch, wide open valve
+        :param drop: Pressure drop across the valve, assuming valve is wide open
+        :param open_press: Pressure required to open the valve
+        :param close_press: Pressure required to close the valve
+        """
         self.name = name
-        self.position = int(position)  # Represents percent open
-        self.Cv = float(flow_coeff)  # Assume 2 inch, valve wide open
-        self.deltaP = float(drop)  # Default assumes valve wide open
-        self.flow_in = float(sys_flow_in)  # Flow rate to valve in gpm (doesn't guarantee flow past valve)
+        self.position = int(position)  # Truncate float values for ease of calculations
+        self.Cv = float(flow_coeff)
+        self.deltaP = float(drop)
+        self.flow_in = float(sys_flow_in)
         self.flow_out = 0.0
         self.setpoint_open = open_press
         self.setpoint_close = close_press
@@ -109,7 +127,7 @@ class Valve:
         If new position is not an integer, an error is raised.
 
         :param new_position: Value indicating valve's position.
-        :except TypeError Exception if non-integer value used
+        :except TypeError
         :return Update valve position
         """
         try:
@@ -135,8 +153,8 @@ class Gate(Valve):
     Subclasses Valve.
 
     Methods:
-        read_position(): Extends cls_get_position()
-        turn_handle(): Extends open() & close()
+        read_position()
+        turn_handle()
     """
 
     def read_position(self):
@@ -171,8 +189,8 @@ class Globe(Valve):
     Subclasses Valve.
 
     Methods:
-        read_position(): Extends cls_get_position()
-        turn_handle(): Extends cls_change_position() & cls_get_position()
+        read_position()
+        turn_handle()
     """
 
     def read_position(self):
@@ -200,7 +218,7 @@ class Relief(Valve):
     Subclasses Valve.
 
     Methods:
-        read_position(): Extends cls_get_position()
+        read_position()
         set_open_pressure()
         set_blowdown()
         read_open_pressure()

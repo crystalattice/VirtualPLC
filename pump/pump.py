@@ -21,20 +21,40 @@ import math
 class Pump:
     """Generic class for pumps.
 
-    Default parameters: Volumetric flow rate, required head pressure, outlet pressure, pump speed, power required
+    Displacement is the amount of fluid pushed through the pump per second.
+    Horsepower coefficient is the slope of the equivalent pump curve.
 
-    Provides base methods to change pump speed control, calculate changes to pump parameters based on speed changes,
-    read the pump speed, outlet pressure, and flow rate.
+    Variables:
+        name
+        flow_rate
+        head
+        outlet_pressure
+        speed
+        hp
+        displacement
+        hp_coeff
+        wattage
+
+    Methods:
+        set_speed()
+        cls_read_speed()
+        cls_read_press()
+        cls_read_flow()
+        cls_read_power()
+        hp_to_watts()
     """
     def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0,
                  displacement=0.0, hp_coeff=0.0):
         """Set initial parameters.
 
+        :param name: Instance name
         :param flow_rate: Flow rate from the pump (gpm)
         :param pump_head_in: Necessary pump head into the pump (feet)
         :param press_out: Pressure created by the pump (psi)
         :param pump_speed: Rotational speed of the pump (rpm)
-        :param hp: Power required to drive the pump at the current speed (kw)
+        :param hp: Horsepower required to drive the pump at the current speed
+        :param displacement: Amount of fluid pumped per second
+        :param hp_coeff: Slope of equivalent pump curve
         """
         self.name = name
         self.flow_rate = float(flow_rate)
@@ -50,8 +70,9 @@ class Pump:
         """Change the pump speed.
 
         :param new_speed: Requested speed for the pump
+        :except TypeError
+        :except ValueError
         :return: Pump speed
-        :except TypeError Exception if non-integer argument used
         """
         try:
             if type(new_speed) != int:
@@ -66,31 +87,19 @@ class Pump:
             return new_speed
 
     def cls_read_speed(self):
-        """Get the current speed of the pump.
-
-        :return: Pump speed
-        """
+        """Get the current speed of the pump."""
         return self.speed
 
     def cls_read_press(self):
-        """Get the current outlet pressure of the pump.
-
-        :return: Pressure from the pump
-        """
+        """Get the current outlet pressure of the pump."""
         return self.outlet_pressure
 
     def cls_read_flow(self):
-        """Get the current outlet flow rate of the pump.
-
-        :return: Outlet flow rate
-        """
+        """Get the current outlet flow rate of the pump."""
         return self.flow_rate
 
     def cls_read_power(self):
-        """Get the current power draw of the pump.
-
-        :return: Current pump power requirement
-        """
+        """Get the current power draw of the pump."""
         self.wattage = self.hp_to_watts(self.hp)
         return self.wattage
 
@@ -105,36 +114,35 @@ class Pump:
 
 
 class CentrifPump(Pump):
-    """Defines a variable-displacement, centrifugal-style pump."""
-    def get_speed(self):
-        """Get the current speed of the pump
+    """Defines a variable-displacement, centrifugal-style pump.
 
-        :return: Current rotational speed, in rpm
-        """
+    Subclasses Pump.
+
+    Methods:
+        get_speed()
+        get_flowrate()
+        get_pressure()
+        get_power()
+        adjust_speed()
+        pump_laws()
+    """
+    def get_speed(self):
+        """Get the current speed of the pump, in rpm."""
         if self.cls_read_speed() == 0:
                 return "The pump is stopped."
         else:
             return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
-        """Get the current flow rate of the pump
-
-        :return: Current flow rate, in gpm
-        """
+        """Get the current flow rate of the pump."""
         return "The pump output flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
-        """Get the current output pressure for the pump.
-
-        :return: Current outlet pressure, in psi
-        """
+        """Get the current output pressure for the pump."""
         return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
-        """Get the current power draw for the pump.
-
-        :return: Current power requirement, in kW
-        """
+        """Get the current power draw for the pump."""
         return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
 
     def adjust_speed(self, new_speed):
@@ -143,7 +151,7 @@ class CentrifPump(Pump):
         Affects the outlet flow rate, outlet pressure, and power requirements for the pump.
 
         :param new_speed: New pump speed
-        :return: Changes, in-place, the flow rate, output pressure, and pump power requirement
+        :return: Updates flow rate, output pressure, and pump power requirement
         """
         self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(new_speed)
 
@@ -157,7 +165,7 @@ class CentrifPump(Pump):
         :param old_flow_rate: Current (old) flow rate from the pump
         :param old_press_out: Current (old) pressure from the pump
         :param old_pump_power: Current (old) power requirement of the pump
-        :return: Volumetric flow rate, pump head, and pressure
+        :return: Pump speed, flow rate, outlet pressure, and power
         """
         self.n2 = self.set_speed(new_speed)
 
@@ -176,36 +184,35 @@ class CentrifPump(Pump):
 
 
 class PositiveDisplacement(Pump):
-    """Defines a positive-displacement pump."""
-    def get_speed(self):
-        """Get the current speed of the pump
+    """Defines a positive-displacement pump.
 
-        :return: Current rotational speed, in rpm
-        """
+    Subclasses Pump.
+
+    Methods:
+        get_speed()
+        get_flowrate()
+        get_pressure()
+        get_power()
+        set_hp_coeff()
+        adjust_speed()
+    """
+    def get_speed(self):
+        """Get the current speed of the pump, in rpm."""
         if self.cls_read_speed() == 0:
                 return "The pump is stopped."
         else:
             return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
 
     def get_flowrate(self):
-        """Get the current flow rate of the pump
-
-        :return: Current flow rate, in gpm
-        """
+        """Get the current flow rate of the pump."""
         return "The pump outlet flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
 
     def get_pressure(self):
-        """Get the current output pressure for the pump.
-
-        :return: Current outlet pressure, in psi
-        """
+        """Get the current output pressure for the pump."""
         return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
-        """Get the current power draw for the pump.
-
-        :return: Current power requirement, in kW
-        """
+        """Get the current power draw for the pump."""
         return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
 
     def set_hp_coeff(self):
@@ -224,7 +231,7 @@ class PositiveDisplacement(Pump):
         Affects the outlet flow rate and power requirements for the pump.
 
         :param new_speed: New pump speed
-        :return: Flow rate, pump power requirement, and new speed
+        :return: Flow rate, pump power, and new speed
         """
         self.speed = self.set_speed(new_speed)
 
