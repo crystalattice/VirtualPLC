@@ -66,7 +66,8 @@ class Pump:
         self.hp_coeff = float(hp_coeff)
         self.wattage = self.hp_to_watts(self.hp)
 
-    def set_speed(self, new_speed):
+    @staticmethod
+    def set_speed(new_speed):
         """Change the pump speed.
 
         :param new_speed: Requested speed for the pump
@@ -103,7 +104,8 @@ class Pump:
         self.wattage = self.hp_to_watts(self.hp)
         return self.wattage
 
-    def hp_to_watts(self, hp):
+    @staticmethod
+    def hp_to_watts(hp):
         """Convert pump horsepower to watts.
 
         :param hp: Pump horsepower
