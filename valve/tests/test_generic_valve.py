@@ -25,47 +25,53 @@ class TestValveCoeff:
         with pytest.raises(TypeError):
             v.calc_coeff("a")
 
+
 class TestValvePress:
     # x = (flow / self.Cv)
     # self.deltaP = math.pow(x, 2) * spec_grav
     def test_press_drop_expected(self):
-        v = Valve()
+        v = Valve(flow_coeff=15.0)
         v.press_drop(100)
-        assert v.deltaP == 11.111111111111112
+        assert v.deltaP == 44.44444444444445
 
     def test_press_drop_zero(self):
-        v = Valve()
+        v = Valve(flow_coeff=15.0)
         v.press_drop(0)
         assert v.deltaP == 0
 
     def test_press_drop_neg(self):
-        v = Valve()
+        v = Valve(flow_coeff=15.0)
         v.press_drop(-100)
-        assert v.deltaP == 11.111111111111112
+        assert v.deltaP == 44.44444444444445
 
     def test_press_drop_str(self):
         """Checks for correct Exception thrown if non-number argument used"""
-        v = Valve()
+        v = Valve(flow_coeff=15.0)
         with pytest.raises(TypeError):
             v.deltaP("a")
+
 
 class TestValveFlow:
     # x = spec_grav / press_drop
     # self.flow_out = flow_coeff / math.sqrt(x)
     def test_sys_flow_rate_expected(self):
-        v = Valve()
+        v = Valve(flow_coeff=15.0, drop=7.5)
         v.sys_flow_rate(v.Cv, v.deltaP)
-        assert v.flow_out == 116.18950038622252
+        assert v.flow_out == 41.07919181288746
 
     def test_sys_flow_rate_zero_coeff(self):
-        v = Valve(flow_coeff=0.0)
-        v.sys_flow_rate(v.Cv, v.deltaP)
-        assert v.flow_out == 0.0
+        v = Valve(flow_coeff=0.0, drop=7.5)
+        with pytest.raises(ValueError) as excinfo:
+            v.sys_flow_rate(v.Cv, v.deltaP)
+        exception_msg = excinfo.value.args[0]
+        assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_zero_press(self):
-        v = Valve(drop=0.0)
-        with pytest.raises(ZeroDivisionError):
+        v = Valve(flow_coeff=7.5, drop=0.0)
+        with pytest.raises(ValueError) as excinfo:
             v.sys_flow_rate(v.Cv, v.deltaP)
+        exception_msg = excinfo.value.args[0]
+        assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_neg_coeff(self):
         v = Valve(flow_coeff=-30.0)
@@ -82,14 +88,13 @@ class TestValveFlow:
         assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_str_press(self):
-        v = Valve(drop="a")
-        with pytest.raises(TypeError):
-            v.sys_flow_rate(v.Cv, v.deltaP)
+        with pytest.raises(ValueError):
+            v = Valve(drop="a")
 
     def test_sys_flow_rate_str_coeff(self):
-        v = Valve(flow_coeff="a")
-        with pytest.raises(TypeError):
-            v.sys_flow_rate(v.Cv, v.deltaP)
+        with pytest.raises(ValueError):
+            v = Valve(flow_coeff="a")
+
 
 class TestValvePosition:
     def test_cls_get_position(self):
