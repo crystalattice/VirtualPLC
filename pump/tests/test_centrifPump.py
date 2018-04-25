@@ -26,36 +26,36 @@ class TestPressure:
 
 class TestPower:
     def test_get_power(self):
-        p = CentrifPump(hp=0.12)
-        assert p.get_power() == "The power usage for the pump is 89.48398464 W."
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
+        assert p.get_power() == "The power usage for the pump is 146.00132213333336 kW."
 
 
 class TestChangeSpeed:
     def test_adjust_speed_expected(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         p.adjust_speed(500)
         assert p.get_speed() == "The pump is running at 500 rpm."
         assert p.get_flowrate() == "The pump output flow rate is 166.66666666666669 gpm."
         assert p.get_pressure() == "The pump pressure is 125.00000000000001 psi."
-        assert p.get_power() == "The power usage for the pump is 414.2777066666668 W."
+        assert p.get_power() == "The power usage for the pump is 833.239868740741 kW."
 
     def test_adjust_speed_neg(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         with pytest.raises(ValueError) as excinfo:
             p.adjust_speed(-100)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Speed must be 0 or greater."
 
     def test_adjust_speed_zero(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         p.adjust_speed(0)
         assert p.get_speed() == "The pump is stopped."
         assert p.get_flowrate() == "The pump output flow rate is 0.0 gpm."
         assert p.get_pressure() == "The pump pressure is 0.0 psi."
-        assert p.get_power() == "The power usage for the pump is 0.0 W."
+        assert p.get_power() == "The power usage for the pump is 0.0 kW."
 
     def test_adjust_speed_non_int(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         with pytest.raises(TypeError) as excinfo:
             p.adjust_speed("a")
         exception_msg = excinfo.value.args[0]
@@ -64,28 +64,28 @@ class TestChangeSpeed:
 
 class TestPumpLaws:
     def test_pump_laws_expected(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         p.pump_laws(100)
         assert p.flow_rate == 33.33333333333333
         assert p.outlet_pressure == 5.0
-        assert p.wattage == 3.3142216533333326
+        assert p.wattage == 10.323325807407407
 
     def test_pump_laws_zero(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         p.pump_laws(0)
         assert p.flow_rate == 0.0
         assert p.outlet_pressure == 0.0
         assert p.wattage == 0.0
 
     def test_pump_laws_neg(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         with pytest.raises(ValueError) as excinfo:
             p.set_speed(-120)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Speed must be 0 or greater."
 
     def test_pump_laws_non_int(self):
-        p = CentrifPump("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = CentrifPump("", 100, 12, 45, 300, 0.12)
         with pytest.raises(TypeError) as excinfo:
             p.set_speed(85.3)
         exception_msg = excinfo.value.args[0]

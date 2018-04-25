@@ -43,8 +43,7 @@ class Pump:
         cls_read_power()
         hp_to_watts()
     """
-    def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0,
-                 displacement=0.0, hp_coeff=0.0):
+    def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0):
         """Set initial parameters.
 
         :param name: Instance name
@@ -52,19 +51,16 @@ class Pump:
         :param pump_head_in: Necessary pump head into the pump (feet)
         :param press_out: Pressure created by the pump (psi)
         :param pump_speed: Rotational speed of the pump (rpm)
-        :param hp: Horsepower required to drive the pump at the current speed
         :param displacement: Amount of fluid pumped per second
-        :param hp_coeff: Slope of equivalent pump curve
         """
         self.name = name
         self.flow_rate = float(flow_rate)
         self.head = float(pump_head_in)
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
-        self.hp = float(hp)
         self.displacement = float(displacement)
-        self.hp_coeff = float(hp_coeff)
-        self.wattage = self.hp_to_watts(self.hp)
+        self.hp_coeff = 0.0
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
 
     @staticmethod
     def set_speed(new_speed):
@@ -101,18 +97,27 @@ class Pump:
 
     def cls_read_power(self):
         """Get the current power draw of the pump."""
-        self.wattage = self.hp_to_watts(self.hp)
+        return self.wattage
+
+    def pump_power(self, flow_rate, diff_head, fluid_spec_weight=62.4, efficiency=0.6):
+        """Calculate pump power in kW."""
+        gravity = 32.174  # ft/s^2
+        hyd_power = (flow_rate * fluid_spec_weight * gravity * diff_head) / 3.6e6
+        self.wattage = hyd_power / efficiency
         return self.wattage
 
     @staticmethod
-    def hp_to_watts(hp):
-        """Convert pump horsepower to watts.
+    def press_to_ft(press):
+        """Convert psi to feet of differential head."""
+        ft = press * 47.6
+        return ft
 
-        :param hp: Pump horsepower
-        :return: Pump wattage requirement
-        """
-        watts = hp * 745.699872
-        return watts
+    def diff_press(self, in_press, out_press):
+        """Calculate differential head across pump, in feet."""
+        in_press_ft = self.press_to_ft(in_press)
+        out_press_ft = self.press_to_ft(out_press)
+        delta_p = out_press_ft - in_press_ft
+        return delta_p
 
 
 class CentrifPump(Pump):
@@ -128,6 +133,7 @@ class CentrifPump(Pump):
         adjust_speed()
         pump_laws()
     """
+
     def get_speed(self):
         """Get the current speed of the pump, in rpm."""
         if self.cls_read_speed() == 0:
@@ -145,7 +151,7 @@ class CentrifPump(Pump):
 
     def get_power(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump.
@@ -170,13 +176,12 @@ class CentrifPump(Pump):
         n1 = self.speed
         v1 = self.flow_rate
         hp1 = self.outlet_pressure
-        p1 = self.hp
 
         self.flow_rate = v1 * (n2 / n1)  # New flow rate
         self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
-        self.hp = p1 * math.pow((n2 / n1), 3)  # New pump power
         self.speed = n2  # Replace old speed with new value
-        self.wattage = self.hp_to_watts(self.hp)  # Convert horsepower to watts
+        delta_p = self.diff_press(self.head, self.outlet_pressure)
+        self.wattage = abs(self.pump_power(self.flow_rate, delta_p))  # Account for negative differential
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
 
@@ -194,6 +199,7 @@ class PositiveDisplacement(Pump):
         set_hp_coeff()
         adjust_speed()
     """
+
     def get_speed(self):
         """Get the current speed of the pump, in rpm."""
         if self.cls_read_speed() == 0:
@@ -211,17 +217,7 @@ class PositiveDisplacement(Pump):
 
     def get_power(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow} W.".format(pow=self.cls_read_power())
-
-    def set_hp_coeff(self):
-        """Change the horsepower coefficient.
-
-         Simulates a pump curve by calculating the coefficient based on horsepower and pump speed
-
-        :return: Horsepower coefficient
-        """
-        self.hp_coeff = self.hp / self.speed
-        return self.hp_coeff
+        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump, assuming constant outlet pressure.
@@ -232,24 +228,48 @@ class PositiveDisplacement(Pump):
         :return: Flow rate, pump power, and new speed
         """
         self.speed = self.set_speed(new_speed)
+        # self.set_hp_coeff()
 
         self.flow_rate = self.speed * self.displacement
-        self.hp = self.speed * self.hp_coeff
-        self.wattage = self.hp_to_watts(self.hp)
+        # self.hp = self.speed * self.hp_coeff
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
 
         return self.flow_rate, self.wattage, self.speed
 
 
 if __name__ == "__main__":
     # Functional tests
-    pump1 = CentrifPump("Pumpy pump")
+    # name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0, displacement=0.0
+    pump1 = CentrifPump("Pumpy", 75, 12, 25, 125, 0.03)
     print("{} created.".format(pump1.name))
     print(pump1.get_speed())
     print(pump1.get_flowrate())
     print(pump1.get_power())
     print(pump1.get_pressure())
-    pump1.adjust_speed(2000)
+    pump1.adjust_speed(50)
     print(pump1.get_speed())
     print(pump1.get_flowrate())
     print(pump1.get_power())
     print(pump1.get_pressure())
+    pump1.adjust_speed(0)
+    print(pump1.get_speed())
+    print(pump1.get_flowrate())
+    print(pump1.get_power())
+    print(pump1.get_pressure())
+
+    pump2 = PositiveDisplacement("Grumpy", 100, 0, 200, 300, 0.15)
+    print("\n{} created.".format(pump2.name))
+    print(pump2.get_speed())
+    print(pump2.get_flowrate())
+    print(pump2.get_power())
+    pump2.adjust_speed(50)
+    print(pump2.get_speed())
+    print(pump2.get_flowrate())
+    print(pump2.get_power())
+    pump2.adjust_speed(0)
+    print(pump2.get_speed())
+    print(pump2.get_flowrate())
+    print(pump2.get_power())
+
+    p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
+    print(p.pump_power(p.flow_rate, p.diff_press(p.head, p.outlet_pressure)))
