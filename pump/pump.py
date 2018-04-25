@@ -153,31 +153,27 @@ class CentrifPump(Pump):
         :param new_speed: New pump speed
         :return: Updates flow rate, output pressure, and pump power requirement
         """
-        self.speed, self.flow_rate, self.outlet_pressure, self.power = self.pump_laws(new_speed)
+        self.speed, self.flow_rate, self.outlet_pressure, self.wattage = self.pump_laws(new_speed)
 
     def pump_laws(self, new_speed):
         """Defines pump characteristics that are based on pump speed.
 
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
 
-        :param old_speed: Current (old) speed of the pump
         :param new_speed: Requested (new) speed of the pump
-        :param old_flow_rate: Current (old) flow rate from the pump
-        :param old_press_out: Current (old) pressure from the pump
-        :param old_pump_power: Current (old) power requirement of the pump
         :return: Pump speed, flow rate, outlet pressure, and power
         """
-        self.n2 = self.set_speed(new_speed)
+        n2 = self.set_speed(new_speed)
 
-        self.n1 = self.speed
-        self.V1 = self.flow_rate
-        self.Hp1 = self.outlet_pressure
-        self.P1 = self.hp
+        n1 = self.speed
+        v1 = self.flow_rate
+        hp1 = self.outlet_pressure
+        p1 = self.hp
 
-        self.flow_rate = self.V1 * (self.n2 / self.n1)  # New flow rate
-        self.outlet_pressure = self.Hp1 * math.pow((self.n2 / self.n1), 2)  # New outlet pressure
-        self.hp = self.P1 * math.pow((self.n2 / self.n1), 3)  # New pump power
-        self.speed = self.n2  # Replace old speed with new value
+        self.flow_rate = v1 * (n2 / n1)  # New flow rate
+        self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
+        self.hp = p1 * math.pow((n2 / n1), 3)  # New pump power
+        self.speed = n2  # Replace old speed with new value
         self.wattage = self.hp_to_watts(self.hp)  # Convert horsepower to watts
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage

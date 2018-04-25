@@ -309,4 +309,3 @@ if __name__ == "__main__":
     print(relief1.read_position())
     relief1.valve_operation(73)
     print(relief1.read_position())
-
