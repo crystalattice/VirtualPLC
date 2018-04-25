@@ -40,3 +40,22 @@ class TestAdjustSpeed:
         assert p.wattage == 3728.4993600000003
         assert p.speed == 25
 
+    def test_adjust_speed_zero(self):
+        p = PositiveDisplacement()
+        assert p.flow_rate == 0.0
+        assert p.wattage == 0.0
+        assert p.speed == 0
+
+    def test_adjust_speed_neg(self):
+        p = PositiveDisplacement("", 100, 0, 0, 75, 10, 0.09, 0.2)
+        with pytest.raises(ValueError) as excinfo:
+            p.set_speed(-10)
+        exception_msg = excinfo.value.args[0]
+        assert exception_msg == "Speed must be 0 or greater."
+
+    def test_speed_control_non_int(self):
+        p = PositiveDisplacement("", 100, 12, 45, 300, 0.12, 0, 0)
+        with pytest.raises(TypeError) as excinfo:
+            p.set_speed(12.5)
+        exception_msg = excinfo.value.args[0]
+        assert exception_msg == "Integer values only."

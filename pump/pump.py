@@ -44,6 +44,7 @@ class Pump:
         self.hp = float(hp)
         self.displacement = float(displacement)
         self.hp_coeff = float(hp_coeff)
+        self.wattage = self.hp_to_watts(self.hp)
 
     def set_speed(self, new_speed):
         """Change the pump speed.
