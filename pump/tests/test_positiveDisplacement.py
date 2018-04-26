@@ -5,56 +5,58 @@ from pump.pump import PositiveDisplacement
 class TestSpeed:
     def test_get_speed(self):
         p = PositiveDisplacement()
+        p.adjust_speed(0)
         assert p.get_speed() == "The pump is stopped."
+        p1 = PositiveDisplacement(pump_speed=75, displacement=0.05)
+        p1.adjust_speed(75)
+        assert p1.get_speed() == "The pump is running at 75 rpm."
 
 
 class TestFlow:
     def test_get_flowrate(self):
-        p = PositiveDisplacement(flow_rate=35)
-        assert p.get_flowrate() == "The pump outlet flow rate is 35.0 gpm."
+        p = PositiveDisplacement(pump_speed=75, displacement=0.05)
+        p.adjust_speed(p.speed)
+        assert p.get_flowrate() == "The pump outlet flow rate is 3.75 gpm."
 
 
 class TestPress:
     def test_get_pressure(self):
-        p = PositiveDisplacement(press_out=24.5)
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
+        p.adjust_speed(p.speed)
         assert p.get_pressure() == "The pump pressure is 24.5 psi."
 
 
 class TestPower:
     def test_get_power(self):
-        p = PositiveDisplacement(hp=0.45)
-        assert p.get_power() == "The power usage for the pump is 335.5649424 W."
-
-
-class TestHpCoeff:
-    def test_set_hp_coeff(self):
-        p = PositiveDisplacement(pump_speed=120, hp=0.12)
-        assert p.set_hp_coeff() == 0.001
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
+        p.adjust_speed(p.speed)
+        assert p.get_power() == "The power usage for the pump is 4.064809536666666 kW."
 
 
 class TestAdjustSpeed:
     def test_adjust_speed_expected(self):
-        p = PositiveDisplacement("", 100, 0, 0, 75, 10, 0.09, 0.2)
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(25)
-        assert p.flow_rate == 2.25
-        assert p.wattage == 3728.4993600000003
+        assert p.flow_rate == 1.25
+        assert p.wattage == 1.3549365122222223
         assert p.speed == 25
 
     def test_adjust_speed_zero(self):
-        p = PositiveDisplacement()
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
+        p.adjust_speed(0)
         assert p.flow_rate == 0.0
         assert p.wattage == 0.0
         assert p.speed == 0
 
     def test_adjust_speed_neg(self):
-        p = PositiveDisplacement("", 100, 0, 0, 75, 10, 0.09, 0.2)
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         with pytest.raises(ValueError) as excinfo:
             p.set_speed(-10)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Speed must be 0 or greater."
 
     def test_speed_control_non_int(self):
-        p = PositiveDisplacement("", 100, 12, 45, 300, 0.12, 0, 0)
+        p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         with pytest.raises(TypeError) as excinfo:
             p.set_speed(12.5)
         exception_msg = excinfo.value.args[0]

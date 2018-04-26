@@ -59,7 +59,6 @@ class Pump:
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
         self.displacement = float(displacement)
-        self.hp_coeff = 0.0
         self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
 
     @staticmethod
@@ -228,10 +227,8 @@ class PositiveDisplacement(Pump):
         :return: Flow rate, pump power, and new speed
         """
         self.speed = self.set_speed(new_speed)
-        # self.set_hp_coeff()
 
         self.flow_rate = self.speed * self.displacement
-        # self.hp = self.speed * self.hp_coeff
         self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
 
         return self.flow_rate, self.wattage, self.speed
