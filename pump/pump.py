@@ -146,11 +146,11 @@ class CentrifPump(Pump):
 
     def get_pressure(self):
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
+        return "The pump pressure is {press:.2f} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.cls_read_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump.
@@ -212,11 +212,11 @@ class PositiveDisplacement(Pump):
 
     def get_pressure(self):
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press} psi.".format(press=self.cls_read_press())
+        return "The pump pressure is {press:.2f} psi.".format(press=self.cls_read_press())
 
     def get_power(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.cls_read_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump, assuming constant outlet pressure.
@@ -269,4 +269,3 @@ if __name__ == "__main__":
     print(pump2.get_power())
 
     p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-    print(p.pump_power(p.flow_rate, p.diff_press(p.head, p.outlet_pressure)))
