@@ -68,6 +68,7 @@ class Valve:
         self.flow_out = 0.0
         self.setpoint_open = open_press
         self.setpoint_close = close_press
+# TODO: Move valve-specific parameters to their appropriate classes
 
     def calc_coeff(self, diameter):
         """Roughly calculate Cv based on valve diameter.
@@ -163,11 +164,11 @@ class Gate(Valve):
         :return: The open/closed status of the valve.
         """
         if self.cls_get_position() == 0:
-            return "The valve is closed."
+            return "{name} is closed.".format(name=self.name)
         elif self.cls_get_position() == 100:
-            return "The valve is open."
+            return "{name} is open.".format(name=self.name)
         else:  # bad condition
-            return "Warning! The valve is partially open."
+            return "Warning! {name} is partially open.".format(name=self.name)
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -195,7 +196,7 @@ class Globe(Valve):
 
     def read_position(self):
         """Identify the position of the valve."""
-        return "The valve is {position}% open.".format(position=self.cls_get_position())
+        return "{name} is {position}% open.".format(name=self.name, position=self.cls_get_position())
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -215,6 +216,9 @@ class Globe(Valve):
 class Relief(Valve):
     """Pressure relieving valve.
 
+    Assumes full open when open set point reached and fully closed when close set point reached. Does not affect flow
+    rate or system pressure; those parameters must be adjusted elsewhere.
+
     Subclasses Valve.
 
     Methods:
@@ -232,11 +236,11 @@ class Relief(Valve):
         :return: The open/closed status of the valve.
         """
         if self.cls_get_position() == 0:
-            return "The valve is closed."
+            return "{name} is closed.".format(name=self.name)
         elif self.cls_get_position() == 100:
-            return "The valve is open."
+            return "{name} is open.".format(name=self.name)
         else:   # bad condition
-            return "Warning! The valve is partially open."
+            return "Warning! {name} is partially open.".format(name=self.name)
 
     def set_open_pressure(self, open_set):
         """Set the pressure setpoint where the valve opens.
@@ -276,6 +280,7 @@ class Relief(Valve):
 
 if __name__ == "__main__":
     # Functional tests
+    # name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0
     gate1 = Gate("Pump inlet")
     print("{} created".format(gate1.name))
     print(gate1.read_position())

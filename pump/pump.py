@@ -3,8 +3,12 @@
 """
 VirtualPLC-pump.py
 
-Purpose: Creates a generic Pump class for PLC-controlled SCADA systems. Subclassed into variable and positive
-displacement pumps.
+Purpose: Creates a generic Pump class for PLC-controlled SCADA systems.
+
+Classes:
+    Pump: Generic superclass
+    CentrifPump: Pump subclass; provides for a variable displacement pump
+    PositiveDisplacement: Pump subclass; provides for a positive displacement pump
 
 Author: Cody Jackson
 
@@ -60,6 +64,7 @@ class Pump:
         self.speed = pump_speed
         self.displacement = float(displacement)
         self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
+# TODO: Move pump-specific parameters to their appropriate classes
 
     @staticmethod
     def set_speed(new_speed):
@@ -99,7 +104,14 @@ class Pump:
         return self.wattage
 
     def pump_power(self, flow_rate, diff_head, fluid_spec_weight=62.4, efficiency=0.6):
-        """Calculate pump power in kW."""
+        """Calculate pump power in kW.
+
+        :param flow_rate: System flow rate
+        :param diff_head: Change in pressure across pump
+        :param fluid_spec_weight: Specific weight of fluid; default assumes water
+        :param efficiency: Pump efficiency
+        :return: Pump power requirement, in kW
+        """
         gravity = 32.174  # ft/s^2
         hyd_power = (flow_rate * fluid_spec_weight * gravity * diff_head) / 3.6e6
         self.wattage = hyd_power / efficiency
@@ -170,9 +182,12 @@ class CentrifPump(Pump):
         :param new_speed: Requested (new) speed of the pump
         :return: Pump speed, flow rate, outlet pressure, and power
         """
-        n2 = self.set_speed(new_speed)
+        n2 = self.set_speed(new_speed)  # Validate input
 
-        n1 = self.speed
+        if self.speed == 0:  # Pump initially stopped
+            n1 = 1
+        else:
+            n1 = self.speed
         v1 = self.flow_rate
         hp1 = self.outlet_pressure
 
