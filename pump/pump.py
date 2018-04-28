@@ -1,5 +1,4 @@
 #!/bin/python
-
 """
 VirtualPLC-pump.py
 
@@ -71,8 +70,10 @@ class Pump:
         """Change the pump speed.
 
         :param new_speed: Requested speed for the pump
-        :except TypeError
-        :except ValueError
+
+        :except TypeError: Non-integer value provided
+        :except ValueError: Speed < 0
+
         :return: Pump speed
         """
         try:
@@ -110,6 +111,7 @@ class Pump:
         :param diff_head: Change in pressure across pump
         :param fluid_spec_weight: Specific weight of fluid; default assumes water
         :param efficiency: Pump efficiency
+
         :return: Pump power requirement, in kW
         """
         gravity = 32.174  # ft/s^2
@@ -170,6 +172,7 @@ class CentrifPump(Pump):
         Affects the outlet flow rate, outlet pressure, and power requirements for the pump.
 
         :param new_speed: New pump speed
+
         :return: Updates flow rate, output pressure, and pump power requirement
         """
         self.speed, self.flow_rate, self.outlet_pressure, self.wattage = self.pump_laws(new_speed)
@@ -180,6 +183,7 @@ class CentrifPump(Pump):
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
 
         :param new_speed: Requested (new) speed of the pump
+
         :return: Pump speed, flow rate, outlet pressure, and power
         """
         n2 = self.set_speed(new_speed)  # Validate input
@@ -239,6 +243,7 @@ class PositiveDisplacement(Pump):
         Affects the outlet flow rate and power requirements for the pump.
 
         :param new_speed: New pump speed
+        
         :return: Flow rate, pump power, and new speed
         """
         self.speed = self.set_speed(new_speed)

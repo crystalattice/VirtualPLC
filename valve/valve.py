@@ -1,5 +1,4 @@
 #!/bin/python
-
 """
 VirtualPLC-valve.py
 
@@ -74,6 +73,7 @@ class Valve:
         """Roughly calculate Cv based on valve diameter.
 
         :param diameter: Valve diameter
+
         :return: Update valve flow coefficient
         """
         self.Cv = 15 * math.pow(diameter, 2)
@@ -89,7 +89,9 @@ class Valve:
 
         :param flow: System flow rate
         :param spec_grav: Fluid specific gravity
-        :except ZeroDivisionError
+
+        :except ZeroDivisionError: Valve coefficient not provided
+
         :return: Update pressure drop across valve
         """
         try:
@@ -106,7 +108,9 @@ class Valve:
         :param flow_coeff: Valve flow coefficient
         :param press_drop: Pressure drop (psi)
         :param spec_grav: Fluid specific gravity
-        :except ValueError
+
+        :except ValueError: Valve coefficient or deltaP <= 0
+
         :return: Update system flow rate
         """
         try:
@@ -128,8 +132,10 @@ class Valve:
         If new position is not an integer, an error is raised.
 
         :param new_position: Value indicating valve's position.
-        :except TypeError
-        :return Update valve position
+
+        :except TypeError: Non-integer value provided.
+
+        :return: Update valve position
         """
         try:
             if type(new_position) != int:
@@ -159,9 +165,7 @@ class Gate(Valve):
     """
 
     def read_position(self):
-        """Identify the status of the valve.
-
-        :return: The open/closed status of the valve.
+        """Identify the position of the valve.
         """
         if self.cls_get_position() == 0:
             return "{name} is closed.".format(name=self.name)
@@ -174,6 +178,7 @@ class Gate(Valve):
         """Change the status of the valve.
         
         :param new_position: New valve position
+
         :return: Update valve position
         """
         if new_position == 0:
@@ -202,6 +207,7 @@ class Globe(Valve):
         """Change the status of the valve.
         
         :param new_position: New valve position
+
         :return: Update outlet flow rate and valve pressure drop
         """
         self.cls_change_position(new_position)
@@ -246,6 +252,7 @@ class Relief(Valve):
         """Set the pressure setpoint where the valve opens.
 
         :param: open_set: Opening set point
+
         :return: Update the opening set point
         """
         self.setpoint_open = open_set
@@ -262,6 +269,7 @@ class Relief(Valve):
         """Set the pressure setpoint where the valve closes.
 
         :param close_set: Closing set point
+
         :return: Update the closing set point
         """
         self.setpoint_close = close_set
@@ -270,6 +278,7 @@ class Relief(Valve):
         """Open the valve if pressure is too high; close the valve when pressure lowers.
 
         :param press_in: Valve input pressure
+
         :return: Update valve position
         """
         if press_in >= self.setpoint_open:
