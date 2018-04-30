@@ -28,24 +28,9 @@ class Valve:
     Cv is the valve flow coefficient: number of gallons per minute at 60F through a fully open valve with a press. drop
     of 1 psi. For valves 1 inch or less in diameter, Cv is typically < 5.
 
-    Variables:
-        name
-        position
-        Cv
-        deltaP
-        flow_in
-        flow_out
-        setpoint_open
-        setpoint_close
+    Variables: name, position, Cv, deltaP, flow_in, flow_out, setpoint_open, setpoint_close
 
-    Methods:
-        calc_coeff()
-        press_drop()
-        sys_flow_rate()
-        cls_get_position()
-        cls_change_position()
-        open()
-        close()
+    Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
     """
 
     def __init__(self, name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0):

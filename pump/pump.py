@@ -27,24 +27,9 @@ class Pump:
     Displacement is the amount of fluid pushed through the pump per second.
     Horsepower coefficient is the slope of the equivalent pump curve.
 
-    Variables:
-        name
-        flow_rate
-        head
-        outlet_pressure
-        speed
-        hp
-        displacement
-        hp_coeff
-        wattage
+    Variables: name, flow_rate, head, outlet_pressure, speed, displacement, wattage
 
-    Methods:
-        set_speed()
-        cls_read_speed()
-        cls_read_press()
-        cls_read_flow()
-        cls_read_power()
-        hp_to_watts()
+    Methods: set_speed(), cls_read_speed(), cls_read_press(), cls_read_flow(), cls_read_power(), hp_to_watts()
     """
     def __init__(self, name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0):
         """Set initial parameters.
