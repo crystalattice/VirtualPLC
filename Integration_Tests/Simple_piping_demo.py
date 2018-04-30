@@ -14,6 +14,8 @@ Date: 4/26/18
 Version 0.1
     Initial build
 """
+# Valve parameters: name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0
+# Pump parameters: name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0
 from pump.pump import CentrifPump, PositiveDisplacement
 from valve.valve import Gate, Globe, Relief
 
@@ -21,7 +23,7 @@ from valve.valve import Gate, Globe, Relief
 # Pump 1 group (centrifugal)
 in_valve1 = Gate("Centrifugal Pump inlet", flow_coeff=90)
 out_valve1 = Gate("Centrifugal Pump outlet", flow_coeff=90)
-centrif_pump1 = CentrifPump("Centrifugal Pump")
+centrif_pump1 = CentrifPump("Centrifugal Pump", pump_head_in=20)
 throttle1 = Globe("Centrifugal Pump throttle", flow_coeff=30)
 
 # Pump 2 group (gear)
@@ -37,7 +39,6 @@ globe_valves = [throttle1, throttle2]
 
 def initial_state():
     """Confirm zero state."""
-    print("INITIAL CONDITIONS")
     print("***Gate Valves***")
     for valve in gate_valves:
         print(valve.read_position())
@@ -88,7 +89,13 @@ def start_centrif_pump(speed):
 
 
 if __name__ == "__main__":
+    print("INITIAL CONDITIONS")
     initial_state()
+
+    print("OPEN VALVES")
     open_gates()
     set_globe_valves(100)
-    start_centrif_pump(75)
+
+    print("START PUMPS")
+    start_centrif_pump(1750)
+    centrif_pump1

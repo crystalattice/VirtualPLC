@@ -20,6 +20,8 @@ import math
 
 # from pymodbus.client.sync import ModbusTcpClient
 
+GRAVITY = 9.81  # m/s^2
+
 
 class Pump:
     """Generic class for pumps.
@@ -47,7 +49,7 @@ class Pump:
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
         self.displacement = float(displacement)
-        self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
 # TODO: Move pump-specific parameters to their appropriate classes
 
     @staticmethod
@@ -89,32 +91,43 @@ class Pump:
         """Get the current power draw of the pump."""
         return self.wattage
 
-    def pump_power(self, flow_rate, diff_head, fluid_spec_weight=62.4, efficiency=0.6):
+    def pump_power(self, flow_rate, diff_head, fluid_spec_weight=62.4):
         """Calculate pump power in kW.
 
-        :param flow_rate: System flow rate
-        :param diff_head: Change in pressure across pump
+        Formula from https://www.engineeringtoolbox.com/pumps-power-d_505.html.
+        Because imperial values are converted to metric, the calculation isn't exactly the formula listed on the site;
+        view the site's source code to see the formula used.
+
+        :param flow_rate: System flow rate, in gpm
+        :param diff_head: Change in pressure across pump, in feet
         :param fluid_spec_weight: Specific weight of fluid; default assumes water
-        :param efficiency: Pump efficiency
 
         :return: Pump power requirement, in kW
         """
-        gravity = 32.174  # ft/s^2
-        hyd_power = (flow_rate * fluid_spec_weight * gravity * diff_head) / 3.6e6
-        self.wattage = hyd_power / efficiency
+        flow_rate = flow_rate / 15852
+        density = fluid_spec_weight / 0.0624
+        head = diff_head / 3.2808
+        hyd_power = (100 * (flow_rate * density * GRAVITY * head) / 1000) / 100
+        self.wattage = hyd_power
         return self.wattage
 
     @staticmethod
     def press_to_ft(press):
         """Convert psi to feet of differential head."""
-        ft = press * 47.6
+        ft = press * 2.308933
         return ft
 
-    def diff_press(self, in_press, out_press):
+    def diff_press_psi(self, in_press, out_press):
         """Calculate differential head across pump, in feet."""
         in_press_ft = self.press_to_ft(in_press)
         out_press_ft = self.press_to_ft(out_press)
-        delta_p = out_press_ft - in_press_ft
+        delta_p = abs(out_press_ft - in_press_ft)
+        return delta_p
+
+    @staticmethod
+    def diff_press_ft(in_ft, out_ft):
+        """Calculate differential pump head."""
+        delta_p = abs(out_ft - in_ft)
         return delta_p
 
 
@@ -183,8 +196,28 @@ class CentrifPump(Pump):
         self.flow_rate = v1 * (n2 / n1)  # New flow rate
         self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
         self.speed = n2  # Replace old speed with new value
-        delta_p = self.diff_press(self.head, self.outlet_pressure)
-        self.wattage = abs(self.pump_power(self.flow_rate, delta_p))  # Account for negative differential
+        delta_p = abs(self.diff_press_psi(self.head, self.outlet_pressure))  # Account for negative differential
+        self.wattage = self.pump_power(self.flow_rate, delta_p)
+
+        return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
+
+    def start_pump(self, speed, flow, out_press=0.0, out_ft=0.0):
+        """System characteristics when a pump is initially started.
+
+        Assumes all valves fully open, i.e. maximum flow rate.
+
+        :param speed: Pump speed
+        :param flow: Max flow rate, in gpm
+        :param out_press: Pump pressure at max flow, in psi
+        :param out_ft: Output head pressure, in feet
+
+        :return: Pump speed, flow rate, outlet pressure, and power
+        """
+        self.speed = speed
+        self.flow_rate = flow
+        self.outlet_pressure = press_out
+        delta_p = abs(Pump.press_to_ft(press_out) - self.head)
+        self.wattage = self.pump_power(self.flow_rate, delta_p)
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
 
@@ -234,7 +267,7 @@ class PositiveDisplacement(Pump):
         self.speed = self.set_speed(new_speed)
 
         self.flow_rate = self.speed * self.displacement
-        self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
 
         return self.flow_rate, self.wattage, self.speed
 
