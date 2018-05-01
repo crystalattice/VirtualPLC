@@ -76,19 +76,29 @@ def open_gates():
 def get_gate_delta():
     """Check the pressure drop across the gate valves."""
     print("\n***Gate valve press drop***")
-    print("Centrif Pump inlet: {}".format(in_valve1.deltaP))
-    print("Centrif Pump outlet: {}".format(out_valve1.deltaP))
-    print("Gear Pump inlet: {}".format(in_valve2.deltaP))
-    print("Gear Pump outlet: {}".format(out_valve2.deltaP))
+    centrif_out_gate = out_valve1.press_drop(centrif_pump1.get_flow())  # Input = centrif pump
+    gear_in_gate = in_valve2.press_drop(throttle1.flow_out)  # Input = centrif pump throttle
+    gear_out_gate = out_valve2.press_drop(gear_pump1.get_flow())  # Input = gear pump
+    centrif_in_gate = in_valve1.press_drop(throttle2.flow_out)  # Input = gear pump throttle
+
+    print("Centrif Pump inlet: {:.2f}".format(centrif_in_gate))
+    print("Centrif Pump outlet: {:.2f}".format(centrif_out_gate))
+    print("Gear Pump inlet: {:.2f}".format(gear_in_gate))
+    print("Gear Pump outlet: {:.2f}".format(gear_out_gate))
 
 
 def get_gate_press_out():
     """Check the outlet pressure of gate valves."""
     print("\n***Gate valve outlet press***")
-    print("Centrif Pump inlet: {}".format(in_valve1.press_out))
-    print("Centrif Pump outlet: {}".format(out_valve1.press_out))
-    print("Gear Pump inlet: {}".format(in_valve2.press_out))
-    print("Gear Pump outlet: {}".format(out_valve2.press_out))
+    centrif_out_gate = out_valve1.get_press(centrif_pump1.outlet_pressure)  # Input = centrif pump outlet
+    gear_in_gate = in_valve2.get_press(throttle1.press_out)  # Input = centrif pump throttle
+    gear_out_gate = out_valve2.get_press(gear_pump1.outlet_pressure)  # Input = gear pump outlet
+    centrif_in_gate = in_valve1.get_press(throttle2.press_out)   # Input = gear pump throttle
+
+    print("Centrif Pump inlet: {:.2f}".format(centrif_in_gate))
+    print("Centrif Pump outlet: {:.2f}".format(centrif_out_gate))
+    print("Gear Pump inlet: {:.2f}".format(gear_in_gate))
+    print("Gear Pump outlet: {:.2f}".format(gear_out_gate))
 
 
 def set_globe_valves(percent):
@@ -102,15 +112,21 @@ def set_globe_valves(percent):
 def get_globe_delta():
     """Check the pressure drop across the globe valves."""
     print("\n***Globe valve press drop***")
-    print("Centrif Pump throttle: {}".format(throttle1.deltaP))
-    print("Gear Pump throttle: {}".format(throttle2.deltaP))
+    centrif_throttle = throttle1.press_drop(out_valve1.flow_out)
+    gear_throttle = throttle2.press_drop(out_valve2.flow_out)
+
+    print("Centrif Pump throttle: {:.2f}".format(centrif_throttle))  # Input = centrif pump gate out
+    print("Gear Pump throttle: {:.2f}".format(gear_throttle))  # Input = gear pump gate out
 
 
 def get_globe_press_out():
     """Check the outlet pressure of the throttle valves."""
     print("\n***Globe valve outlet press")
-    print("Centrif Pump throttle: {}".format(throttle1.press_out))
-    print("Gear Pump throttle: {}".format(throttle2.press_out))
+    centrif_globe_out = throttle1.get_press(out_valve1.press_out)
+    gear_globe_out = throttle2.get_press(out_valve2.press_out)
+
+    print("Centrif Pump throttle: {:.2f}".format(centrif_globe_out)) # Input = centrif pump gate out
+    print("Gear Pump throttle: {:.2f}".format(gear_globe_out))  # Input = gear pump gate out
 
 
 def start_centrif_pump(speed, flow, press_out):
@@ -133,7 +149,7 @@ def start_gear_pump(speed):
 
 if __name__ == "__main__":
     print("INITIAL CONDITIONS")
-    initial_state()
+    # initial_state()
 
     print("\nOPEN VALVES")
     open_gates()
@@ -150,4 +166,3 @@ if __name__ == "__main__":
     get_gate_press_out()
     get_globe_delta()
     get_globe_press_out()
-

@@ -66,7 +66,7 @@ class Valve:
         """
         self.Cv = 15 * math.pow(diameter, 2)
 
-    def press_drop(self, spec_grav=1.0):
+    def press_drop(self, flow_in, spec_grav=1.0):
         """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
@@ -75,6 +75,7 @@ class Valve:
 
         Specific gravity of water is 1.
 
+        :param flow_in: System flow rate into the valve
         :param spec_grav: Fluid specific gravity; assumes fluid is water
 
         :except ZeroDivisionError: Valve coefficient not provided
@@ -82,8 +83,9 @@ class Valve:
         :return: Update pressure drop across valve
         """
         try:
-            x = (self.flow_in / self.Cv)
+            x = (flow_in / self.Cv)
             self.deltaP = math.pow(x, 2) * spec_grav
+            return self.deltaP
         except ZeroDivisionError:
             return "The valve coefficient must be > 0."
 
@@ -109,9 +111,9 @@ class Valve:
         except ValueError:
             raise  # Re-raise error for testing
 
-    def get_press(self):
+    def get_press(self, press_in):
         """Get the valve outlet pressure."""
-        self.press_out = self.press_in - self.deltaP
+        self.press_out = press_in - self.deltaP
         return self.press_out
 
     def get_position(self):
