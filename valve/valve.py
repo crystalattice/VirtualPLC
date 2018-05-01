@@ -113,7 +113,8 @@ class Valve:
 
     def get_press(self, press_in):
         """Get the valve outlet pressure."""
-        self.press_out = press_in - self.deltaP
+        self.press_in = press_in
+        self.press_out = self.press_in - self.deltaP
         return self.press_out
 
     def get_position(self):

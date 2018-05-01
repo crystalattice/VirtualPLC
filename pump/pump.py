@@ -45,11 +45,11 @@ class Pump:
         """
         self.name = name
         self.flow_rate = float(flow_rate)
-        self.head = float(pump_head_in)
+        self.head_in = float(pump_head_in)
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
         self.displacement = float(displacement)
-        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head_in, self.outlet_pressure))
 # TODO: Move pump-specific parameters to their appropriate classes
 # TODO: Identify and decorate properties
 
@@ -197,7 +197,7 @@ class CentrifPump(Pump):
         self.flow_rate = v1 * (n2 / n1)  # New flow rate
         self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
         self.speed = n2  # Replace old speed with new value
-        delta_p = abs(self.diff_press_psi(self.head, self.outlet_pressure))  # Account for negative differential
+        delta_p = abs(self.diff_press_psi(self.head_in, self.outlet_pressure))  # Account for negative differential
         self.wattage = self.pump_power(self.flow_rate, delta_p)
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
@@ -222,7 +222,7 @@ class CentrifPump(Pump):
             self.outlet_pressure = out_ft
         else:
             return "Outlet pump pressure required."
-        delta_p = abs(self.outlet_pressure - self.head)
+        delta_p = abs(self.outlet_pressure - self.head_in)
         self.wattage = self.pump_power(self.flow_rate, delta_p)
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
@@ -273,7 +273,7 @@ class PositiveDisplacement(Pump):
         self.speed = self.set_speed(new_speed)
 
         self.flow_rate = self.speed * self.displacement
-        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
+        self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head_in, self.outlet_pressure))
 
         return self.flow_rate, self.wattage, self.speed
 # TODO: Account for different flow rates based on outlet pressure
