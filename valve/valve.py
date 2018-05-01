@@ -33,7 +33,8 @@ class Valve:
     Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0):
+    def __init__(self, name="", sys_flow_in=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0,
+                 press_in=0.0):
         """Initialize valve.
 
         :param name: Instance name
@@ -52,7 +53,9 @@ class Valve:
         self.setpoint_open = open_press
         self.setpoint_close = close_press
         self.press_out = 0.0
+        self.press_in = press_in
 # TODO: Move valve-specific parameters to their appropriate classes
+# TODO: Identify and decorate properties
 
     def calc_coeff(self, diameter):
         """Roughly calculate Cv based on valve diameter.
@@ -72,7 +75,7 @@ class Valve:
 
         Specific gravity of water is 1.
 
-        :param spec_grav: Fluid specific gravity
+        :param spec_grav: Fluid specific gravity; assumes fluid is water
 
         :except ZeroDivisionError: Valve coefficient not provided
 
@@ -106,9 +109,9 @@ class Valve:
         except ValueError:
             raise  # Re-raise error for testing
 
-    def get_press(self, press_in):
+    def get_press(self):
         """Get the valve outlet pressure."""
-        self.press_out = press_in - self.deltaP
+        self.press_out = self.press_in - self.deltaP
         return self.press_out
 
     def get_position(self):

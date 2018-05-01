@@ -51,6 +51,7 @@ class Pump:
         self.displacement = float(displacement)
         self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
 # TODO: Move pump-specific parameters to their appropriate classes
+# TODO: Identify and decorate properties
 
     @staticmethod
     def set_speed(new_speed):

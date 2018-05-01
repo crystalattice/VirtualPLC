@@ -73,10 +73,22 @@ def open_gates():
         print(valve.read_position())
 
 
-def check_gate_press():
+def get_gate_delta():
     """Check the pressure drop across the gate valves."""
     print("\n***Gate valve press drop***")
+    print("Centrif Pump inlet: {}".format(in_valve1.deltaP))
+    print("Centrif Pump outlet: {}".format(out_valve1.deltaP))
+    print("Gear Pump inlet: {}".format(in_valve2.deltaP))
+    print("Gear Pump outlet: {}".format(out_valve2.deltaP))
 
+
+def get_gate_press_out():
+    """Check the outlet pressure of gate valves."""
+    print("\n***Gate valve outlet press***")
+    print("Centrif Pump inlet: {}".format(in_valve1.press_out))
+    print("Centrif Pump outlet: {}".format(out_valve1.press_out))
+    print("Gear Pump inlet: {}".format(in_valve2.press_out))
+    print("Gear Pump outlet: {}".format(out_valve2.press_out))
 
 
 def set_globe_valves(percent):
@@ -85,6 +97,20 @@ def set_globe_valves(percent):
     for valve in globe_valves:
         valve.turn_handle(percent)
         print(valve.read_position())
+
+
+def get_globe_delta():
+    """Check the pressure drop across the globe valves."""
+    print("\n***Globe valve press drop***")
+    print("Centrif Pump throttle: {}".format(throttle1.deltaP))
+    print("Gear Pump throttle: {}".format(throttle2.deltaP))
+
+
+def get_globe_press_out():
+    """Check the outlet pressure of the throttle valves."""
+    print("\n***Globe valve outlet press")
+    print("Centrif Pump throttle: {}".format(throttle1.press_out))
+    print("Gear Pump throttle: {}".format(throttle2.press_out))
 
 
 def start_centrif_pump(speed, flow, press_out):
@@ -111,9 +137,17 @@ if __name__ == "__main__":
 
     print("\nOPEN VALVES")
     open_gates()
+    get_gate_delta()
+    get_gate_press_out()
     set_globe_valves(100)
+    get_globe_delta()
+    get_globe_press_out()
 
     print("\nSTART PUMPS")
     start_centrif_pump(1750, 75, 7.5)
     start_gear_pump(100)
+    get_gate_delta()
+    get_gate_press_out()
+    get_globe_delta()
+    get_globe_press_out()
 
