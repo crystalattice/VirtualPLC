@@ -7,7 +7,7 @@ class TestGate():
         assert g.read_position() == "Gate1 is closed."
         g.open()
         assert g.read_position() == "Gate1 is open."
-        g.cls_change_position(50)
+        g.change_position(50)
         assert g.read_position() == "Warning! Gate1 is partially open."
 
     def test_turn_handle(self):

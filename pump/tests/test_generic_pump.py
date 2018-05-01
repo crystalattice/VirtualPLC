@@ -31,23 +31,23 @@ class TestPumpSpeed:
 class TestPumpReadSpeed:
     def test_cls_read_speed_expected(self):
         p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-        assert p.cls_read_speed() == 300
+        assert p.get_speed() == 300
 
 
 class TestPumpReadPress:
     def test_cls_read_press(self):
         p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-        assert p.cls_read_press() == 45.0
+        assert p.get_press() == 45.0
 
 
 class TestPumpReadFlow:
     def test_cls_read_flow(self):
         p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-        assert p.cls_read_flow() == 100.0
+        assert p.get_flow() == 100.0
 
 
 class TestPumpReadPower:
     def test_cls_read_power(self):
         # self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
         p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-        assert p.cls_read_power() == 1.4372438473837463
+        assert p.get_power() == 1.4372438473837463

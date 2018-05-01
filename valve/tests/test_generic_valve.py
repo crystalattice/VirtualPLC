@@ -30,8 +30,8 @@ class TestValvePress:
     # x = (flow / self.Cv)
     # self.deltaP = math.pow(x, 2) * spec_grav
     def test_press_drop_expected(self):
-        v = Valve(flow_coeff=15.0)
-        v.press_drop(100)
+        v = Valve(flow_coeff=15.0, sys_flow_in=100)
+        v.press_drop()
         assert v.deltaP == 44.44444444444445
 
     def test_press_drop_zero(self):
@@ -40,8 +40,8 @@ class TestValvePress:
         assert v.deltaP == 0
 
     def test_press_drop_neg(self):
-        v = Valve(flow_coeff=15.0)
-        v.press_drop(-100)
+        v = Valve(flow_coeff=15.0, sys_flow_in=-100)
+        v.press_drop()
         assert v.deltaP == 44.44444444444445
 
     def test_press_drop_str(self):
@@ -99,19 +99,19 @@ class TestValveFlow:
 class TestValvePosition:
     def test_cls_get_position(self):
         v = Valve()
-        assert v.cls_get_position() == 0
+        assert v.get_position() == 0
 
     def test_cls_change_position(self):
         v = Valve()
-        v.cls_change_position(100)
-        assert v.cls_get_position() == 100
+        v.change_position(100)
+        assert v.get_position() == 100
 
     def test_open(self):
         v = Valve()
         v.open()
-        assert v.cls_get_position() == 100
+        assert v.get_position() == 100
 
     def test_close(self):
         v = Valve(position=100)
         v.close()
-        assert v.cls_get_position() == 0
+        assert v.get_position() == 0

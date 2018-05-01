@@ -14,24 +14,26 @@ Date: 4/26/18
 Version 0.1
     Initial build
 """
-# Valve parameters: name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0
+# Valve parameters: name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0
 # Pump parameters: name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0
 from pump.pump import CentrifPump, PositiveDisplacement
 from valve.valve import Gate, Globe, Relief
 
 
 # Pump 1 group (centrifugal)
-in_valve1 = Gate("Centrifugal Pump inlet", flow_coeff=90)
-out_valve1 = Gate("Centrifugal Pump outlet", flow_coeff=90)
 centrif_pump1 = CentrifPump("Centrifugal Pump", pump_head_in=20)
-throttle1 = Globe("Centrifugal Pump throttle", flow_coeff=30)
+out_valve1 = Gate("Centrifugal Pump outlet", flow_coeff=90, sys_flow_in=centrif_pump1.get_flow())
+throttle1 = Globe("Centrifugal Pump throttle", flow_coeff=30, sys_flow_in=centrif_pump1.get_flow())
+in_valve2 = Gate("Gear Pump inlet", flow_coeff=270, sys_flow_in=centrif_pump1.get_flow())
+
 
 # Pump 2 group (gear)
-in_valve2 = Gate("Gear Pump inlet", flow_coeff=270)
-out_valve2 = Gate("Gear Pump outlet", flow_coeff=270)
 gear_pump1 = PositiveDisplacement("Gear Pump", displacement=0.096, pump_head_in=throttle1.press_out, press_out=10)
-throttle2 = Globe("Gear Pump throttle", flow_coeff=30)
-relief1 = Relief("Gear Pump relief", flow_coeff=0.71, open_press=150, close_press=125)
+out_valve2 = Gate("Gear Pump outlet", flow_coeff=270, sys_flow_in=gear_pump1.get_flow())
+throttle2 = Globe("Gear Pump throttle", flow_coeff=30, sys_flow_in=gear_pump1.get_flow())
+relief1 = Relief("Gear Pump relief", flow_coeff=0.71, open_press=150, close_press=125, sys_flow_in=gear_pump1.get_flow())
+in_valve1 = Gate("Centrifugal Pump inlet", flow_coeff=90, sys_flow_in=gear_pump1.get_flow())
+
 
 gate_valves = [in_valve1, out_valve1, in_valve2, out_valve2]
 globe_valves = [throttle1, throttle2]
@@ -51,16 +53,16 @@ def initial_state():
     print(relief1.read_position())
 
     print("\n***Centrifugal Pump***")
-    print(centrif_pump1.get_speed())
-    print(centrif_pump1.get_flowrate())
-    print(centrif_pump1.get_pressure())
-    print(centrif_pump1.get_power())
+    print(centrif_pump1.get_speed_str())
+    print(centrif_pump1.get_flow_str())
+    print(centrif_pump1.get_press_str())
+    print(centrif_pump1.get_power_str())
 
     print("\n***Gear Pump***")
-    print(gear_pump1.get_speed())
-    print(gear_pump1.get_flowrate())
-    print(gear_pump1.get_pressure())
-    print(gear_pump1.get_power())
+    print(gear_pump1.get_speed_str())
+    print(gear_pump1.get_flow_str())
+    print(gear_pump1.get_press_str())
+    print(gear_pump1.get_power_str())
 
 
 def open_gates():
@@ -69,6 +71,12 @@ def open_gates():
     for valve in gate_valves:
         valve.open()
         print(valve.read_position())
+
+
+def check_gate_press():
+    """Check the pressure drop across the gate valves."""
+    print("\n***Gate valve press drop***")
+
 
 
 def set_globe_valves(percent):
@@ -82,19 +90,19 @@ def set_globe_valves(percent):
 def start_centrif_pump(speed, flow, press_out):
     print("***Start centrifugal pump***")
     centrif_pump1.start_pump(speed, flow, press_out)
-    print(centrif_pump1.get_speed())
-    print(centrif_pump1.get_flowrate())
-    print(centrif_pump1.get_pressure())
-    print(centrif_pump1.get_power())
+    print(centrif_pump1.get_speed_str())
+    print(centrif_pump1.get_flow_str())
+    print(centrif_pump1.get_press_str())
+    print(centrif_pump1.get_power_str())
 
 
 def start_gear_pump(speed):
     print("\n***Start gear pump***")
     gear_pump1.adjust_speed(speed)
-    print(gear_pump1.get_speed())
-    print(gear_pump1.get_flowrate())
-    print(gear_pump1.get_pressure())
-    print(gear_pump1.get_power())
+    print(gear_pump1.get_speed_str())
+    print(gear_pump1.get_flow_str())
+    print(gear_pump1.get_press_str())
+    print(gear_pump1.get_power_str())
 
 
 if __name__ == "__main__":
@@ -108,3 +116,4 @@ if __name__ == "__main__":
     print("\nSTART PUMPS")
     start_centrif_pump(1750, 75, 7.5)
     start_gear_pump(100)
+

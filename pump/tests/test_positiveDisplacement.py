@@ -6,31 +6,31 @@ class TestSpeed:
     def test_get_speed(self):
         p = PositiveDisplacement()
         p.adjust_speed(0)
-        assert p.get_speed() == "The pump is stopped."
+        assert p.get_speed_str() == "The pump is stopped."
         p1 = PositiveDisplacement(pump_speed=75, displacement=0.05)
         p1.adjust_speed(75)
-        assert p1.get_speed() == "The pump is running at 75 rpm."
+        assert p1.get_speed_str() == "The pump is running at 75 rpm."
 
 
 class TestFlow:
     def test_get_flowrate(self):
         p = PositiveDisplacement(pump_speed=75, displacement=0.05)
         p.adjust_speed(p.speed)
-        assert p.get_flowrate() == "The pump outlet flow rate is 3.75 gpm."
+        assert p.get_flow_str() == "The pump outlet flow rate is 3.75 gpm."
 
 
 class TestPress:
     def test_get_pressure(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(p.speed)
-        assert p.get_pressure() == "The pump pressure is 24.50 psi."
+        assert p.get_press_str() == "The pump pressure is 24.50 psi."
 
 
 class TestPower:
     def test_get_power(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(p.speed)
-        assert p.get_power() == "The power usage for the pump is 0.04 kW."
+        assert p.get_power_str() == "The power usage for the pump is 0.04 kW."
 
 
 class TestAdjustSpeed:

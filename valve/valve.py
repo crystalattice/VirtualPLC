@@ -33,22 +33,21 @@ class Valve:
     Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0):
+    def __init__(self, name="", sys_flow_in=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0):
         """Initialize valve.
 
         :param name: Instance name
         :param sys_flow_in: Flow rate into the valve
         :param position: Percentage valve is open
         :param flow_coeff: Affect valve has on flow rate; assumes a 2 inch, wide open valve
-        :param drop: Pressure drop across the valve, assuming valve is wide open
         :param open_press: Pressure required to open the valve
         :param close_press: Pressure required to close the valve
         """
         self.name = name
         self.position = int(position)  # Truncate float values for ease of calculations
         self.Cv = float(flow_coeff)
-        self.deltaP = float(drop)
         self.flow_in = float(sys_flow_in)
+        self.deltaP = float(drop)
         self.flow_out = 0.0
         self.setpoint_open = open_press
         self.setpoint_close = close_press
@@ -64,7 +63,7 @@ class Valve:
         """
         self.Cv = 15 * math.pow(diameter, 2)
 
-    def press_drop(self, flow, spec_grav=1.0):
+    def press_drop(self, spec_grav=1.0):
         """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
@@ -73,7 +72,6 @@ class Valve:
 
         Specific gravity of water is 1.
 
-        :param flow: System flow rate
         :param spec_grav: Fluid specific gravity
 
         :except ZeroDivisionError: Valve coefficient not provided
@@ -81,7 +79,7 @@ class Valve:
         :return: Update pressure drop across valve
         """
         try:
-            x = (flow / self.Cv)
+            x = (self.flow_in / self.Cv)
             self.deltaP = math.pow(x, 2) * spec_grav
         except ZeroDivisionError:
             return "The valve coefficient must be > 0."
@@ -108,16 +106,16 @@ class Valve:
         except ValueError:
             raise  # Re-raise error for testing
 
-    def cls_get_press(self, press_in):
+    def get_press(self, press_in):
         """Get the valve outlet pressure."""
         self.press_out = press_in - self.deltaP
         return self.press_out
 
-    def cls_get_position(self):
+    def get_position(self):
         """Get position of valve, in percent open."""
         return self.position
 
-    def cls_change_position(self, new_position):
+    def change_position(self, new_position):
         """Change the valve's position.
 
         If new position is not an integer, an error is raised.
@@ -138,11 +136,11 @@ class Valve:
 
     def open(self):
         """Open the valve"""
-        self.cls_change_position(100)
+        self.change_position(100)
 
     def close(self):
         """Close the valve"""
-        self.cls_change_position(0)
+        self.change_position(0)
 
 
 class Gate(Valve):
@@ -158,9 +156,9 @@ class Gate(Valve):
     def read_position(self):
         """Identify the position of the valve.
         """
-        if self.cls_get_position() == 0:
+        if self.get_position() == 0:
             return "{name} is closed.".format(name=self.name)
-        elif self.cls_get_position() == 100:
+        elif self.get_position() == 100:
             return "{name} is open.".format(name=self.name)
         else:  # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)
@@ -192,7 +190,7 @@ class Globe(Valve):
 
     def read_position(self):
         """Identify the position of the valve."""
-        return "{name} is {position}% open.".format(name=self.name, position=self.cls_get_position())
+        return "{name} is {position}% open.".format(name=self.name, position=self.get_position())
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -201,8 +199,8 @@ class Globe(Valve):
 
         :return: Update outlet flow rate and valve pressure drop
         """
-        self.cls_change_position(new_position)
-        if self.cls_get_position() == 0:
+        self.change_position(new_position)
+        if self.get_position() == 0:
             self.flow_out = 0.0
             self.deltaP = 0.0
         else:
@@ -232,9 +230,9 @@ class Relief(Valve):
 
         :return: The open/closed status of the valve.
         """
-        if self.cls_get_position() == 0:
+        if self.get_position() == 0:
             return "{name} is closed.".format(name=self.name)
-        elif self.cls_get_position() == 100:
+        elif self.get_position() == 100:
             return "{name} is open.".format(name=self.name)
         else:   # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)

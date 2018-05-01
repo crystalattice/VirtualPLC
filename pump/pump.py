@@ -75,19 +75,19 @@ class Pump:
         else:
             return new_speed
 
-    def cls_read_speed(self):
+    def get_speed(self):
         """Get the current speed of the pump."""
         return self.speed
 
-    def cls_read_press(self):
+    def get_press(self):
         """Get the current outlet pressure of the pump."""
         return self.outlet_pressure
 
-    def cls_read_flow(self):
+    def get_flow(self):
         """Get the current outlet flow rate of the pump."""
         return self.flow_rate
 
-    def cls_read_power(self):
+    def get_power(self):
         """Get the current power draw of the pump."""
         return self.wattage
 
@@ -145,24 +145,24 @@ class CentrifPump(Pump):
         pump_laws()
     """
 
-    def get_speed(self):
+    def get_speed_str(self):
         """Get the current speed of the pump, in rpm."""
-        if self.cls_read_speed() == 0:
+        if self.get_speed() == 0:
                 return "The pump is stopped."
         else:
-            return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
+            return "The pump is running at {speed} rpm.".format(speed=self.get_speed())
 
-    def get_flowrate(self):
+    def get_flow_str(self):
         """Get the current flow rate of the pump."""
-        return "The pump output flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
+        return "The pump output flow rate is {flow} gpm.".format(flow=self.get_flow())
 
-    def get_pressure(self):
+    def get_press_str(self):
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press:.2f} psi.".format(press=self.cls_read_press())
+        return "The pump pressure is {press:.2f} psi.".format(press=self.get_press())
 
-    def get_power(self):
+    def get_power_str(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.get_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump.
@@ -241,24 +241,24 @@ class PositiveDisplacement(Pump):
         adjust_speed()
     """
 
-    def get_speed(self):
+    def get_speed_str(self):
         """Get the current speed of the pump, in rpm."""
-        if self.cls_read_speed() == 0:
+        if self.get_speed() == 0:
                 return "The pump is stopped."
         else:
-            return "The pump is running at {speed} rpm.".format(speed=self.cls_read_speed())
+            return "The pump is running at {speed} rpm.".format(speed=self.get_speed())
 
-    def get_flowrate(self):
+    def get_flow_str(self):
         """Get the current flow rate of the pump."""
-        return "The pump outlet flow rate is {flow} gpm.".format(flow=self.cls_read_flow())
+        return "The pump outlet flow rate is {flow} gpm.".format(flow=self.get_flow())
 
-    def get_pressure(self):
+    def get_press_str(self):
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press:.2f} psi.".format(press=self.cls_read_press())
+        return "The pump pressure is {press:.2f} psi.".format(press=self.get_press())
 
-    def get_power(self):
+    def get_power_str(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.cls_read_power())
+        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.get_power())
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump, assuming constant outlet pressure.
@@ -283,33 +283,33 @@ if __name__ == "__main__":
     # name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0, displacement=0.0
     pump1 = CentrifPump("Pumpy", 75, 12, 25, 125, 0.03)
     print("{} created.".format(pump1.name))
-    print(pump1.get_speed())
-    print(pump1.get_flowrate())
-    print(pump1.get_power())
-    print(pump1.get_pressure())
+    print(pump1.get_speed_str())
+    print(pump1.get_flow_str())
+    print(pump1.get_power_str())
+    print(pump1.get_press_str())
     pump1.adjust_speed(50)
-    print(pump1.get_speed())
-    print(pump1.get_flowrate())
-    print(pump1.get_power())
-    print(pump1.get_pressure())
+    print(pump1.get_speed_str())
+    print(pump1.get_flow_str())
+    print(pump1.get_power_str())
+    print(pump1.get_press_str())
     pump1.adjust_speed(0)
-    print(pump1.get_speed())
-    print(pump1.get_flowrate())
-    print(pump1.get_power())
-    print(pump1.get_pressure())
+    print(pump1.get_speed_str())
+    print(pump1.get_flow_str())
+    print(pump1.get_power_str())
+    print(pump1.get_press_str())
 
     pump2 = PositiveDisplacement("Grumpy", 100, 0, 200, 300, 0.15)
     print("\n{} created.".format(pump2.name))
-    print(pump2.get_speed())
-    print(pump2.get_flowrate())
-    print(pump2.get_power())
+    print(pump2.get_speed_str())
+    print(pump2.get_flow_str())
+    print(pump2.get_power_str())
     pump2.adjust_speed(50)
-    print(pump2.get_speed())
-    print(pump2.get_flowrate())
-    print(pump2.get_power())
+    print(pump2.get_speed_str())
+    print(pump2.get_flow_str())
+    print(pump2.get_power_str())
     pump2.adjust_speed(0)
-    print(pump2.get_speed())
-    print(pump2.get_flowrate())
-    print(pump2.get_power())
+    print(pump2.get_speed_str())
+    print(pump2.get_flow_str())
+    print(pump2.get_power_str())
 
     p = Pump(name="", flow_rate=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
