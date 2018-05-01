@@ -275,6 +275,7 @@ class PositiveDisplacement(Pump):
         self.wattage = self.pump_power(self.flow_rate, self.diff_press_psi(self.head, self.outlet_pressure))
 
         return self.flow_rate, self.wattage, self.speed
+# TODO: Account for different flow rates based on outlet pressure
 
 
 if __name__ == "__main__":

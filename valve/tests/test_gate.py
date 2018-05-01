@@ -3,17 +3,17 @@ from ..valve import Gate
 
 class TestGate():
     def test_read_position(self):
-        g = Gate()
-        assert g.read_position() == "The valve is closed."
+        g = Gate(name="Gate1")
+        assert g.read_position() == "Gate1 is closed."
         g.open()
-        assert g.read_position() == "The valve is open."
+        assert g.read_position() == "Gate1 is open."
         g.cls_change_position(50)
-        assert g.read_position() == "Warning! The valve is partially open."
+        assert g.read_position() == "Warning! Gate1 is partially open."
 
     def test_turn_handle(self):
-        g = Gate()
+        g = Gate(name="Gate1")
         g.turn_handle(100)
-        assert g.read_position() == "The valve is open."
+        assert g.read_position() == "Gate1 is open."
         g.turn_handle(0)
-        assert g.read_position() == "The valve is closed."
+        assert g.read_position() == "Gate1 is closed."
         assert g.turn_handle(50) == "Warning: Invalid valve position."

@@ -3,20 +3,20 @@ from ..valve import Globe
 
 class TestGlobe():
     def test_read_position(self):
-        g = Globe()
-        assert g.read_position() == "The valve is 0% open."
+        g = Globe(name="Globe1")
+        assert g.read_position() == "Globe1 is 0% open."
 
     def test_turn_handle(self):
-        g = Globe()
+        g = Globe(name="Globe1")
         g.turn_handle(40)
-        assert g.read_position() == "The valve is 40% open."
+        assert g.read_position() == "Globe1 is 40% open."
 
     def test_open(self):
-        g = Globe()
+        g = Globe(name="Globe1")
         g.open()
-        assert g.read_position() == "The valve is 100% open."
+        assert g.read_position() == "Globe1 is 100% open."
 
     def test_close(self):
-        g = Globe()
+        g = Globe(name="Globe1")
         g.close()
-        assert g.read_position() == "The valve is 0% open."
+        assert g.read_position() == "Globe1 is 0% open."

@@ -52,6 +52,7 @@ class Valve:
         self.flow_out = 0.0
         self.setpoint_open = open_press
         self.setpoint_close = close_press
+        self.press_out = 0.0
 # TODO: Move valve-specific parameters to their appropriate classes
 
     def calc_coeff(self, diameter):
@@ -106,6 +107,11 @@ class Valve:
                 self.flow_out = flow_coeff / math.sqrt(x)
         except ValueError:
             raise  # Re-raise error for testing
+
+    def cls_get_press(self, press_in):
+        """Get the valve outlet pressure."""
+        self.press_out = press_in - self.deltaP
+        return self.press_out
 
     def cls_get_position(self):
         """Get position of valve, in percent open."""
