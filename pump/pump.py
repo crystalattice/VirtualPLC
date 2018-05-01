@@ -215,8 +215,13 @@ class CentrifPump(Pump):
         """
         self.speed = speed
         self.flow_rate = flow
-        self.outlet_pressure = press_out
-        delta_p = abs(Pump.press_to_ft(press_out) - self.head)
+        if out_press > 0.0:
+            self.outlet_pressure = Pump.press_to_ft(out_press)
+        elif out_ft > 0.0:
+            self.outlet_pressure = out_ft
+        else:
+            return "Outlet pump pressure required."
+        delta_p = abs(self.outlet_pressure - self.head)
         self.wattage = self.pump_power(self.flow_rate, delta_p)
 
         return self.speed, self.flow_rate, self.outlet_pressure, self.wattage
