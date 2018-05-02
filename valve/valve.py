@@ -111,10 +111,11 @@ class Valve:
         except ValueError:
             raise  # Re-raise error for testing
 
-    def get_press(self, press_in):
+    def get_press_out(self, press_in):
         """Get the valve outlet pressure."""
-        self.press_in = press_in
-        self.press_out = self.press_in - self.deltaP
+        if press_in:
+            self.press_in = press_in  # In case the valve initialization didn't include it, or the value has changed
+        self.press_out = self.press_in - self.press_drop(self.flow_in)
         return self.press_out
 
     def get_position(self):

@@ -5,7 +5,7 @@ Simple_piping_demo.py
 
 Purpose: Creates a simple, closed-loop piping system, comprised of two pumps (one variable and one positive
 displacement), each with inlet and outlet gate valves and a throttle valve, and a pressure relief valve on the outlet of
-the positive displacement pump. Assumes 2 inch piping and a tank at the inlet of gate valve 1 that is 6 feet above the
+the positive displacement pump. Assumes 2 inch piping and a tank at the inlet of gate valve 1 that is 6 inches above the
 valve and has 10 feet of piping.
 
 Author: Cody Jackson
@@ -91,10 +91,10 @@ def get_gate_delta():
 def get_gate_press_out():
     """Check the outlet pressure of gate valves."""
     print("\n***Gate valve outlet press***")
-    centrif_out_gate = out_valve1.get_press(centrif_pump1.outlet_pressure)  # Input = centrif pump outlet
-    gear_in_gate = in_valve2.get_press(throttle1.press_out)  # Input = centrif pump throttle
-    gear_out_gate = out_valve2.get_press(gear_pump1.outlet_pressure)  # Input = gear pump outlet
-    centrif_in_gate = in_valve1.get_press(throttle2.press_out)   # Input = gear pump throttle
+    centrif_out_gate = out_valve1.get_press_out(centrif_pump1.outlet_pressure)  # Input = centrif pump outlet
+    gear_in_gate = in_valve2.get_press_out(throttle1.press_out)  # Input = centrif pump throttle
+    gear_out_gate = out_valve2.get_press_out(gear_pump1.outlet_pressure)  # Input = gear pump outlet
+    centrif_in_gate = in_valve1.get_press_out(throttle2.press_out)   # Input = gear pump throttle
 
     print("Centrif Pump inlet: {:.2f}".format(centrif_in_gate))
     print("Centrif Pump outlet: {:.2f}".format(centrif_out_gate))
@@ -123,8 +123,8 @@ def get_globe_delta():
 def get_globe_press_out():
     """Check the outlet pressure of the throttle valves."""
     print("\n***Globe valve outlet press")
-    centrif_globe_out = throttle1.get_press(out_valve1.press_out)
-    gear_globe_out = throttle2.get_press(out_valve2.press_out)
+    centrif_globe_out = throttle1.get_press_out(out_valve1.press_out)
+    gear_globe_out = throttle2.get_press_out(out_valve2.press_out)
 
     print("Centrif Pump throttle: {:.2f}".format(centrif_globe_out)) # Input = centrif pump gate out
     print("Gear Pump throttle: {:.2f}".format(gear_globe_out))  # Input = gear pump gate out
