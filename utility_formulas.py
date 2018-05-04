@@ -23,5 +23,17 @@ def gravity_flow_rate(diameter, slope, rough_coeff=140):
     return root_flow
 
 
+def static_head(height):
+    """Calculate the pressure due to height of fluid.
+
+    :param height: Fluid height, in feet
+
+    :return: Pressure, in psi
+    """
+    press = height / 2.31
+    return press
+
+
 if __name__ == "__main__":
     print(gravity_flow_rate(2, 0.6))
+    print(static_head(150))
