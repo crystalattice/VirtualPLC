@@ -66,14 +66,14 @@ class TestPumpLaws:
     def test_pump_laws_expected(self):
         p = CentrifPump("", flow_rate=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
         p.pump_laws(500)
-        assert p.flow_rate == 21.428571428571427
+        assert p.flow_rate_out == 21.428571428571427
         assert p.outlet_pressure == 0.5959183673469387
         assert p.wattage == 0.02243669828012262
 
     def test_pump_laws_zero(self):
         p = CentrifPump("", 100, 12, 45, 300, 0.12)
         p.pump_laws(0)
-        assert p.flow_rate == 0.0
+        assert p.flow_rate_out == 0.0
         assert p.outlet_pressure == 0.0
         assert p.wattage == 0.0
 

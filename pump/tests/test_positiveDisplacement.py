@@ -37,14 +37,14 @@ class TestAdjustSpeed:
     def test_adjust_speed_expected(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(25)
-        assert p.flow_rate == 1.25
+        assert p.flow_rate_out == 1.25
         assert p.wattage == 0.013338058432159764
         assert p.speed == 25
 
     def test_adjust_speed_zero(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(0)
-        assert p.flow_rate == 0.0
+        assert p.flow_rate_out == 0.0
         assert p.wattage == 0.0
         assert p.speed == 0
 
