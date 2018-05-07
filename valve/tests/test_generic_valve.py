@@ -56,34 +56,34 @@ class TestValveFlow:
     # self.flow_out = flow_coeff / math.sqrt(x)
     def test_sys_flow_rate_expected(self):
         v = Valve(flow_coeff=15.0, drop=7.5)
-        v.sys_flow_rate(v.Cv, v.deltaP)
+        v.valve_flow_out(v.Cv, v.deltaP)
         assert v.flow_out == 41.07919181288746
 
     def test_sys_flow_rate_zero_coeff(self):
         v = Valve(flow_coeff=0.0, drop=7.5)
         with pytest.raises(ValueError) as excinfo:
-            v.sys_flow_rate(v.Cv, v.deltaP)
+            v.valve_flow_out(v.Cv, v.deltaP)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_zero_press(self):
         v = Valve(flow_coeff=7.5, drop=0.0)
         with pytest.raises(ValueError) as excinfo:
-            v.sys_flow_rate(v.Cv, v.deltaP)
+            v.valve_flow_out(v.Cv, v.deltaP)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_neg_coeff(self):
         v = Valve(flow_coeff=-30.0)
         with pytest.raises(ValueError) as excinfo:
-            v.sys_flow_rate(v.Cv, v.deltaP)
+            v.valve_flow_out(v.Cv, v.deltaP)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Input values must be > 0."
 
     def test_sys_flow_rate_neg_press(self):
         v = Valve(drop=-30.0)
         with pytest.raises(ValueError) as excinfo:
-            v.sys_flow_rate(v.Cv, v.deltaP)
+            v.valve_flow_out(v.Cv, v.deltaP)
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Input values must be > 0."
 

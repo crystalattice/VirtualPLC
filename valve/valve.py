@@ -89,7 +89,7 @@ class Valve:
         except ZeroDivisionError:
             return "The valve coefficient must be > 0."
 
-    def sys_flow_rate(self, flow_coeff, press_drop, spec_grav=1.0):
+    def valve_flow_out(self, flow_coeff, press_drop, spec_grav=1.0):
         """Calculate the system flow rate through a valve, given a pressure drop.
 
         Flow rate = valve coefficient / sqrt(spec. grav. / press. drop)
@@ -108,6 +108,7 @@ class Valve:
             else:
                 x = spec_grav / press_drop
                 self.flow_out = flow_coeff / math.sqrt(x)
+                return self.flow_out
         except ValueError:
             raise  # Re-raise error for testing
 

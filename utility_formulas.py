@@ -77,6 +77,6 @@ def head_to_press(head, spec_grav=WATER_SPEC_GRAV):
 
 if __name__ == "__main__":
     print(gravity_flow_rate(2, 0.6))
-    print(static_head(150))
+    print(static_press(150))
     print(press_to_head(65.0))
     print(head_to_press(150))
