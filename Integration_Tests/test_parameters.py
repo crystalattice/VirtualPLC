@@ -3,8 +3,7 @@ import utility_formulas
 from pump.pump import CentrifPump, PositiveDisplacement
 from valve.valve import Gate, Globe, Relief
 
-"""Same as test_functions.py, except it verifies that the parameters of each instance are being set correctly.
-"""
+"""Same as test_functions.py, except it verifies that the parameters of each instance are being set correctly."""
 
 valve1 = Gate("Valve 1", position=100, flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 1.67),
               press_in=utility_formulas.static_press(14))
@@ -48,6 +47,7 @@ valve4.press_drop(valve4.flow_in)
 valve4.valve_flow_out(valve4.Cv, valve4.deltaP)
 valve4.get_press_out(valve4.press_in)
 
+
 # Utility functions
 def test_grav_flow():
     flow_rate = utility_formulas.gravity_flow_rate(2, 1.67)
@@ -57,6 +57,7 @@ def test_grav_flow():
 def test_static_press():
     press = utility_formulas.static_press(14)
     assert press == 6.0606060606060606
+
 
 # Gate Valve 1
 def test_v1_input_press():
@@ -78,6 +79,7 @@ def test_v1_output_flow():
 def test_v1_press_out():
     assert valve1.press_out == 3.512111811131609
 
+
 # Centrifugal Pump
 def test_pump1_input_press():
     assert pump1.head_in == 8.101304720057573
@@ -88,6 +90,7 @@ def test_pump1_start_pump():
     assert pump1.flow_rate_out == 50
     assert pump1.outlet_pressure == 16
     assert pump1.wattage == 0.11777800491229948
+
 
 # Globe valve 1
 def test_t1_input_press():
@@ -109,6 +112,7 @@ def test_t1_output_flow():
 def test_t1_press_out():
     assert throttle1.press_out == 10.331065759637188
 
+
 # Gate Valve 2
 def test_v2_input_press():
     assert valve2.press_in == 10.331065759637188
@@ -128,6 +132,7 @@ def test_v2_output_flow():
 
 def test_v2_press_out():
     assert valve2.press_out == 10.268565759637188
+
 
 # Gate Valve 3
 def test_v3_input_press():
@@ -149,6 +154,7 @@ def test_v3_output_flow():
 def test_v3_press_out():
     assert valve3.press_out == 10.206065759637188
 
+
 # Gear Pump
 def test_pump2_input_press():
     assert pump2.head_in == 23.542088964737797
@@ -159,9 +165,11 @@ def test_pump2_output():
     assert pump2.flow_rate_out == 28.8
     assert pump2.wattage == 0.10753003776038036
 
+
 # Relief Valve 1
 def test_relief1_input_press():
     assert relief1.press_in == 30
+
 
 # Globe Valve 2
 def test_t2_input_press():
@@ -182,6 +190,7 @@ def test_t2_output_flow():
 
 def test_t2_press_out():
     assert throttle2.press_out == 28.119183673469387
+
 
 # Gate Valve 4
 def test_v4_input_press():

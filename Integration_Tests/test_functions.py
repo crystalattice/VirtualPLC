@@ -19,7 +19,6 @@ throttle2 = Globe("Throttle 2", position=100, flow_coeff=21)
 valve4 = Gate("Valve 4", flow_coeff=200)
 
 
-
 # Utility functions
 def test_grav_flow():
     flow_rate = utility_formulas.gravity_flow_rate(2, 1.67)
@@ -29,6 +28,7 @@ def test_grav_flow():
 def test_static_press():
     press = utility_formulas.static_press(14)
     assert press == 6.0606060606060606
+
 
 # Gate Valve 1
 def test_v1_input_press():
@@ -53,6 +53,7 @@ def test_v1_press_out():
     press_out = valve1.get_press_out(valve1.press_in)
     assert press_out == 3.512111811131609
 
+
 # Centrifugal Pump
 def test_pump1_input_press():
     pump1.head_in = utility_formulas.press_to_head(valve1.press_out)
@@ -65,6 +66,7 @@ def test_pump1_start_pump():
     assert pump1.flow_rate_out == 50
     assert pump1.outlet_pressure == 16
     assert pump1.wattage == 0.11777800491229948
+
 
 # Globe valve 1
 def test_t1_input_press():
@@ -91,6 +93,7 @@ def test_t1_press_out():
     press_out = throttle1.get_press_out(throttle1.press_in)
     assert press_out == 10.331065759637188
 
+
 # Gate Valve 2
 def test_v2_input_press():
     valve2.press_in = throttle1.press_out
@@ -115,6 +118,7 @@ def test_v2_output_flow():
 def test_v2_press_out():
     press_out = valve2.get_press_out(valve2.press_in)
     assert press_out == 10.268565759637188
+
 
 # Gate Valve 3
 def test_v3_input_press():
@@ -141,6 +145,7 @@ def test_v3_press_out():
     press_out = valve3.get_press_out(valve3.press_in)
     assert press_out == 10.206065759637188
 
+
 # Gear Pump
 def test_pump2_input_press():
     pump2.head_in = utility_formulas.press_to_head(valve3.press_out)
@@ -153,10 +158,12 @@ def test_pump2_output():
     assert pump2.flow_rate_out == 28.8
     assert pump2.wattage == 0.10753003776038036
 
+
 # Relief Valve 1
 def test_relief1_input_press():
     relief1.press_in = pump2.outlet_pressure
     assert relief1.press_in == 30
+
 
 # Globe Valve 2
 def test_t2_input_press():
@@ -182,6 +189,7 @@ def test_t2_output_flow():
 def test_t2_press_out():
     press_out = throttle2.get_press_out(throttle2.press_in)
     assert press_out == 28.119183673469387
+
 
 # Gate Valve 4
 def test_v4_input_press():
