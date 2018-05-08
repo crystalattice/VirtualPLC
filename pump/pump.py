@@ -193,7 +193,7 @@ class CentrifPump(Pump):
         self.flow_rate_out = v1 * (n2 / n1)  # New flow rate
         self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
         self.speed = n2  # Replace old speed with new value
-        delta_p = self.diff_press_psi(utility_formulas.head_to_press(self.head_in), self.outlet_pressure)
+        delta_p = self.diff_press_psi(self.head_in, utility_formulas.press_to_head(self.outlet_pressure))
         self.wattage = self.pump_power(self.flow_rate_out, delta_p)
 
         return self.speed, self.flow_rate_out, self.outlet_pressure, self.wattage

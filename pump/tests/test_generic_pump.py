@@ -50,4 +50,4 @@ class TestPumpReadPower:
     def test_cls_read_power(self):
         # self.wattage = self.pump_power(self.flow_rate, self.diff_press(self.head, self.outlet_pressure))
         p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
-        assert p.get_power() == 1.4372438473837463
+        assert p.get_power() == 0.6224710060377437

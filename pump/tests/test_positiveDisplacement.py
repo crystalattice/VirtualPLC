@@ -30,7 +30,7 @@ class TestPower:
     def test_get_power(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(p.speed)
-        assert p.get_power_str() == "The power usage for the pump is 0.04 kW."
+        assert p.get_power_str() == "The power usage for the pump is 0.02 kW."
 
 
 class TestAdjustSpeed:
@@ -38,7 +38,7 @@ class TestAdjustSpeed:
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(25)
         assert p.flow_rate_out == 1.25
-        assert p.wattage == 0.013338058432159764
+        assert p.wattage == 0.005776719563607849
         assert p.speed == 25
 
     def test_adjust_speed_zero(self):

@@ -14,7 +14,7 @@ class TestPumpSpeed():
 
 class TestFlowrate:
     def test_get_flowrate(self):
-        p = CentrifPump(flow_rate=100.0)
+        p = CentrifPump(flow_rate_out=100.0)
         assert p.get_flow_str() == "The pump output flow rate is 100.0 gpm."
 
 
@@ -27,17 +27,17 @@ class TestPressure:
 class TestPower:
     def test_get_power(self):
         p = CentrifPump("", 100, 12, 45, 300, 0.12)
-        assert p.get_power_str() == "The power usage for the pump is 1.44 kW."
+        assert p.get_power_str() == "The power usage for the pump is 0.62 kW."
 
 
 class TestChangeSpeed:
     def test_adjust_speed_expected(self):
-        p = CentrifPump("", flow_rate=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
+        p = CentrifPump("", flow_rate_out=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
         p.adjust_speed(500)
         assert p.get_speed_str() == "The pump is running at 500 rpm."
         assert p.get_flow_str() == "The pump output flow rate is 21.428571428571427 gpm."
         assert p.get_press_str() == "The pump pressure is 0.60 psi."
-        assert p.get_power_str() == "The power usage for the pump is 0.02 kW."
+        assert p.get_power_str() == "The power usage for the pump is 0.01 kW."
 
     def test_adjust_speed_neg(self):
         p = CentrifPump("", 100, 12, 45, 300, 0.12)
@@ -64,11 +64,11 @@ class TestChangeSpeed:
 
 class TestPumpLaws:
     def test_pump_laws_expected(self):
-        p = CentrifPump("", flow_rate=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
+        p = CentrifPump("", flow_rate_out=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
         p.pump_laws(500)
         assert p.flow_rate_out == 21.428571428571427
         assert p.outlet_pressure == 0.5959183673469387
-        assert p.wattage == 0.02243669828012262
+        assert p.wattage == 0.006569936061502869
 
     def test_pump_laws_zero(self):
         p = CentrifPump("", 100, 12, 45, 300, 0.12)
