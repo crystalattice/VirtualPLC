@@ -10,9 +10,13 @@ Water level is 4 feet above tank bottom; total water head = 14 feet.
 valve1 = Gate("Valve 1", flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 1.67),
               press_in=utility_formulas.static_press(14))
 pump1 = CentrifPump("Pump 1")
-throttle1 = Globe("Throttle 2", position=100, flow_coeff=21)
+throttle1 = Globe("Throttle 1", position=100, flow_coeff=21)
 valve2 = Gate("Valve 2", flow_coeff=200)
 valve3 = Gate("Valve 3", flow_coeff=200)
+pump2 = PositiveDisplacement("Gear Pump", displacement=0.096, press_out=30)
+relief1 = Relief("Relief 1", open_press=60, close_press=55)
+throttle2 = Globe("Throttle 2", position=100, flow_coeff=21)
+
 
 # Utility functions
 def test_grav_flow():
@@ -134,3 +138,45 @@ def test_v3_output_flow():
 def test_v3_press_out():
     press_out = valve3.get_press_out(valve3.press_in)
     assert press_out == 10.206065759637188
+
+# Gear Pump
+def test_pump2_input_press():
+    pump2.head_in = utility_formulas.press_to_head(valve3.press_out)
+    assert pump2.head_in == 23.542088964737797
+
+
+def test_pump2_output():
+    pump2.adjust_speed(300)
+    assert pump2.speed == 300
+    assert pump2.flow_rate_out == 28.8
+    assert pump2.wattage == 0.10753003776038036
+
+# Relief Valve 1
+def test_relief1_input_press():
+    relief1.press_in = pump2.outlet_pressure
+    assert relief1.press_in == 30
+
+# Globe Valve 2
+def test_t2_input_press():
+    throttle2.press_in = pump2.outlet_pressure
+    assert throttle2.press_in == 30
+
+
+def test_t2_input_flow():
+    throttle2.flow_in = pump2.flow_rate_out
+    assert throttle2.flow_in == 28.8
+
+
+def test_2_press_drop():
+    press_diff = throttle2.press_drop(throttle2.flow_in)
+    assert press_diff == 1.8808163265306124
+
+
+def test_t2_output_flow():
+    out_flow = throttle2.valve_flow_out(throttle2.Cv, throttle2.deltaP)
+    assert out_flow == 28.8
+
+
+def test_t2_press_out():
+    press_out = throttle2.get_press_out(throttle2.press_in)
+    assert press_out == 28.119183673469387

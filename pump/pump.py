@@ -113,12 +113,6 @@ class Pump:
         self.wattage = hyd_power
         return self.wattage
 
-    # @staticmethod
-    # def press_to_ft(press):
-    #     """Convert psi to feet of differential head."""
-    #     ft = press * 2.308933
-    #     return ft
-
     @staticmethod
     def diff_press_ft(in_press_ft, out_press_ft):
         """Calculate differential head across pump, converted from feet."""
@@ -130,7 +124,7 @@ class Pump:
     @staticmethod
     def diff_press_psi(press_in, press_out):
         """Calculate differential pump head."""
-        delta_p = press_out - press_in
+        delta_p = abs(press_out - press_in)  # Account for Pout < Pin
         return delta_p
 
 
@@ -273,9 +267,10 @@ class PositiveDisplacement(Pump):
         :return: Flow rate, pump power, and new speed
         """
         self.speed = self.set_speed(new_speed)
+        press_in = utility_formulas.head_to_press(self.head_in)
 
         self.flow_rate_out = self.speed * self.displacement
-        self.wattage = self.pump_power(self.flow_rate_out, self.diff_press_psi(self.head_in, self.outlet_pressure))
+        self.wattage = self.pump_power(self.flow_rate_out, self.diff_press_psi(press_in, self.outlet_pressure))
 
         return self.flow_rate_out, self.wattage, self.speed
 # TODO: Account for different flow rates based on outlet pressure
