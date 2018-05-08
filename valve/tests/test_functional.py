@@ -16,6 +16,8 @@ valve3 = Gate("Valve 3", flow_coeff=200)
 pump2 = PositiveDisplacement("Gear Pump", displacement=0.096, press_out=30)
 relief1 = Relief("Relief 1", open_press=60, close_press=55)
 throttle2 = Globe("Throttle 2", position=100, flow_coeff=21)
+valve4 = Gate("Valve 4", flow_coeff=200)
+
 
 
 # Utility functions
@@ -180,3 +182,28 @@ def test_t2_output_flow():
 def test_t2_press_out():
     press_out = throttle2.get_press_out(throttle2.press_in)
     assert press_out == 28.119183673469387
+
+# Gate Valve 4
+def test_v4_input_press():
+    valve4.press_in = throttle2.press_out
+    assert valve4.press_in == 28.119183673469387
+
+
+def test_v4_input_flow():
+    valve4.flow_in = throttle2.flow_out
+    assert valve4.flow_in == 28.8
+
+
+def test_v4_press_drop():
+    press_diff = valve4.press_drop(valve4.flow_in)
+    assert press_diff == 0.020736000000000004
+
+
+def test_v4_output_flow():
+    out_flow = valve4.valve_flow_out(valve4.Cv, valve4.deltaP)
+    assert out_flow == 28.800000000000004
+
+
+def test_v4_press_out():
+    press_out = valve4.get_press_out(valve4.press_in)
+    assert press_out == 28.098447673469387
