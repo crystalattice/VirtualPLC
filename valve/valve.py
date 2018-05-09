@@ -212,7 +212,7 @@ class Globe(Valve):
             self.flow_out = 0.0
             self.deltaP = 0.0
         else:
-            self.flow_out = self.flow_in + (self.flow_in * self.position / 100)
+            self.flow_out = self.flow_in * self.position / 100
             self.press_drop(self.flow_out)
 
 
