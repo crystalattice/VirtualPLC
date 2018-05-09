@@ -8,8 +8,8 @@ from valve.valve import Gate, Globe, Relief
 # Gate Valve 1
 valve1 = Gate("Valve 1", position=100, flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 1.67),
               press_in=utility_formulas.static_press(14))
-valve1.press_drop(valve1.flow_in)
-valve1.valve_flow_out(valve1.Cv, valve1.deltaP)
+valve1.flow_out = valve1.flow_in
+valve1.press_drop(valve1.flow_out)
 valve1.get_press_out(valve1.press_in)
 
 # Centrif Pump
@@ -19,19 +19,22 @@ pump1.start_pump(1750, 50, 16)
 # Globe valve 1
 throttle1 = Globe("Throttle 1", position=100, flow_coeff=21, press_in=pump1.outlet_pressure,
                   sys_flow_in=pump1.flow_rate_out)
-throttle1.press_drop(throttle1.flow_in)
+throttle1.flow_out = throttle1.flow_in
+throttle1.press_drop(throttle1.flow_out)
 throttle1.valve_flow_out(throttle1.Cv, throttle1.deltaP)
 throttle1.get_press_out(throttle1.press_in)
 
 # Gate Valve 2
 valve2 = Gate("Valve 2", position=100, flow_coeff=200, press_in=throttle1.press_out, sys_flow_in=throttle1.flow_out)
-valve2.press_drop(valve2.flow_in)
+valve2.flow_out = valve2.flow_in
+valve2.press_drop(valve2.flow_out)
 valve2.valve_flow_out(valve2.Cv, valve2.deltaP)
 valve2.get_press_out(valve2.press_in)
 
 # Gate Valve 3
 valve3 = Gate("Valve 3", position=100, flow_coeff=200, press_in=valve2.press_out, sys_flow_in=valve2.flow_out)
-valve3.press_drop(valve3.flow_in)
+valve3.flow_out = valve3.flow_in
+valve3.press_drop(valve3.flow_out)
 valve3.valve_flow_out(valve3.Cv, valve3.deltaP)
 valve3.get_press_out(valve3.press_in)
 
@@ -44,15 +47,17 @@ pump2.adjust_speed(300)
 relief1 = Relief("Relief 1", open_press=60, close_press=55, press_in=pump2.outlet_pressure)
 
 # Globe Valve 2
-throttle2 = Globe("Throttle 2", position=100, flow_coeff=21, press_in=pump2.outlet_pressure,
-                  sys_flow_in=pump2.flow_rate_out)
-throttle2.press_drop(throttle2.flow_in)
-throttle2.valve_flow_out(throttle2.Cv, throttle2.deltaP)
-throttle2.get_press_out(throttle2.press_in)
+recirc1 = Globe("Throttle 2", position=100, flow_coeff=21, press_in=pump2.outlet_pressure,
+                sys_flow_in=pump2.flow_rate_out)
+recirc1.flow_out = recirc1.flow_in
+recirc1.press_drop(recirc1.flow_out)
+recirc1.valve_flow_out(recirc1.Cv, recirc1.deltaP)
+recirc1.get_press_out(recirc1.press_in)
 
 # Gate Valve 4
-valve4 = Gate("Valve 4", position=100, flow_coeff=200, press_in=throttle2.press_out, sys_flow_in=throttle2.flow_out)
-valve4.press_drop(valve4.flow_in)
+valve4 = Gate("Valve 4", position=100, flow_coeff=200, press_in=recirc1.press_out, sys_flow_in=recirc1.flow_out)
+valve4.flow_out = valve4.flow_in
+valve4.press_drop(valve4.flow_out)
 valve4.valve_flow_out(valve4.Cv, valve4.deltaP)
 valve4.get_press_out(valve4.press_in)
 
@@ -182,23 +187,23 @@ def test_relief1_input_press():
 
 # Globe Valve 2
 def test_t2_input_press():
-    assert throttle2.press_in == 30
+    assert recirc1.press_in == 30
 
 
 def test_t2_input_flow():
-    assert throttle2.flow_in == 28.8
+    assert recirc1.flow_in == 28.8
 
 
 def test_2_press_drop():
-    assert throttle2.deltaP == 1.8808163265306124
+    assert recirc1.deltaP == 1.8808163265306124
 
 
 def test_t2_output_flow():
-    assert throttle2.flow_out == 28.8
+    assert recirc1.flow_out == 28.8
 
 
 def test_t2_press_out():
-    assert throttle2.press_out == 28.119183673469387
+    assert recirc1.press_out == 28.119183673469387
 
 
 # Gate Valve 4
@@ -211,7 +216,7 @@ def test_v4_input_flow():
 
 
 def test_v4_press_drop():
-    assert valve4.deltaP== 0.020736000000000004
+    assert valve4.deltaP == 0.020736000000000004
 
 
 def test_v4_output_flow():

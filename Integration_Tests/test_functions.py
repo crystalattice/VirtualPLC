@@ -15,7 +15,7 @@ valve2 = Gate("Valve 2", flow_coeff=200)
 valve3 = Gate("Valve 3", flow_coeff=200)
 pump2 = PositiveDisplacement("Gear Pump", displacement=0.096, press_out=30)
 relief1 = Relief("Relief 1", open_press=60, close_press=55)
-throttle2 = Globe("Throttle 2", position=100, flow_coeff=21)
+recirc1 = Globe("Throttle 2", position=100, flow_coeff=21)
 valve4 = Gate("Valve 4", flow_coeff=200)
 
 
@@ -36,11 +36,11 @@ def test_v1_input_press():
 
 
 def test_v1_input_flow():
-    assert valve1.flow_in == 319.28008077388426
+    assert valve1.flow_out == 319.28008077388426
 
 
 def test_v1_press_drop():
-    press_diff = valve1.press_drop(valve1.flow_in)
+    press_diff = valve1.press_drop(valve1.flow_out)
     assert press_diff == 2.5484942494744516
 
 
@@ -75,12 +75,12 @@ def test_t1_input_press():
 
 
 def test_t1_input_flow():
-    throttle1.flow_in = pump1.flow_rate_out
-    assert throttle1.flow_in == 50.0
+    throttle1.flow_out = pump1.flow_rate_out
+    assert throttle1.flow_out == 50.0
 
 
 def test_t1_press_drop():
-    press_diff = throttle1.press_drop(throttle1.flow_in)
+    press_diff = throttle1.press_drop(throttle1.flow_out)
     assert press_diff == 5.668934240362812
 
 
@@ -101,12 +101,12 @@ def test_v2_input_press():
 
 
 def test_v2_input_flow():
-    valve2.flow_in = throttle1.flow_out
-    assert valve2.flow_in == 50.0
+    valve2.flow_out = throttle1.flow_out
+    assert valve2.flow_out == 50.0
 
 
 def test_v2_press_drop():
-    press_diff = valve2.press_drop(valve2.flow_in)
+    press_diff = valve2.press_drop(valve2.flow_out)
     assert press_diff == 0.0625
 
 
@@ -127,12 +127,12 @@ def test_v3_input_press():
 
 
 def test_v3_input_flow():
-    valve3.flow_in = valve2.flow_out
-    assert valve3.flow_in == 50.0
+    valve3.flow_out = valve2.flow_out
+    assert valve3.flow_out == 50.0
 
 
 def test_v3_press_drop():
-    press_diff = valve3.press_drop(valve3.flow_in)
+    press_diff = valve3.press_drop(valve3.flow_out)
     assert press_diff == 0.0625
 
 
@@ -167,43 +167,43 @@ def test_relief1_input_press():
 
 # Globe Valve 2
 def test_t2_input_press():
-    throttle2.press_in = pump2.outlet_pressure
-    assert throttle2.press_in == 30
+    recirc1.press_in = pump2.outlet_pressure
+    assert recirc1.press_in == 30
 
 
 def test_t2_input_flow():
-    throttle2.flow_in = pump2.flow_rate_out
-    assert throttle2.flow_in == 28.8
+    recirc1.flow_out = pump2.flow_rate_out
+    assert recirc1.flow_out == 28.8
 
 
 def test_2_press_drop():
-    press_diff = throttle2.press_drop(throttle2.flow_in)
+    press_diff = recirc1.press_drop(recirc1.flow_out)
     assert press_diff == 1.8808163265306124
 
 
 def test_t2_output_flow():
-    out_flow = throttle2.valve_flow_out(throttle2.Cv, throttle2.deltaP)
+    out_flow = recirc1.valve_flow_out(recirc1.Cv, recirc1.deltaP)
     assert out_flow == 28.8
 
 
 def test_t2_press_out():
-    press_out = throttle2.get_press_out(throttle2.press_in)
+    press_out = recirc1.get_press_out(recirc1.press_in)
     assert press_out == 28.119183673469387
 
 
 # Gate Valve 4
 def test_v4_input_press():
-    valve4.press_in = throttle2.press_out
+    valve4.press_in = recirc1.press_out
     assert valve4.press_in == 28.119183673469387
 
 
 def test_v4_input_flow():
-    valve4.flow_in = throttle2.flow_out
-    assert valve4.flow_in == 28.8
+    valve4.flow_out = recirc1.flow_out
+    assert valve4.flow_out == 28.8
 
 
 def test_v4_press_drop():
-    press_diff = valve4.press_drop(valve4.flow_in)
+    press_diff = valve4.press_drop(valve4.flow_out)
     assert press_diff == 0.020736000000000004
 
 

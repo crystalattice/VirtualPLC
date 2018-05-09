@@ -31,13 +31,13 @@ in_valve2 = Gate("Gear Pump inlet", flow_coeff=270, sys_flow_in=centrif_pump1.ge
 # Pump 2 group (gear)
 gear_pump1 = PositiveDisplacement("Gear Pump", displacement=0.096, pump_head_in=throttle1.press_out, press_out=10)
 out_valve2 = Gate("Gear Pump outlet", flow_coeff=270, sys_flow_in=gear_pump1.get_flow())
-throttle2 = Globe("Gear Pump throttle", flow_coeff=30, sys_flow_in=gear_pump1.get_flow())
+recirc1 = Globe("Gear Pump throttle", flow_coeff=30, sys_flow_in=gear_pump1.get_flow())
 relief1 = Relief("Gear Pump relief", flow_coeff=0.71, open_press=150, close_press=125, sys_flow_in=gear_pump1.get_flow())
 in_valve1 = Gate("Centrifugal Pump inlet", flow_coeff=90, sys_flow_in=48, press_in=2.6)
 
 
 gate_valves = [in_valve1, out_valve1, in_valve2, out_valve2]
-globe_valves = [throttle1, throttle2]
+globe_valves = [throttle1, recirc1]
 
 
 def initial_state():
@@ -94,7 +94,7 @@ def get_gate_press_out():
     centrif_out_gate = out_valve1.get_press_out(centrif_pump1.outlet_pressure)  # Input = centrif pump outlet
     gear_in_gate = in_valve2.get_press_out(throttle1.press_out)  # Input = centrif pump throttle
     gear_out_gate = out_valve2.get_press_out(gear_pump1.outlet_pressure)  # Input = gear pump outlet
-    centrif_in_gate = in_valve1.get_press_out(throttle2.press_out)   # Input = gear pump throttle
+    centrif_in_gate = in_valve1.get_press_out(recirc1.press_out)   # Input = gear pump throttle
 
     print("Centrif Pump inlet: {:.2f}".format(centrif_in_gate))
     print("Centrif Pump outlet: {:.2f}".format(centrif_out_gate))
@@ -114,7 +114,7 @@ def get_globe_delta():
     """Check the pressure drop across the globe valves."""
     print("\n***Globe valve press drop***")
     centrif_throttle = throttle1.press_drop(out_valve1.flow_out)
-    gear_throttle = throttle2.press_drop(out_valve2.flow_out)
+    gear_throttle = recirc1.press_drop(out_valve2.flow_out)
 
     print("Centrif Pump throttle: {:.2f}".format(centrif_throttle))  # Input = centrif pump gate out
     print("Gear Pump throttle: {:.2f}".format(gear_throttle))  # Input = gear pump gate out
@@ -124,7 +124,7 @@ def get_globe_press_out():
     """Check the outlet pressure of the throttle valves."""
     print("\n***Globe valve outlet press")
     centrif_globe_out = throttle1.get_press_out(out_valve1.press_out)
-    gear_globe_out = throttle2.get_press_out(out_valve2.press_out)
+    gear_globe_out = recirc1.get_press_out(out_valve2.press_out)
 
     print("Centrif Pump throttle: {:.2f}".format(centrif_globe_out)) # Input = centrif pump gate out
     print("Gear Pump throttle: {:.2f}".format(gear_globe_out))  # Input = gear pump gate out

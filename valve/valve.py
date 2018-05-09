@@ -33,8 +33,8 @@ class Valve:
     Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0,
-                 press_in=0.0):
+    def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0,
+                 close_press=0, press_in=0.0):
         """Initialize valve.
 
         :param name: Instance name
@@ -49,7 +49,7 @@ class Valve:
         self.Cv = float(flow_coeff)
         self.flow_in = float(sys_flow_in)
         self.deltaP = float(drop)
-        self.flow_out = 0.0
+        self.flow_out = sys_flow_out
         self.setpoint_open = open_press
         self.setpoint_close = close_press
         self.press_out = 0.0
@@ -66,7 +66,7 @@ class Valve:
         """
         self.Cv = 15 * math.pow(diameter, 2)
 
-    def press_drop(self, flow_in, spec_grav=1.0):
+    def press_drop(self, flow_out, spec_grav=1.0):
         """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
@@ -75,7 +75,7 @@ class Valve:
 
         Specific gravity of water is 1.
 
-        :param flow_in: System flow rate into the valve
+        :param flow_out: System flow rate into the valve
         :param spec_grav: Fluid specific gravity; assumes fluid is water
 
         :except ZeroDivisionError: Valve coefficient not provided
@@ -83,7 +83,7 @@ class Valve:
         :return: Update pressure drop across valve
         """
         try:
-            x = (flow_in / self.Cv)
+            x = (flow_out / self.Cv)
             self.deltaP = math.pow(x, 2) * spec_grav
             return self.deltaP
         except ZeroDivisionError:
@@ -116,7 +116,7 @@ class Valve:
         """Get the valve outlet pressure."""
         if press_in:
             self.press_in = press_in  # In case the valve initialization didn't include it, or the value has changed
-        self.press_out = self.press_in - self.press_drop(self.flow_in)
+        self.press_out = self.press_in - self.press_drop(self.flow_out)
         return self.press_out
 
     def get_position(self):
@@ -212,8 +212,9 @@ class Globe(Valve):
             self.flow_out = 0.0
             self.deltaP = 0.0
         else:
-            self.flow_out = self.flow_in * self.position / 100
+            self.flow_out = self.flow_out * self.position / 100
             self.press_drop(self.flow_out)
+            self.get_press_out(self.press_in)
 
 
 class Relief(Valve):
