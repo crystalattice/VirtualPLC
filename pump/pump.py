@@ -34,7 +34,7 @@ class Pump:
 
     Methods: set_speed(), cls_read_speed(), cls_read_press(), cls_read_flow(), cls_read_power(), hp_to_watts()
     """
-    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0):
+    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0):
         """Set initial parameters.
 
         :param name: Instance name
@@ -49,9 +49,7 @@ class Pump:
         self.head_in = float(pump_head_in)
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
-        self.displacement = float(displacement)
         self.wattage = self.pump_power(self.flow_rate_out, self.diff_press_psi(self.head_in, self.outlet_pressure))
-# TODO: Move pump-specific parameters to their appropriate classes
 # TODO: Identify and decorate properties
 
     @staticmethod
@@ -237,6 +235,10 @@ class PositiveDisplacement(Pump):
         set_hp_coeff()
         adjust_speed()
     """
+
+    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0):
+        super(PositiveDisplacement, self).__init__(name, flow_rate_out, pump_head_in, press_out, pump_speed)
+        self.displacement = displacement
 
     def get_speed_str(self):
         """Get the current speed of the pump, in rpm."""

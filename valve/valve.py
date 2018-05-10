@@ -49,7 +49,6 @@ class Valve:
         self.flow_out = float(sys_flow_out)
         self.press_out = 0.0
         self.press_in = press_in
-# TODO: Move valve-specific parameters to their appropriate classes
 # TODO: Identify and decorate properties
 
     def calc_coeff(self, diameter):
