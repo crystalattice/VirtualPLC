@@ -33,25 +33,20 @@ class Valve:
     Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0, open_press=0,
-                 close_press=0, press_in=0.0):
+    def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0, press_in=0.0):
         """Initialize valve.
 
         :param name: Instance name
         :param sys_flow_in: Flow rate into the valve
         :param position: Percentage valve is open
         :param flow_coeff: Affect valve has on flow rate; assumes a 2 inch, wide open valve
-        :param open_press: Pressure required to open the valve
-        :param close_press: Pressure required to close the valve
         """
         self.name = name
         self.position = int(position)  # Truncate float values for ease of calculations
         self.Cv = float(flow_coeff)
         self.flow_in = float(sys_flow_in)
         self.deltaP = float(drop)
-        self.flow_out = sys_flow_out
-        self.setpoint_open = open_press
-        self.setpoint_close = close_press
+        self.flow_out = float(sys_flow_out)
         self.press_out = 0.0
         self.press_in = press_in
 # TODO: Move valve-specific parameters to their appropriate classes
@@ -233,6 +228,11 @@ class Relief(Valve):
         read_close_pressure()
         valve_operation()
     """
+
+    def __init__(self, open_press=0, close_press=0, *args, **kwargs):
+        super(Relief, self).__init__(*args, **kwargs)
+        self.setpoint_open = open_press
+        self.setpoint_close = close_press
 
     def read_position(self):
         """Identify the status of the valve.
