@@ -277,7 +277,7 @@ class PositiveDisplacement(Pump):
 
 
 if __name__ == "__main__":
-    # Functional tests
+    # Functional test_valves
     # name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0, displacement=0.0
     pump1 = CentrifPump("Pumpy", 75, 12, 25, 125, 0.03)
     print("{} created.".format(pump1.name))

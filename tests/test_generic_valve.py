@@ -1,5 +1,5 @@
 import pytest
-from ..valve import Valve
+from valve.valve import Valve
 
 
 class TestValveCoeff:

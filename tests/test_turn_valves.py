@@ -1,5 +1,5 @@
 """Same as test_parameters.py, except it checks values after throttle valve 1 is turned."""
-from initial_conditions import *
+from tests.initial_conditions import *
 
 
 # Turn Globe Valve 1

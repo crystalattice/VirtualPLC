@@ -1,4 +1,4 @@
-from ..valve import Relief
+from valve.valve import Relief
 
 
 class TestRelief():

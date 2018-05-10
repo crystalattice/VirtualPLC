@@ -1,4 +1,4 @@
-from ..valve import Gate
+from valve.valve import Gate
 
 
 class TestGate():

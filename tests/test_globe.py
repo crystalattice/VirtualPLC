@@ -1,4 +1,4 @@
-from ..valve import Globe
+from valve.valve import Globe
 
 
 class TestGlobe():
