@@ -16,6 +16,8 @@ Date: 4/12/18
 Version 0.1
     Initial build
 """
+# TODO: Identify and decorate properties
+
 import math
 import utility_formulas
 
@@ -50,7 +52,6 @@ class Pump:
         self.outlet_pressure = float(press_out)
         self.speed = pump_speed
         self.wattage = self.pump_power(self.flow_rate_out, self.diff_press_psi(self.head_in, self.outlet_pressure))
-# TODO: Identify and decorate properties
 
     @staticmethod
     def set_speed(new_speed):
