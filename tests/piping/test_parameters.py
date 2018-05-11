@@ -1,5 +1,5 @@
 """Same as test_functions.py, except it verifies that the parameters of each instance are being set correctly."""
-from tests.initial_conditions import *
+from tests.piping.initial_conditions import *
 
 
 # Utility functions
