@@ -13,7 +13,7 @@ class TestRelief():
 
     def test_set_blowdown(self):
         r = Relief(name="Relief1")
-        r.set_blowdown(10)
+        r.set_close_press(10)
         assert r.setpoint_close == 10
 
     def test_valve_operation(self):

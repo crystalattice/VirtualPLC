@@ -32,7 +32,7 @@ class Pump:
     Displacement is the amount of fluid pushed through the pump per second.
     Horsepower coefficient is the slope of the equivalent pump curve.
 
-    Variables: name, flow_rate, head, outlet_pressure, speed, displacement, wattage
+    Variables: name, flow_rate_out, pump_head_in, press_out, pump_speed
 
     Methods: set_speed(), cls_read_speed(), cls_read_press(), cls_read_flow(), cls_read_power(), hp_to_watts()
     """
@@ -44,7 +44,6 @@ class Pump:
         :param pump_head_in: Necessary pump head into the pump (feet)
         :param press_out: Pressure created by the pump (psi)
         :param pump_speed: Rotational speed of the pump (rpm)
-        :param displacement: Amount of fluid pumped per second
         """
         self.name = name
         self.flow_rate_out = float(flow_rate_out)
@@ -63,6 +62,7 @@ class Pump:
         :except ValueError: Speed < 0
 
         :return: Pump speed
+        :rtype: int
         """
         try:
             if type(new_speed) != int:
@@ -104,6 +104,7 @@ class Pump:
         :param fluid_spec_weight: Specific weight of fluid; default assumes water
 
         :return: Pump power requirement, in kW
+        :rtype: float
         """
         flow_rate = flow_rate / 15852
         density = fluid_spec_weight / 0.0624
@@ -168,6 +169,7 @@ class CentrifPump(Pump):
         :param new_speed: New pump speed
 
         :return: Updates flow rate, output pressure, and pump power requirement
+        :rtype: tuple
         """
         self.speed, self.flow_rate_out, self.outlet_pressure, self.wattage = self.pump_laws(new_speed)
 
@@ -179,6 +181,7 @@ class CentrifPump(Pump):
         :param new_speed: Requested (new) speed of the pump
 
         :return: Pump speed, flow rate, outlet pressure, and power
+        :rtype: tuple
         """
         n2 = self.set_speed(new_speed)  # Validate input
 
@@ -208,6 +211,7 @@ class CentrifPump(Pump):
         :param out_ft: Output head pressure, in feet
 
         :return: Pump speed, flow rate, outlet pressure, and power
+        :rtype: tuple
         """
         self.speed = speed
         self.flow_rate_out = flow
@@ -268,6 +272,7 @@ class PositiveDisplacement(Pump):
         :param new_speed: New pump speed
         
         :return: Flow rate, pump power, and new speed
+        :rtype: tuple
         """
         self.speed = self.set_speed(new_speed)
         press_in = utility_formulas.head_to_press(self.head_in)
@@ -282,7 +287,7 @@ class PositiveDisplacement(Pump):
 if __name__ == "__main__":
     # Functional test_valves
     # name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, hp=0.0, displacement=0.0
-    pump1 = CentrifPump("Pumpy", 75, 12, 25, 125, 0.03)
+    pump1 = CentrifPump("Pumpy", 75, 12, 25, 125)
     print("{} created.".format(pump1.name))
     print(pump1.get_speed_str())
     print(pump1.get_flow_str())
@@ -313,4 +318,4 @@ if __name__ == "__main__":
     print(pump2.get_flow_str())
     print(pump2.get_power_str())
 
-    p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300, displacement=0)
+    p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300)

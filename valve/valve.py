@@ -18,6 +18,7 @@ Version 0.1
     Initial build
 """
 # TODO: Identify and decorate properties
+# TODO: Have relief affect pump outlet pressure
 
 import math
 
@@ -30,14 +31,18 @@ class Valve:
     Cv is the valve flow coefficient: number of gallons per minute at 60F through a fully open valve with a press. drop
     of 1 psi. For valves 1 inch or less in diameter, Cv is typically < 5.
 
-    Variables: name, position, Cv, deltaP, flow_in, flow_out, setpoint_open, setpoint_close
+    Variables: name, position, Cv, deltaP, flow_in, flow_out, press_out, press_in
 
-    Methods: calc_coeff(), press_drop(), sys_flow_rate(), cls_get_position(), cls_change_position(), open(), close()
+    Methods: calc_coeff(), press_drop(), valve_flow_out(), get_press_out(), get_position(), change_position(), open(),
+    close()
     """
 
     def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0, press_in=0.0):
         """Initialize valve.
 
+        :param sys_flow_out: Fluid flow out of the valve
+        :param drop: Pressure drop across the valve
+        :param press_in: Pressure at valve inlet
         :param name: Instance name
         :param sys_flow_in: Flow rate into the valve
         :param position: Percentage valve is open
@@ -71,11 +76,12 @@ class Valve:
         Specific gravity of water is 1.
 
         :param flow_out: System flow rate into the valve
-        :param spec_grav: Fluid specific gravity; assumes fluid is water
+        :param spec_grav: Fluid specific gravity; default assumes fluid is water
 
         :except ZeroDivisionError: Valve coefficient not provided
 
         :return: Update pressure drop across valve
+        :rtype: float
         """
         try:
             x = (flow_out / self.Cv)
@@ -89,6 +95,7 @@ class Valve:
 
         Flow rate = valve coefficient / sqrt(spec. grav. / press. drop)
 
+
         :param flow_coeff: Valve flow coefficient
         :param press_drop: Pressure drop (psi)
         :param spec_grav: Fluid specific gravity
@@ -96,6 +103,7 @@ class Valve:
         :except ValueError: Valve coefficient or deltaP <= 0
 
         :return: Update system flow rate
+        :rtype: float
         """
         try:
             if flow_coeff <= 0 or press_drop <= 0:
@@ -108,7 +116,13 @@ class Valve:
             raise  # Re-raise error for testing
 
     def get_press_out(self, press_in):
-        """Get the valve outlet pressure."""
+        """Get the valve outlet pressure, calculated from inlet pressure.
+
+        :param press_in:  Pressure at valve inlet
+
+        :return: Pressure at valve outlet
+        :rtype: float
+        """
         if press_in:
             self.press_in = press_in  # In case the valve initialization didn't include it, or the value has changed
         self.press_out = self.press_in - self.press_drop(self.flow_out)
@@ -128,6 +142,7 @@ class Valve:
         :except TypeError: Non-integer value provided.
 
         :return: Update valve position
+        :rtype: int
         """
         try:
             if type(new_position) != int:
@@ -158,6 +173,9 @@ class Gate(Valve):
 
     def read_position(self):
         """Identify the position of the valve.
+
+        :return: Indication of whether the valve is open or closed.
+        :rtype: str
         """
         if self.get_position() == 0:
             return "{name} is closed.".format(name=self.name)
@@ -192,7 +210,11 @@ class Globe(Valve):
     """
 
     def read_position(self):
-        """Identify the position of the valve."""
+        """Identify the position of the valve.
+
+        :return: Percent open
+        :rtype: str
+        """
         return "{name} is {position}% open.".format(name=self.name, position=self.get_position())
 
     def turn_handle(self, new_position):
@@ -200,7 +222,7 @@ class Globe(Valve):
         
         :param new_position: New valve position
 
-        :return: Update outlet flow rate and valve pressure drop
+        :return: Update outlet flow rate, valve pressure drop, and pressure out.
         """
         self.change_position(new_position)
         if self.get_position() == 0:
@@ -231,6 +253,7 @@ class Relief(Valve):
 
     def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0,
                  press_in=0.0, open_press=0, close_press=0):
+        """Inherits base initialization and adds valve open/close pressure values."""
         super(Relief, self).__init__(name, sys_flow_in, sys_flow_out, drop, position, flow_coeff, press_in)
         self.setpoint_open = open_press
         self.setpoint_close = close_press
@@ -239,6 +262,7 @@ class Relief(Valve):
         """Identify the status of the valve.
 
         :return: The open/closed status of the valve.
+        :rtype: str
         """
         if self.get_position() == 0:
             return "{name} is closed.".format(name=self.name)
@@ -264,7 +288,7 @@ class Relief(Valve):
         """Read the low pressure setpoint."""
         return self.setpoint_close
 
-    def set_blowdown(self, close_set):
+    def set_close_press(self, close_set):
         """Set the pressure setpoint where the valve closes.
 
         :param close_set: Closing set point
@@ -299,7 +323,7 @@ if __name__ == "__main__":
     gate1.open()
     print(gate1.read_position())
 
-    globe1 = Globe("\nThrottle valve")
+    globe1 = Globe("\nThrottle valve", flow_coeff=21, press_in=10, sys_flow_in=15)
     print("{} created".format(globe1.name))
     print(globe1.read_position())
     globe1.open()
@@ -315,7 +339,7 @@ if __name__ == "__main__":
     print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
     print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
     relief1.set_open_pressure(75)
-    relief1.set_blowdown(73)
+    relief1.set_close_press(73)
     print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
     print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
     relief1.valve_operation(75)
