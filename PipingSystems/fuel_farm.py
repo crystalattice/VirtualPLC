@@ -1,7 +1,7 @@
 """Provides standard starting conditions for all devices in the system.
 
-Assumes valves in series, with the first supplied by a tank 10 feet above the valve with a pipe length of 6 feet.
-Water level is 4 feet above tank bottom; total water head = 14 feet.
+Assumes initial tank level is 20 feet above pipe inlet;  pipe length to valve is 15 feet, with a slope of 0.07. Pipe
+diameter is 4 inches.
 """
 import utility_formulas
 
@@ -9,19 +9,19 @@ from pump.pump import CentrifPump, PositiveDisplacement
 from valve.valve import Gate, Globe, Relief
 
 # Gate Valve 1
-valve1 = Gate("Valve 1", position=100, flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 1.67),
-              press_in=utility_formulas.static_press(14))
+valve1 = Gate("Valve 1", position=100, flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 0.07),
+              press_in=utility_formulas.static_press(20))
 valve1.flow_out = valve1.flow_in
 valve1.press_drop(valve1.flow_out)
 valve1.get_press_out(valve1.press_in)
 
 # Centrif Pump
 pump1 = CentrifPump("Pump 1", pump_head_in=utility_formulas.press_to_head(valve1.press_out))
-pump1.start_pump(1750, 50, 16)
+pump1.start_pump(speed=1750, flow=100, out_ft=75)
 
 # Globe valve 1
-throttle1 = Globe("Throttle 1", position=100, flow_coeff=21, press_in=pump1.outlet_pressure,
-                  sys_flow_in=pump1.flow_rate_out)
+throttle1 = Globe("Throttle 1", position=100, flow_coeff=21,
+                  press_in=utility_formulas.head_to_press(pump1.outlet_pressure), sys_flow_in=pump1.flow_rate_out)
 throttle1.flow_out = throttle1.flow_in
 throttle1.press_drop(throttle1.flow_out)
 throttle1.valve_flow_out(throttle1.Cv, throttle1.deltaP)

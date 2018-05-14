@@ -1,11 +1,11 @@
+"""Assumes valves in series, with the first supplied by a tank 10 feet above the valve with a pipe length of 6 feet.
+Water level is 4 feet above tank bottom; total water head = 14 feet.
+"""
+
 import utility_formulas
 
 from pump.pump import CentrifPump, PositiveDisplacement
 from valve.valve import Gate, Globe, Relief
-
-"""Assumes valves in series, with the first supplied by a tank 10 feet above the valve with a pipe length of 6 feet.
-Water level is 4 feet above tank bottom; total water head = 14 feet.
-"""
 
 valve1 = Gate("Valve 1",  position=100, flow_coeff=200, sys_flow_in=utility_formulas.gravity_flow_rate(2, 1.67),
               press_in=utility_formulas.static_press(14))
