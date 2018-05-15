@@ -27,12 +27,12 @@ def test_grav_flow():
 
 def test_static_press():
     press = utility_formulas.static_press(14)
-    assert press == 6.0606060606060606
+    assert press == 6.068373888888889
 
 
 # Gate Valve 1
 def test_v1_input_press():
-    assert valve1.press_in == 6.0606060606060606
+    assert valve1.press_in == 6.068373888888889
 
 
 def test_v1_input_flow():
@@ -51,13 +51,13 @@ def test_v1_press_drop():
 
 def test_v1_press_out():
     press_out = valve1.get_press_out(valve1.press_in)
-    assert press_out == 3.512111811131609
+    assert press_out == 3.5198796394144374
 
 
 # Centrifugal Pump
 def test_pump1_input_press():
     pump1.head_in = utility_formulas.press_to_head(valve1.press_out)
-    assert pump1.head_in == 8.101304720057573
+    assert pump1.head_in == 8.119222584669064
 
 
 def test_pump1_start_pump():
@@ -65,7 +65,7 @@ def test_pump1_start_pump():
     assert pump1.speed == 1750
     assert pump1.flow_rate_out == 50.0
     assert pump1.outlet_pressure == 16
-    assert pump1.wattage == 0.11777800491229948
+    assert pump1.wattage == 0.11770474358069433
 
 
 # Globe valve 1

@@ -28,18 +28,7 @@ def gravity_flow_rate(diameter, slope, rough_coeff=140):
     return root_flow
 
 
-def static_press(height):
-    """Calculate the pressure due to height of fluid.
-
-    :param height: Fluid height, in feet
-
-    :return: Pressure, in psi
-    """
-    press = height / 2.31
-    return press
-
-
-def alt_static_press(height, density=WATER_DENSITY):
+def static_press(height, density=WATER_DENSITY):
     """Calculate static pressure for any fluid.
 
     :param height: Fluid height, in feet
@@ -47,7 +36,7 @@ def alt_static_press(height, density=WATER_DENSITY):
 
     :return: Fluid pressure, in psi
     """
-    press = density * GRAVITY * height
+    press = density * GRAVITY * height / 144
     return press
 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VirtualPLC-pump.py
+VirtualPLC pump.py
 
 Purpose: Creates a generic Pump class for PLC-controlled SCADA systems.
 

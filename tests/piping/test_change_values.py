@@ -49,7 +49,7 @@ def test_centrif_speed():
     pump1.adjust_speed(3000)
     assert pump1.flow_rate_out == 85.71428571428571
     assert pump1.outlet_pressure == 47.0204081632653
-    assert pump1.wattage == 1.622621066531539
+    assert pump1.wattage == 1.622331369097493
 
 
 def test_throttle_open():

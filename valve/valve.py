@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-VirtualPLC-valve.py
+VirtualPLC valve.py
 
 Purpose: Creates a generic Valve class for PLC-controlled SCADA systems.
 
