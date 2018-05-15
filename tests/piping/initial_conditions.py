@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """Provides standard starting conditions for all devices in the system.
 
 Assumes valves in series, with the first supplied by a tank 10 feet above the valve with a pipe length of 6 feet.
