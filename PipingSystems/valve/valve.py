@@ -49,7 +49,7 @@ class Valve:
         :param flow_coeff: Affect valve has on flow rate; assumes a 2 inch, wide open valve
         """
         self.name = name
-        self.position = int(position)  # Truncate float values for ease of calculations
+        self.__position = int(position)  # Truncate float values for ease of calculations
         self.Cv = float(flow_coeff)
         self.flow_in = float(sys_flow_in)
         self.deltaP = float(drop)
@@ -86,7 +86,6 @@ class Valve:
         try:
             x = (flow_out / self.Cv)
             self.deltaP = math.pow(x, 2) * spec_grav
-            return self.deltaP
         except ZeroDivisionError:
             return "The valve coefficient must be > 0."
 
@@ -125,14 +124,17 @@ class Valve:
         """
         if press_in:
             self.press_in = press_in  # In case the valve initialization didn't include it, or the value has changed
-        self.press_out = self.press_in - self.press_drop(self.flow_out)
+        self.press_drop(self.flow_out)
+        self.press_out = self.press_in - self.deltaP
         return self.press_out
 
-    def get_position(self):
+    @property
+    def position(self):
         """Get position of valve, in percent open."""
-        return self.position
+        return self.__position
 
-    def change_position(self, new_position):
+    @position.setter
+    def position(self, new_position):
         """Change the valve's position.
 
         If new position is not an integer, an error is raised.
@@ -150,15 +152,15 @@ class Valve:
         except TypeError:
             return "Integer values only."
         else:
-            self.position = new_position
+            self.__position = new_position
 
     def open(self):
         """Open the valve"""
-        self.change_position(100)
+        self.__position = 100
 
     def close(self):
         """Close the valve"""
-        self.change_position(0)
+        self.__position = 0
 
 
 class Gate(Valve):
@@ -177,9 +179,9 @@ class Gate(Valve):
         :return: Indication of whether the valve is open or closed.
         :rtype: str
         """
-        if self.get_position() == 0:
+        if self.position == 0:
             return "{name} is closed.".format(name=self.name)
-        elif self.get_position() == 100:
+        elif self.position == 100:
             return "{name} is open.".format(name=self.name)
         else:  # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)
@@ -215,7 +217,7 @@ class Globe(Valve):
         :return: Percent open
         :rtype: str
         """
-        return "{name} is {position}% open.".format(name=self.name, position=self.get_position())
+        return "{name} is {position}% open.".format(name=self.name, position=self.position)
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -224,8 +226,8 @@ class Globe(Valve):
 
         :return: Update outlet flow rate, valve pressure drop, and pressure out.
         """
-        self.change_position(new_position)
-        if self.get_position() == 0:
+        self.position = new_position
+        if self.position == 0:
             self.flow_out = 0.0
             self.deltaP = 0.0
         else:
@@ -264,9 +266,9 @@ class Relief(Valve):
         :return: The open/closed status of the valve.
         :rtype: str
         """
-        if self.get_position() == 0:
+        if self.position == 0:
             return "{name} is closed.".format(name=self.name)
-        elif self.get_position() == 100:
+        elif self.position == 100:
             return "{name} is open.".format(name=self.name)
         else:   # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)

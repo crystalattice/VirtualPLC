@@ -99,19 +99,19 @@ class TestValveFlow:
 class TestValvePosition:
     def test_cls_get_position(self):
         v = Valve()
-        assert v.get_position() == 0
+        assert v.position == 0
 
     def test_cls_change_position(self):
         v = Valve()
-        v.change_position(100)
-        assert v.get_position() == 100
+        v.position = 100
+        assert v.position == 100
 
     def test_open(self):
         v = Valve()
         v.open()
-        assert v.get_position() == 100
+        assert v.position == 100
 
     def test_close(self):
         v = Valve(position=100)
         v.close()
-        assert v.get_position() == 0
+        assert v.position == 0

@@ -37,13 +37,13 @@ class TestPumpReadSpeed:
 class TestPumpReadPress:
     def test_cls_read_press(self):
         p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300)
-        assert p.get_press() == 45.0
+        assert p.outlet_pressure() == 45.0
 
 
 class TestPumpReadFlow:
     def test_cls_read_flow(self):
         p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300)
-        assert p.get_flow() == 100.0
+        assert p.get_flow == 100.0
 
 
 class TestPumpReadPower:

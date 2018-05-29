@@ -23,16 +23,16 @@ from PipingSystems.valve.valve import Gate, Globe, Relief
 
 # Pump 1 group (centrifugal)
 centrif_pump1 = CentrifPump("Centrifugal Pump", pump_head_in=20)
-out_valve1 = Gate("Centrifugal Pump outlet", flow_coeff=90, sys_flow_in=centrif_pump1.get_flow())
-throttle1 = Globe("Centrifugal Pump throttle", flow_coeff=30, sys_flow_in=centrif_pump1.get_flow())
-in_valve2 = Gate("Gear Pump inlet", flow_coeff=270, sys_flow_in=centrif_pump1.get_flow())
+out_valve1 = Gate("Centrifugal Pump outlet", flow_coeff=90, sys_flow_in=centrif_pump1.get_flow)
+throttle1 = Globe("Centrifugal Pump throttle", flow_coeff=30, sys_flow_in=centrif_pump1.get_flow)
+in_valve2 = Gate("Gear Pump inlet", flow_coeff=270, sys_flow_in=centrif_pump1.get_flow)
 
 
 # Pump 2 group (gear)
 gear_pump1 = PositiveDisplacement("Gear Pump", displacement=0.096, pump_head_in=throttle1.press_out, press_out=10)
-out_valve2 = Gate("Gear Pump outlet", flow_coeff=270, sys_flow_in=gear_pump1.get_flow())
-recirc1 = Globe("Gear Pump throttle", flow_coeff=30, sys_flow_in=gear_pump1.get_flow())
-relief1 = Relief("Gear Pump relief", flow_coeff=0.71, open_press=150, close_press=125, sys_flow_in=gear_pump1.get_flow())
+out_valve2 = Gate("Gear Pump outlet", flow_coeff=270, sys_flow_in=gear_pump1.get_flow)
+recirc1 = Globe("Gear Pump throttle", flow_coeff=30, sys_flow_in=gear_pump1.get_flow)
+relief1 = Relief("Gear Pump relief", flow_coeff=0.71, open_press=150, close_press=125, sys_flow_in=gear_pump1.get_flow)
 in_valve1 = Gate("Centrifugal Pump inlet", flow_coeff=90, sys_flow_in=48, press_in=2.6)
 
 
@@ -77,9 +77,9 @@ def open_gates():
 def get_gate_delta():
     """Check the pressure drop across the gate valves."""
     print("\n***Gate valve press drop***")
-    centrif_out_gate = out_valve1.press_drop(centrif_pump1.get_flow())  # Input = centrif pump
+    centrif_out_gate = out_valve1.press_drop(centrif_pump1.get_flow)  # Input = centrif pump
     gear_in_gate = in_valve2.press_drop(throttle1.flow_out)  # Input = centrif pump throttle
-    gear_out_gate = out_valve2.press_drop(gear_pump1.get_flow())  # Input = gear pump
+    gear_out_gate = out_valve2.press_drop(gear_pump1.get_flow)  # Input = gear pump
     centrif_in_gate = in_valve1.press_drop(48)  # Input = Gravity drain flow rate
 
     print("Centrif Pump inlet: {:.2f}".format(centrif_in_gate))

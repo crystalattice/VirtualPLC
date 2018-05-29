@@ -20,10 +20,11 @@ valve1.get_press_out(valve1.press_in)
 # Centrif Pump
 pump1 = CentrifPump("Pump 1", pump_head_in=utility_formulas.press_to_head(valve1.press_out))
 pump1.start_pump(1750, 50, 16)
+print(pump1.flow)
 
 # Globe valve 1
 throttle1 = Globe("Throttle 1", position=100, flow_coeff=21, press_in=pump1.outlet_pressure,
-                  sys_flow_in=pump1.flow_rate_out)
+                  sys_flow_in=pump1.flow)
 throttle1.flow_out = throttle1.flow_in
 throttle1.press_drop(throttle1.flow_out)
 throttle1.valve_flow_out(throttle1.Cv, throttle1.deltaP)
@@ -53,7 +54,7 @@ relief1 = Relief("Relief 1", open_press=60, close_press=55, press_in=pump2.outle
 
 # Globe Valve 2
 recirc1 = Globe("Throttle 2", position=100, flow_coeff=21, press_in=pump2.outlet_pressure,
-                sys_flow_in=pump2.flow_rate_out)
+                sys_flow_in=pump2.flow)
 recirc1.flow_out = recirc1.flow_in
 recirc1.press_drop(recirc1.flow_out)
 recirc1.valve_flow_out(recirc1.Cv, recirc1.deltaP)
