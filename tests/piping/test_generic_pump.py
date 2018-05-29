@@ -1,5 +1,5 @@
 import pytest
-from pump.pump import Pump
+from PipingSystems.pump.pump import Pump
 
 
 class TestPumpSpeed:

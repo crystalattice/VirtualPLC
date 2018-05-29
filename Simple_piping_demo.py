@@ -17,8 +17,8 @@ Version 0.1
 """
 # Valve parameters: name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, open_press=0, close_press=0
 # Pump parameters: name="", flow_rate=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0
-from pump.pump import CentrifPump, PositiveDisplacement
-from valve.valve import Gate, Globe, Relief
+from PipingSystems.pump.pump import CentrifPump, PositiveDisplacement
+from PipingSystems.valve.valve import Gate, Globe, Relief
 
 
 # Pump 1 group (centrifugal)

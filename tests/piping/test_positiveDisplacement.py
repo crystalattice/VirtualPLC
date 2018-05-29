@@ -1,5 +1,5 @@
 import pytest
-from pump.pump import PositiveDisplacement
+from PipingSystems.pump.pump import PositiveDisplacement
 
 
 class TestSpeed:

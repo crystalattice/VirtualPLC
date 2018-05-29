@@ -14,9 +14,6 @@ Date: 5/15/18
 Version 0.1
     Initial build
 """
-import utility_formulas
-from valve.valve import *
-from pump.pump import *
 
 
 def request_component():
@@ -47,7 +44,11 @@ def gate_valve():
     """Create a gate valve."""
     gate_name = input("Please provide the name for this valve: ")
     gate_position = input("Is the valve open or closed? ")
-    gate_cv = float(input("What is the flow coefficient of the valve? "))
+    gate_cv = float(input("What is the flow coefficient of the valve? If unknown, enter '-1' to calculate an "
+                          "estimate. "))
+    if gate_cv == -1:
+        gate_diam = float(input("What is the valve diameter? "))
+        # gate_cv = Valve.calc_coeff(gate_diam)
     gate_precede_component = int(input("What is feeding into this valve? Tank = 1, Valve = 2, Pump = 3"))
     if gate_precede_component == 1:
         gate_tank_diam = float(input("What is the diameter of the pipe from the tank, in inches? "))
@@ -55,3 +56,11 @@ def gate_valve():
         gate_tank_slope = float(input("What is the slope of the pipe from the tank to the valve?"))
     gate_flow_in = input("What is the flow rate into the valve, in gallons per minute? ")
     gate_press_in = input("What is the inlet pressure of the valve? ")
+
+
+def globe_valve():
+    pass
+
+
+def relief_valve():
+    pass

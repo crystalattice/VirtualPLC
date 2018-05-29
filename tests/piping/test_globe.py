@@ -1,4 +1,4 @@
-from valve.valve import Globe
+from PipingSystems.valve.valve import Globe
 
 
 class TestGlobe():

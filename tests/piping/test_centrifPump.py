@@ -1,5 +1,5 @@
 import pytest
-from pump.pump import CentrifPump
+from PipingSystems.pump.pump import CentrifPump
 
 
 class TestPumpSpeed():

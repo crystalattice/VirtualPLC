@@ -1,4 +1,4 @@
-from valve.valve import Gate
+from PipingSystems.valve.valve import Gate
 
 
 class TestGate():
