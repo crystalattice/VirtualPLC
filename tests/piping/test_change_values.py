@@ -40,21 +40,21 @@ def test_valve3():
 
 
 def test_gear_pump():
-    pump2.head_in = utility_formulas.press_to_head(valve3.press_out)
-    assert pump2.head_in == 33.5656366192537
+    pump1.head_in = utility_formulas.press_to_head(valve3.press_out)
+    assert pump1.head_in == 33.5656366192537
 
 
 # Change Pump 1 Speed
 def test_centrif_speed():
     pump1.adjust_speed(3000)
-    assert pump1.flow_rate_out == 85.71428571428571
+    assert pump1.flow == 85.71428571428571
     assert pump1.outlet_pressure == 47.0204081632653
-    assert pump1.wattage == 1.622331369097493
+    assert pump1.power == 1.21091176015825
 
 
 def test_throttle_open():
     throttle1.open()  # Reset throttle to fully open
-    throttle1.flow_in = pump1.flow_rate_out
+    throttle1.flow_in = pump1.flow
     throttle1.flow_out = throttle1.flow_in
     throttle1.press_in = pump1.outlet_pressure
     throttle1.press_out = throttle1.press_in

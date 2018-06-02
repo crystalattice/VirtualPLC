@@ -20,7 +20,6 @@ valve1.get_press_out(valve1.press_in)
 # Centrif Pump
 pump1 = CentrifPump("Pump 1", pump_head_in=utility_formulas.press_to_head(valve1.press_out))
 pump1.start_pump(1750, 50, 16)
-print(pump1.flow)
 
 # Globe valve 1
 throttle1 = Globe("Throttle 1", position=100, flow_coeff=21, press_in=pump1.outlet_pressure,

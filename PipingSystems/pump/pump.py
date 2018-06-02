@@ -70,8 +70,8 @@ class Pump:
         :rtype: int
         """
         try:
-            if type(new_speed) != int:
-                raise TypeError("Integer values only.")
+            if type(new_speed) == str:
+                raise TypeError("unsupported operand type(s) for /: 'str' and 'int'")
             elif new_speed < 0:
                 raise ValueError("Speed must be 0 or greater.")
         except TypeError:
@@ -181,18 +181,6 @@ class CentrifPump(Pump):
         return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.power)
 
     def adjust_speed(self, new_speed):
-        """Modify the speed of the pump.
-
-        Affects the outlet flow rate, outlet pressure, and power requirements for the pump.
-
-        :param new_speed: New pump speed
-
-        :return: Updates flow rate, output pressure, and pump power requirement
-        :rtype: tuple
-        """
-        self.speed, self.__flow_rate_out, self.__outlet_pressure, self.__wattage = self.pump_laws(new_speed)
-
-    def pump_laws(self, new_speed):
         """Defines pump characteristics that are based on pump speed.
 
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
@@ -202,7 +190,7 @@ class CentrifPump(Pump):
         :return: Pump speed, flow rate, outlet pressure, and power
         :rtype: tuple
         """
-        n2 = self.__speed = new_speed  # Validate input
+        n2 = new_speed  # Validate input
 
         if self.speed == 0:  # Pump initially stopped
             n1 = 1
@@ -211,13 +199,11 @@ class CentrifPump(Pump):
         v1 = self.flow
         hp1 = self.outlet_pressure
 
-        self.__flow_rate_out = v1 * (n2 / n1)  # New flow rate
-        self.__outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
+        self.flow = v1 * (n2 / n1)  # New flow rate
+        self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
         self.speed = n2  # Replace old speed with new value
         delta_p = self.diff_press_psi(self.head_in, utility_formulas.press_to_head(self.outlet_pressure))
-        self.__wattage = self.pump_power(self.__flow_rate_out, delta_p)
-
-        return self.speed, self.flow, self.outlet_pressure, self.__wattage
+        self.power = self.pump_power(self.flow, delta_p)
 
     def start_pump(self, speed, flow, out_press=0.0, out_ft=0.0):
         """System characteristics when a pump is initially started.
@@ -235,9 +221,9 @@ class CentrifPump(Pump):
         self.speed = speed
         self.flow = flow
         if out_press > 0.0:
-            self.__outlet_pressure = out_press
+            self.outlet_pressure = out_press
         elif out_ft > 0.0:
-            self.__outlet_pressure = utility_formulas.head_to_press(out_ft)
+            self.outlet_pressure = utility_formulas.head_to_press(out_ft)
         else:
             return "Outlet pump pressure required."
         delta_p = self.outlet_pressure - utility_formulas.head_to_press(self.head_in)
@@ -293,13 +279,11 @@ class PositiveDisplacement(Pump):
         :return: Flow rate, pump power, and new speed
         :rtype: tuple
         """
-        self.speed = self.speed = new_speed
+        self.speed = new_speed
         press_in = utility_formulas.head_to_press(self.head_in)
 
-        self.__flow_rate_out = self.speed * self.displacement
-        self.__wattage = self.pump_power(self.flow, self.diff_press_psi(press_in, self.outlet_pressure))
-
-        return self.__flow_rate_out, self.__wattage, self.speed
+        self.flow = self.speed * self.displacement
+        self.power = self.pump_power(self.flow, self.diff_press_psi(press_in, self.outlet_pressure))
 # TODO: Account for different flow rates based on outlet pressure
 
 

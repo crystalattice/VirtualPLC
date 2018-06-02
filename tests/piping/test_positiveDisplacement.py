@@ -37,27 +37,27 @@ class TestAdjustSpeed:
     def test_adjust_speed_expected(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(25)
-        assert p.flow_rate_out == 1.25
-        assert p.wattage == 0.005776719563607849
+        assert p.flow == 1.25
+        assert p.power == 0.005776719563607849
         assert p.speed == 25
 
     def test_adjust_speed_zero(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         p.adjust_speed(0)
-        assert p.flow_rate_out == 0.0
-        assert p.wattage == 0.0
+        assert p.flow == 0.0
+        assert p.power == 0.0
         assert p.speed == 0
 
     def test_adjust_speed_neg(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         with pytest.raises(ValueError) as excinfo:
-            p.set_speed(-10)
+            p.speed = -10
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Speed must be 0 or greater."
 
     def test_speed_control_non_int(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
         with pytest.raises(TypeError) as excinfo:
-            p.set_speed(12.5)
+            p.speed = "a"
         exception_msg = excinfo.value.args[0]
-        assert exception_msg == "Integer values only."
+        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"

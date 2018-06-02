@@ -59,34 +59,34 @@ class TestChangeSpeed:
         with pytest.raises(TypeError) as excinfo:
             p.adjust_speed("a")
         exception_msg = excinfo.value.args[0]
-        assert exception_msg == "Integer values only."
+        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"
 
 
 class TestPumpLaws:
     def test_pump_laws_expected(self):
         p = CentrifPump("", flow_rate_out=75, pump_head_in=3, press_out=7.3, pump_speed=1750)
-        p.pump_laws(500)
-        assert p.flow_rate_out == 21.428571428571427
+        p.adjust_speed(500)
+        assert p.flow == 21.428571428571427
         assert p.outlet_pressure == 0.5959183673469387
-        assert p.wattage == 0.006569936061502869
+        assert p.power == 0.006569936061502869
 
     def test_pump_laws_zero(self):
         p = CentrifPump("", 100, 12, 45, 300)
-        p.pump_laws(0)
-        assert p.flow_rate_out == 0.0
+        p.adjust_speed(0)
+        assert p.flow == 0.0
         assert p.outlet_pressure == 0.0
-        assert p.wattage == 0.0
+        assert p.power == 0.0
 
     def test_pump_laws_neg(self):
         p = CentrifPump("", 100, 12, 45, 300)
         with pytest.raises(ValueError) as excinfo:
-            p.set_speed(-120)
+            p.speed = -120
         exception_msg = excinfo.value.args[0]
         assert exception_msg == "Speed must be 0 or greater."
 
     def test_pump_laws_non_int(self):
         p = CentrifPump("", 100, 12, 45, 300)
         with pytest.raises(TypeError) as excinfo:
-            p.set_speed(85.3)
+            p.speed = "a"
         exception_msg = excinfo.value.args[0]
-        assert exception_msg == "Integer values only."
+        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"

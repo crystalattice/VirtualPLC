@@ -126,7 +126,6 @@ class Valve:
             self.press_in = press_in  # In case the valve initialization didn't include it, or the value has changed
         self.press_drop(self.flow_out)
         self.press_out = self.press_in - self.deltaP
-        return self.press_out
 
     @property
     def position(self):

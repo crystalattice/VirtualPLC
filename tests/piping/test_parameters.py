@@ -41,9 +41,9 @@ def test_pump1_input_press():
 
 def test_pump1_start_pump():
     assert pump1.speed == 1750
-    assert pump1.flow_rate_out == 50
+    assert pump1.flow == 50
     assert pump1.outlet_pressure == 16
-    assert pump1.wattage == 0.11770474358069433
+    assert pump1.power == 0.11770474358069433
 
 
 # Globe valve 1
@@ -116,8 +116,8 @@ def test_pump2_input_press():
 
 def test_pump2_output():
     assert pump2.speed == 300
-    assert pump2.flow_rate_out == 28.8
-    assert pump2.wattage == 0.10753003776038036
+    assert pump2.flow == 28.8
+    assert pump2.power == 0.10753003776038036
 
 
 # Relief Valve 1
