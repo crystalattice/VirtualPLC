@@ -18,7 +18,7 @@ class Tank:
     """Generic storage tank."""
     def __init__(self, name="", level=0.0, fluid_density=1.94, spec_gravity=1.0):
         self.name = name
-        self.__level = level  # feet
+        self.__level = float(level)  # feet
         self.fluid_density = fluid_density
         self.spec_grav = spec_gravity
         self.tank_press = 0.0
