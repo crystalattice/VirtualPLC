@@ -22,10 +22,8 @@ class TestPumpSpeed:
 
     def test_speed_control_non_int(self):
         p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300)
-        with pytest.raises(TypeError) as excinfo:
+        with pytest.raises(TypeError):
             p.speed = "a"
-        exception_msg = excinfo.value.args[0]
-        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"
 
 
 class TestPumpReadSpeed:

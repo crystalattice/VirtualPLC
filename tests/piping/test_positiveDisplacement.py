@@ -57,7 +57,5 @@ class TestAdjustSpeed:
 
     def test_speed_control_non_int(self):
         p = PositiveDisplacement(press_out=24.5, pump_speed=75, displacement=0.05)
-        with pytest.raises(TypeError) as excinfo:
+        with pytest.raises(TypeError):
             p.speed = "a"
-        exception_msg = excinfo.value.args[0]
-        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"

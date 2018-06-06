@@ -12,6 +12,7 @@ Version 0.1
     Initial build
 """
 import utility_formulas
+import numbers
 
 
 class Tank:
@@ -21,12 +22,25 @@ class Tank:
         self.__level = float(level)  # feet
         self.fluid_density = fluid_density
         self.spec_grav = spec_gravity
-        self.tank_press = 0.0
+        self.__tank_press = 0.0
 
+    @property
     def static_tank_press(self):
+        """Return hydrostatic tank pressure."""
+        return self.__tank_press
+
+    @static_tank_press.setter
+    def static_tank_press(self, level):
         """Calculate the static fluid pressure based on tank level."""
-        self.tank_press = utility_formulas.head_to_press(self.level, self.spec_grav)
-        return self.tank_press
+        try:
+            if not isinstance(level, numbers.Number):
+                raise TypeError("Numeric values only.")
+            elif level <= 0:
+                self.__tank_press = 0.0
+            else:
+                self.__tank_press = utility_formulas.head_to_press(level, self.spec_grav)
+        except TypeError:
+            raise  # Re-raise for testing
 
     @property
     def level(self):
@@ -36,11 +50,25 @@ class Tank:
     @level.setter
     def level(self, level):
         """Set the level in the tank."""
-        self.__level = level
+        try:
+            if not isinstance(level, numbers.Number):
+                raise TypeError("Numeric values only.")
+            elif level <= 0:
+                self.__level = 0.0
+            else:
+                self.__level = level
+        except TypeError:
+            raise  # Re-raise error for testing
 
 
 if __name__ == "__main__":
     tank1 = Tank("tank1", 10)
     print(tank1.level)
+    tank1.static_tank_press = tank1.level
+    print(tank1.static_tank_press)
     tank1.level = 8.0
+    print(tank1.level)
+    tank1.static_tank_press = tank1.level
+    print(tank1.static_tank_press)
+    tank1.level = "a"
     print(tank1.level)

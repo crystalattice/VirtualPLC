@@ -147,11 +147,12 @@ class Valve:
         """
         try:
             if type(new_position) != int:
-                raise TypeError
+                raise TypeError("Integer values only.")
+            else:
+                self.__position = new_position
         except TypeError:
-            return "Integer values only."
-        else:
-            self.__position = new_position
+            raise  # Re-raise for testing
+
 
     def open(self):
         """Open the valve"""

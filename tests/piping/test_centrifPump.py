@@ -56,10 +56,8 @@ class TestChangeSpeed:
 
     def test_adjust_speed_non_int(self):
         p = CentrifPump("", 100, 12, 45, 300)
-        with pytest.raises(TypeError) as excinfo:
+        with pytest.raises(TypeError):
             p.adjust_speed("a")
-        exception_msg = excinfo.value.args[0]
-        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"
 
 
 class TestPumpLaws:
@@ -89,4 +87,4 @@ class TestPumpLaws:
         with pytest.raises(TypeError) as excinfo:
             p.speed = "a"
         exception_msg = excinfo.value.args[0]
-        assert exception_msg == "unsupported operand type(s) for /: 'str' and 'int'"
+        assert exception_msg == "Numeric values only."

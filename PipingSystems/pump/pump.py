@@ -16,9 +16,9 @@ Date: 4/12/18
 Version 0.1
     Initial build
 """
-# TODO: Identify and decorate properties
 
 import math
+import numbers
 import utility_formulas
 
 # from pymodbus.client.sync import ModbusTcpClient
@@ -70,16 +70,16 @@ class Pump:
         :rtype: int
         """
         try:
-            if type(new_speed) == str:
-                raise TypeError("unsupported operand type(s) for /: 'str' and 'int'")
+            if not isinstance(new_speed, numbers.Number):
+                raise TypeError("Numeric values only.")
             elif new_speed < 0:
                 raise ValueError("Speed must be 0 or greater.")
+            else:
+                self.__speed = new_speed
         except TypeError:
             raise  # Re-raise error for testing
         except ValueError:
             raise  # Re-raise error for testing
-        else:
-            self.__speed = new_speed
 
     @property
     def outlet_pressure(self):
