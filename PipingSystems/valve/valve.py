@@ -22,8 +22,6 @@ Version 0.1
 
 import math
 
-# from pymodbus.client.sync import ModbusTcpClient
-
 
 class Valve:
     """Generic class for valves.

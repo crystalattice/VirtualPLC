@@ -21,8 +21,6 @@ import math
 import numbers
 import utility_formulas
 
-# from pymodbus.client.sync import ModbusTcpClient
-
 GRAVITY = 9.81  # m/s^2
 
 
