@@ -127,8 +127,8 @@ class Pump:
         density = fluid_spec_weight / 0.0624
         head = diff_head / 3.2808
         hyd_power = (100 * (flow_rate * density * GRAVITY * head) / 1000) / 100
-        self.__wattage = hyd_power
-        return self.__wattage
+        self.power = hyd_power
+        return self.power
 
     @staticmethod
     def diff_press_ft(in_press_ft, out_press_ft):

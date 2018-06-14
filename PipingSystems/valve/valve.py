@@ -90,7 +90,6 @@ class Valve:
 
         Flow rate = valve coefficient / sqrt(spec. grav. / press. drop)
 
-
         :param flow_coeff: Valve flow coefficient
         :param press_drop: Pressure drop (psi)
         :param spec_grav: Fluid specific gravity
@@ -216,11 +215,7 @@ class Globe(Valve):
     """
 
     def read_position(self):
-        """Identify the position of the valve.
-
-        :return: Percent open
-        :rtype: str
-        """
+        """Identify the position of the valve."""
         return "{name} is {position}% open.".format(name=self.name, position=self.position)
 
     def turn_handle(self, new_position):
