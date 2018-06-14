@@ -10,7 +10,7 @@ class TestPumpSpeed:
 
     def test_speed_control_zero(self):
         p = Pump(name="", flow_rate_out=100, pump_head_in=12, press_out=45, pump_speed=300)
-        p.speed =0
+        p.speed = 0
         assert p.speed == 0
 
     def test_speed_control_neg(self):

@@ -65,3 +65,9 @@ valve4.flow_out = valve4.flow_in
 valve4.press_drop(valve4.flow_out)
 valve4.valve_flow_out(valve4.Cv, valve4.deltaP)
 valve4.get_press_out(valve4.press_in)
+
+if __name__ == "__main__":
+    print(valve1.flow_out)
+    print(valve1.deltaP)
+    print(valve1.press_in)
+    print(valve1.press_out)

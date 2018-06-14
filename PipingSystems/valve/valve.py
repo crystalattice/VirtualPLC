@@ -17,12 +17,8 @@ Date: 4/9/18
 Version 0.1
     Initial build
 """
-# TODO: Identify and decorate properties
-# TODO: Have relief affect pump outlet pressure
 
 import math
-
-# from pymodbus.client.sync import ModbusTcpClient
 
 
 class Valve:
@@ -153,7 +149,6 @@ class Valve:
         except TypeError:
             raise  # Re-raise for testing
 
-
     def open(self):
         """Open the valve"""
         self.__position = 100
@@ -172,7 +167,6 @@ class Gate(Valve):
         read_position()
         turn_handle()
     """
-
     def read_position(self):
         """Identify the position of the valve.
 
@@ -199,6 +193,16 @@ class Gate(Valve):
             self.open()
         else:  # Shouldn't get here
             return "Warning: Invalid valve position."
+
+    def open(self):
+        self.position = 100
+        self.flow_out = self.flow_in
+        self.press_out = self.press_in
+
+    def close(self):
+        self.position = 0
+        self.flow_out = 0
+        self.press_out = 0
 
 
 class Globe(Valve):
@@ -247,7 +251,7 @@ class Relief(Valve):
     Methods:
         read_position()
         set_open_pressure()
-        set_blowdown()
+        set_close_pressure()
         read_open_pressure()
         read_close_pressure()
         valve_operation()
