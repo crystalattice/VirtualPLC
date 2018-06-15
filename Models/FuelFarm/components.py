@@ -32,8 +32,8 @@ tank2 = tank.Tank("Tank 2", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC
 tank2.static_tank_press = tank1.level
 tank2.flow_out = utility_formulas.gravity_flow_rate(diameter=16, slope=0.25, rough_coeff=140)
 
-# Tank-pump connections
-# Assumes 16 inch pipe connection
+# Pump inlet manifold
+# 16 inch to 4 inch connections
 gate1 = valve.Gate("Gate valve 1", sys_flow_in=tank1.flow_out, press_in=tank1.static_tank_press)
 gate1.calc_coeff(16)
 
@@ -41,24 +41,54 @@ gate2 = valve.Gate("Gate valve 2", sys_flow_in=tank2.flow_out, press_in=tank2.st
 gate2.calc_coeff(16)
 
 gate3 = valve.Gate("Gate valve 3", sys_flow_in=gate1.flow_out, press_in=gate1.press_out)
-gate3.calc_coeff(16)
+gate3.calc_coeff(4)
 
 gate4 = valve.Gate("Gate valve 4", sys_flow_in=gate2.flow_out, press_in=gate2.press_out)
-gate4.calc_coeff(16)
+gate4.calc_coeff(4)
 
 gate5 = valve.Gate("Gate valve 5", sys_flow_in=gate1.flow_out, press_in=gate1.press_out)
-gate5.calc_coeff(16)
+gate5.calc_coeff(4)
 
 gate6 = valve.Gate("Gate valve 6", sys_flow_in=gate3.flow_out + gate4.flow_out,
                    press_in=gate3.press_out + gate4.press_out)
-gate6.calc_coeff(16)
+gate6.calc_coeff(4)
 
 gate7 = valve.Gate("Gate valve 7", sys_flow_in=gate2.flow_out, press_in=gate2.press_out)
-gate7.calc_coeff(16)
+gate7.calc_coeff(4)
 
 # Fuel pumps
-pump1 = pump.PositiveDisplacement("Pump 1", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0,
-                                  displacement=0)
+pump1 = pump.PositiveDisplacement("Pump 1",
+                                  flow_rate_out=0.0,
+                                  pump_head_in=utility_formulas.press_to_head(gate5.press_out),
+                                  displacement=0.3)
+
+pump2 = pump.PositiveDisplacement("Pump 2",
+                                  flow_rate_out=0.0,
+                                  pump_head_in=utility_formulas.press_to_head(gate6.press_out),
+                                  displacement=0.3)
+
+pump3 = pump.PositiveDisplacement("Pump 3",
+                                  flow_rate_out=0.0,
+                                  pump_head_in=utility_formulas.press_to_head(gate7.press_out),
+                                  displacement=0.3)
+
+# Pump outlet manifold
+relief1 = valve.Relief("Relief 1", sys_flow_in=pump1.flow, flow_coeff=0.81)
+relief2 = valve.Relief("Relief 2", sys_flow_in=pump2.flow, flow_coeff=0.81)
+relief3 = valve.Relief("Relief 3", sys_flow_in=pump3.flow, flow_coeff=0.81)
+
+throttle1 = valve.Globe("Flow Control 1", sys_flow_in=pump1.flow, press_in=pump1.outlet_pressure, flow_coeff=165)
+throttle2 = valve.Globe("Flow Control 2", sys_flow_in=pump1.flow, press_in=pump1.outlet_pressure, flow_coeff=165)
+throttle3 = valve.Globe("Flow Control 3", sys_flow_in=pump1.flow, press_in=pump1.outlet_pressure, flow_coeff=165)
+
+gate8 = valve.Gate("Gate valve 8", sys_flow_in=throttle3.flow_out, press_in=throttle3.press_out)
+gate8.calc_coeff(4)
+
+gate9 = valve.Gate("Gate valve 9", sys_flow_in=throttle1.flow_out, press_in=throttle1.press_out)
+gate9.calc_coeff(4)
+
+gate10 = valve.Gate("Gate valve 10", sys_flow_in=throttle3.flow_out, press_in=throttle3.press_out)
+gate10.calc_coeff(4)
 
 
 if __name__ == "__main__":
@@ -109,6 +139,7 @@ if __name__ == "__main__":
     print(gate4.flow_out)
     print(gate4.press_in)
     print(gate4.press_out)
+    gate4.close()
 
     print("\nGate 6")
     print(gate6.flow_out)
@@ -124,12 +155,12 @@ if __name__ == "__main__":
     print(gate6.flow_out)
     print(gate6.press_in)
     print(gate6.press_out)
-    gate4.close()
+    gate4.open()
     gate6.press_in = gate3.press_out + gate4.press_out
     gate6.flow_in = gate3.flow_out + gate4.flow_out
     gate6.press_out = gate6.press_in
     gate6.flow_out = gate6.flow_in
-    print("Gate 4 closed")
+    print("Gate 4 open")
     print(gate6.flow_out)
     print(gate6.press_in)
     print(gate6.press_out)
