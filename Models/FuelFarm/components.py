@@ -26,11 +26,11 @@ SPEC_GRAVITY = 0.840
 # Assumes 16 inch diam transfer piping
 tank1 = tank.Tank("Tank 1", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY)
 tank1.static_tank_press = tank1.level
-tank1.flow_out = utility_formulas.gravity_flow_rate(diameter=16, slope=0.25, rough_coeff=140)
+tank1.gravity_flow(diameter=16, slope=0.25, pipe_coeff=140)
 
 tank2 = tank.Tank("Tank 2", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY)
 tank2.static_tank_press = tank1.level
-tank2.flow_out = utility_formulas.gravity_flow_rate(diameter=16, slope=0.25, rough_coeff=140)
+tank2.gravity_flow(diameter=16, slope=0.25, pipe_coeff=140)
 
 # Pump inlet manifold
 # 16 inch to 4 inch connections
