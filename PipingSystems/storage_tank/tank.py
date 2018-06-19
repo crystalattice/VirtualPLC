@@ -20,9 +20,10 @@ class Tank:
     def __init__(self, name="", level=0.0, fluid_density=1.94, spec_gravity=1.0):
         self.name = name
         self.__level = float(level)  # feet
-        self.fluid_density = fluid_density
+        self.fluid_density = fluid_density  # slugs/ft3
         self.spec_grav = spec_gravity
         self.__tank_press = 0.0
+        self.flow_out = 0.0
 
     @property
     def static_tank_press(self):
@@ -38,7 +39,7 @@ class Tank:
             elif level <= 0:
                 self.__tank_press = 0.0
             else:
-                self.__tank_press = utility_formulas.head_to_press(level, self.spec_grav)
+                self.__tank_press = utility_formulas.static_press(self.level, self.fluid_density)
         except TypeError:
             raise  # Re-raise for testing
 
@@ -59,6 +60,14 @@ class Tank:
                 self.__level = level
         except TypeError:
             raise  # Re-raise error for testing
+        finally:
+            self.static_tank_press = self.level
+
+    def gravity_flow(self, diameter, slope, pipe_coeff):
+        if self.level > 0:
+            self.flow_out = utility_formulas.gravity_flow_rate(diameter, slope, pipe_coeff)
+        else:
+            self.flow_out = 0.0
 
 
 if __name__ == "__main__":
