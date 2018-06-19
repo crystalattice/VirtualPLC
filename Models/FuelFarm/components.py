@@ -24,13 +24,15 @@ SPEC_GRAVITY = 0.840
 # Storage tanks
 # Assumes 36 ft tall tank w/ 1 million gallon capacity = 27778 gallons per foot
 # Assumes 16 inch diam transfer piping
-tank1 = tank.Tank("Tank 1", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY)
+tank1 = tank.Tank("Tank 1", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY, outlet_diam=16,
+                  outlet_slope=0.25)
 tank1.static_tank_press = tank1.level
-tank1.gravity_flow(diameter=16, slope=0.25, pipe_coeff=140)
+tank1.gravity_flow(tank1.pipe_diam, tank1.pipe_slope, tank1.pipe_coeff)
 
-tank2 = tank.Tank("Tank 2", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY)
-tank2.static_tank_press = tank1.level
-tank2.gravity_flow(diameter=16, slope=0.25, pipe_coeff=140)
+tank2 = tank.Tank("Tank 2", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY, outlet_diam=16,
+                  outlet_slope=0.25)
+tank2.static_tank_press = tank2.level
+tank2.gravity_flow(tank2.pipe_diam, tank2.pipe_slope, tank2.pipe_coeff)
 
 # Pump inlet manifold
 # 16 inch to 4 inch connections
@@ -41,10 +43,10 @@ gate2 = valve.Gate("Gate valve 2", sys_flow_in=tank2.flow_out, press_in=tank2.st
 gate2.calc_coeff(16)
 
 gate3 = valve.Gate("Gate valve 3", sys_flow_in=gate1.flow_out, press_in=gate1.press_out)
-gate3.calc_coeff(4)
+gate3.calc_coeff(16)
 
 gate4 = valve.Gate("Gate valve 4", sys_flow_in=gate2.flow_out, press_in=gate2.press_out)
-gate4.calc_coeff(4)
+gate4.calc_coeff(16)
 
 gate5 = valve.Gate("Gate valve 5", sys_flow_in=gate1.flow_out, press_in=gate1.press_out)
 gate5.calc_coeff(4)
