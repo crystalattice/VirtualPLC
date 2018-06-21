@@ -33,13 +33,13 @@ class TestTankPressure:
     def test_tank_press(self):
         tank1 = Tank("tank1", 10)
         tank1.static_tank_press = tank1.level
-        assert tank1.static_tank_press == 4.335242201711244
+        assert tank1.static_tank_press == 4.334552777777777
 
     def test_tank_press_change(self):
         tank1 = Tank()
         tank1.level = 8.0
         tank1.static_tank_press = tank1.level
-        assert tank1.static_tank_press == 3.4681937613689953
+        assert tank1.static_tank_press == 3.467642222222222
 
     def test_tank_press_zero(self):
         tank1 = Tank()
