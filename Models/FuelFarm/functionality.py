@@ -59,16 +59,21 @@ def gate3_open():
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate3.press_out
     ffc.gate6.flow_in = ffc.gate3.flow_out + ffc.gate4.flow_out
-    ffc.gate4.press_in = ffc.gate3.press_out
-    ffc.gate4.flow_in = ffc.gate3.flow_out
+    if ffc.gate2.position == 0:
+        ffc.gate4.press_in = ffc.gate3.press_out
+        ffc.gate4.flow_in = ffc.gate3.flow_out
+    if ffc.gate1.position == 0:
+        ffc.gate5.press_in = ffc.gate3.press_out
+        ffc.gate5.flow_in = ffc.gate3.flow_out
 
 
 def gate3_close():
     ffc.gate3.close()
     ffc.gate6.press_in = ffc.gate4.press_out
     ffc.gate6.flow_in = ffc.gate4.flow_out
-    ffc.gate4.press_in = ffc.gate2.press_out
-    ffc.gate4.flow_in = ffc.gate2.flow_out
+    if ffc.gate2.position == 0:
+        ffc.gate4.press_in = 0.0
+        ffc.gate4.flow_in = 0.0
 
 
 # Gate valve 4
@@ -81,13 +86,51 @@ def gate4_open():
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate4.press_out
     ffc.gate6.flow_in = ffc.gate4.flow_out + ffc.gate3.flow_out
-    ffc.gate3.press_in = ffc.gate4.press_out
-    ffc.gate3.flow_in = ffc.gate4.flow_out
+    if ffc.gate1.position == 0:
+        ffc.gate3.press_in = ffc.gate4.press_out
+        ffc.gate3.flow_in = ffc.gate4.flow_out
+    if ffc.gate2.position == 0:
+        ffc.gate7.press_in = ffc.gate4.press_out
+        ffc.gate7.flow_out = ffc.gate4.flow_out
 
 
 def gate4_close():
     ffc.gate4.close()
     ffc.gate6.press_in = ffc.gate3.press_out
     ffc.gate6.flow_in = ffc.gate3.flow_out
-    ffc.gate3.press_in = ffc.gate1.press_out
-    ffc.gate3.flow_in = ffc.gate1.flow_out
+    if ffc.gate1.position == 0:
+        ffc.gate3.press_in = 0.0
+        ffc.gate3.flow_in = 0.0
+
+
+# Gate valve 5
+def gate5_open():
+    ffc.gate5.open()
+    ffc.pump1.head_in = utility_formulas.press_to_head(ffc.gate5.press_out)
+
+
+def gate5_close():
+    ffc.gate5.close()
+    ffc.pump1.head_in = 0.0
+
+
+# Gate valve 6
+def gate6_open():
+    ffc.gate6.open()
+    ffc.pump2.head_in = utility_formulas.press_to_head(ffc.gate6.press_out)
+
+
+def gate6_close():
+    ffc.gate6.close()
+    ffc.pump2.head_in = 0.0
+
+
+# Gate valve 7
+def gate7_open():
+    ffc.gate7.open()
+    ffc.pump3.head_in = utility_formulas.press_to_head(ffc.gate7.press_out)
+
+
+def gate7_close():
+    ffc.gate7.close()
+    ffc.pump3.head_in = 0.0

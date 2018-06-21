@@ -37,6 +37,8 @@ class TestTank:
 class TestGate1:
     @staticmethod
     def test_gate1_closed():
+        fff.gate1_close()
+        assert ffc.gate1.position == 0
         assert ffc.gate1.flow_in == 19542.86939891452
         assert ffc.gate1.press_in == 13.109851301499999
         assert ffc.gate1.flow_out == 0.0
@@ -45,6 +47,7 @@ class TestGate1:
     @staticmethod
     def test_gate1_open():
         fff.gate1_open()
+        assert ffc.gate1.position == 100
         assert ffc.gate1.flow_in == 19542.86939891452
         assert ffc.gate1.press_in == 13.109851301499999
         assert ffc.gate1.flow_out == 19542.86939891452
@@ -55,6 +58,7 @@ class TestGate2:
     @staticmethod
     def test_gate2_closed():
         fff.gate2_close()
+        assert ffc.gate2.position == 0
         assert ffc.gate2.flow_in == 19542.86939891452
         assert ffc.gate2.press_in == 13.109851301499999
         assert ffc.gate2.flow_out == 0.0
@@ -63,6 +67,7 @@ class TestGate2:
     @staticmethod
     def test_gate2_open():
         fff.gate2_open()
+        assert ffc.gate2.position == 100
         assert ffc.gate2.flow_in == 19542.86939891452
         assert ffc.gate2.press_in == 13.109851301499999
         assert ffc.gate2.flow_out == 19542.86939891452
@@ -73,6 +78,8 @@ class TestGate3:
     def test_gate3_no_flow(self):
         fff.gate1_close()
         fff.gate4_close()
+        assert ffc.gate1.position == 0
+        assert ffc.gate4.position == 0
         assert ffc.gate3.flow_in == 0.0
         assert ffc.gate3.press_in == 0.0
         assert ffc.gate3.flow_out == 0.0
@@ -81,11 +88,14 @@ class TestGate3:
     def test_gate3_flow_in(self):
         fff.gate4_close()
         fff.gate1_open()
+        assert ffc.gate4.position == 0
+        assert ffc.gate1.position == 100
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 0.0
         assert ffc.gate3.press_out == 0.0
         fff.gate1_close()
+        assert ffc.gate1.position == 0
         assert ffc.gate3.flow_in == 0.0
         assert ffc.gate3.press_in == 0.0
         assert ffc.gate3.flow_out == 0.0
@@ -96,6 +106,10 @@ class TestGate3:
         fff.gate2_close()
         fff.gate4_close()
         fff.gate3_open()
+        assert ffc.gate1.position == 100
+        assert ffc.gate2.position == 0
+        assert ffc.gate4.position == 0
+        assert ffc.gate3.position == 100
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 19542.86939891452
@@ -105,6 +119,7 @@ class TestGate3:
         assert ffc.gate4.flow_in == 19542.86939891452
         assert ffc.gate4.press_in == 13.109851301499999
         fff.gate3_close()
+        assert ffc.gate3.position == 0
         assert ffc.gate3.flow_out == 0.0
         assert ffc.gate3.press_out == 0.0
         assert ffc.gate6.flow_in == 0.0
@@ -117,6 +132,10 @@ class TestGate3:
         fff.gate2_open()
         fff.gate3_open()
         fff.gate4_open()
+        assert ffc.gate1.position == 100
+        assert ffc.gate2.position == 100
+        assert ffc.gate4.position == 100
+        assert ffc.gate3.position == 100
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 19542.86939891452
@@ -126,6 +145,7 @@ class TestGate3:
         assert ffc.gate4.flow_in == 19542.86939891452
         assert ffc.gate4.press_in == 13.109851301499999
         fff.gate3_close()
+        assert ffc.gate3.position == 0
         assert ffc.gate3.flow_out == 0.0
         assert ffc.gate3.press_out == 0.0
         assert ffc.gate6.flow_in == 19542.86939891452
@@ -140,6 +160,10 @@ class TestGate4:
         fff.gate2_close()
         fff.gate3_close()
         fff.gate4_close()
+        assert ffc.gate1.position == 0
+        assert ffc.gate2.position == 0
+        assert ffc.gate4.position == 0
+        assert ffc.gate3.position == 0
         assert ffc.gate4.flow_in == 0.0
         assert ffc.gate4.press_in == 0.0
         assert ffc.gate4.flow_out == 0.0
@@ -149,11 +173,15 @@ class TestGate4:
         fff.gate1_close()
         fff.gate2_open()
         fff.gate3_close()
+        assert ffc.gate1.position == 0
+        assert ffc.gate2.position == 100
+        assert ffc.gate3.position == 0
         assert ffc.gate4.flow_in == 19542.86939891452
         assert ffc.gate4.press_in == 13.109851301499999
         assert ffc.gate4.flow_out == 0.0
         assert ffc.gate4.press_out == 0.0
         fff.gate2_close()
+        assert ffc.gate2.position == 0
         assert ffc.gate4.flow_in == 0.0
         assert ffc.gate4.press_in == 0.0
         assert ffc.gate4.flow_out == 0.0
@@ -164,6 +192,10 @@ class TestGate4:
         fff.gate3_close()
         fff.gate2_open()
         fff.gate4_open()
+        assert ffc.gate1.position == 0
+        assert ffc.gate2.position == 100
+        assert ffc.gate3.position == 0
+        assert ffc.gate4.position == 100
         assert ffc.gate4.flow_in == 19542.86939891452
         assert ffc.gate4.press_in == 13.109851301499999
         assert ffc.gate4.flow_out == 19542.86939891452
@@ -173,6 +205,7 @@ class TestGate4:
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         fff.gate4_close()
+        assert ffc.gate4.position == 0
         assert ffc.gate4.flow_out == 0.0
         assert ffc.gate4.press_out == 0.0
         assert ffc.gate6.flow_in == 0.0
@@ -185,6 +218,10 @@ class TestGate4:
         fff.gate2_open()
         fff.gate3_open()
         fff.gate4_open()
+        assert ffc.gate1.position == 100
+        assert ffc.gate2.position == 100
+        assert ffc.gate3.position == 100
+        assert ffc.gate4.position == 100
         assert ffc.gate4.flow_in == 19542.86939891452
         assert ffc.gate4.press_in == 13.109851301499999
         assert ffc.gate4.flow_out == 19542.86939891452
@@ -194,6 +231,7 @@ class TestGate4:
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         fff.gate4_close()
+        assert ffc.gate4.position == 0
         assert ffc.gate4.flow_out == 0.0
         assert ffc.gate4.press_out == 0.0
         assert ffc.gate6.flow_in == 19542.86939891452

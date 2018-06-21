@@ -151,10 +151,14 @@ class Valve:
     def open(self):
         """Open the valve"""
         self.__position = 100
+        self.flow_out = self.flow_in
+        self.press_out = self.press_in
 
     def close(self):
         """Close the valve"""
         self.__position = 0
+        self.flow_out = 0
+        self.press_out = 0
 
 
 class Gate(Valve):
@@ -193,16 +197,6 @@ class Gate(Valve):
         else:  # Shouldn't get here
             return "Warning: Invalid valve position."
 
-    def open(self):
-        self.position = 100
-        self.flow_out = self.flow_in
-        self.press_out = self.press_in
-
-    def close(self):
-        self.position = 0
-        self.flow_out = 0
-        self.press_out = 0
-
 
 class Globe(Valve):
     """Throttling valve.
@@ -225,7 +219,7 @@ class Globe(Valve):
 
         :return: Update outlet flow rate, valve pressure drop, and pressure out.
         """
-        self.position = new_position
+        self.__position = new_position
         if self.position == 0:
             self.flow_out = 0.0
             self.deltaP = 0.0
