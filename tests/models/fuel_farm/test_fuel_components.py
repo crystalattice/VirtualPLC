@@ -35,17 +35,18 @@ class TestTank:
 
 
 class TestGate1:
-    @staticmethod
-    def test_gate1_closed():
+    @classmethod
+    def setup_class(cls):
         fff.gate1_close()
+
+    def test_gate1_closed(self):
         assert ffc.gate1.position == 0
         assert ffc.gate1.flow_in == 19542.86939891452
         assert ffc.gate1.press_in == 13.109851301499999
         assert ffc.gate1.flow_out == 0.0
         assert ffc.gate1.press_out == 0.0
 
-    @staticmethod
-    def test_gate1_open():
+    def test_gate1_open(self):
         fff.gate1_open()
         assert ffc.gate1.position == 100
         assert ffc.gate1.flow_in == 19542.86939891452
@@ -55,9 +56,11 @@ class TestGate1:
 
 
 class TestGate2:
-    @staticmethod
-    def test_gate2_closed():
+    @classmethod
+    def setup_class(cls):
         fff.gate2_close()
+
+    def test_gate2_closed(self):
         assert ffc.gate2.position == 0
         assert ffc.gate2.flow_in == 19542.86939891452
         assert ffc.gate2.press_in == 13.109851301499999
@@ -75,9 +78,14 @@ class TestGate2:
 
 
 class TestGate3:
-    def test_gate3_no_flow(self):
-        fff.gate1_close()
+    @classmethod
+    def setup_class(cls):
+        fff.gate2_close()
         fff.gate4_close()
+        fff.gate1_close()
+        fff.gate3_close()
+
+    def test_gate3_no_flow(self):
         assert ffc.gate1.position == 0
         assert ffc.gate4.position == 0
         assert ffc.gate3.flow_in == 0.0
@@ -86,12 +94,10 @@ class TestGate3:
         assert ffc.gate3.press_out == 0.0
 
     def test_gate3_flow_in(self):
-        fff.gate2_close()
         assert ffc.gate2.position == 0
         assert ffc.gate2.flow_out == 0.0
         assert ffc.gate2.press_out == 0.0
 
-        fff.gate4_close()
         assert ffc.gate4.position == 0
         assert ffc.gate4.press_out == 0.0
         assert ffc.gate4.flow_out == 0.0
@@ -101,7 +107,6 @@ class TestGate3:
         assert ffc.gate1.flow_out == 19542.86939891452
         assert ffc.gate1.press_out == 13.109851301499999
 
-        fff.gate3_close()
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 0.0
@@ -122,12 +127,10 @@ class TestGate3:
         assert ffc.gate1.flow_out == 19542.86939891452
         assert ffc.gate1.press_out == 13.109851301499999
 
-        fff.gate2_close()
         assert ffc.gate2.position == 0
         assert ffc.gate2.flow_out == 0.0
         assert ffc.gate2.press_out == 0.0
 
-        fff.gate4_close()
         assert ffc.gate4.position == 0
         assert ffc.gate4.press_out == 0.0
         assert ffc.gate4.flow_out == 0.0
@@ -192,11 +195,14 @@ class TestGate3:
 
 
 class TestGate4:
-    def test_gate4_no_flow(self):
+    @classmethod
+    def setup_class(cls):
         fff.gate1_close()
         fff.gate2_close()
         fff.gate3_close()
         fff.gate4_close()
+
+    def test_gate4_no_flow(self):
         assert ffc.gate1.position == 0
         assert ffc.gate2.position == 0
         assert ffc.gate4.position == 0
@@ -207,9 +213,7 @@ class TestGate4:
         assert ffc.gate4.press_out == 0.0
 
     def test_gate4_flow_in(self):
-        fff.gate1_close()
         fff.gate2_open()
-        fff.gate3_close()
         assert ffc.gate1.position == 0
         assert ffc.gate2.position == 100
         assert ffc.gate3.position == 0
@@ -217,6 +221,7 @@ class TestGate4:
         assert ffc.gate4.press_in == 13.109851301499999
         assert ffc.gate4.flow_out == 0.0
         assert ffc.gate4.press_out == 0.0
+
         fff.gate2_close()
         assert ffc.gate2.position == 0
         assert ffc.gate4.flow_in == 0.0
@@ -225,8 +230,6 @@ class TestGate4:
         assert ffc.gate4.press_out == 0.0
 
     def test_gate4_operation(self):
-        fff.gate1_close()
-        fff.gate3_close()
         fff.gate2_open()
         fff.gate4_open()
         assert ffc.gate1.position == 0
@@ -241,6 +244,7 @@ class TestGate4:
         assert ffc.gate6.press_in == 13.109851301499999
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
+
         fff.gate4_close()
         assert ffc.gate4.position == 0
         assert ffc.gate4.flow_out == 0.0
@@ -267,6 +271,7 @@ class TestGate4:
         assert ffc.gate6.press_in == 13.109851301499999
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
+
         fff.gate4_close()
         assert ffc.gate4.position == 0
         assert ffc.gate4.flow_out == 0.0
@@ -278,32 +283,35 @@ class TestGate4:
 
 
 class TestGate5:
-    def test_gate5_tank1(self):
+    @classmethod
+    def setup_class(cls):
         fff.gate1_open()
+        fff.gate2_close()
+        fff.gate3_close()
+        fff.gate4_close()
+        fff.gate5_open()
+
+    def test_gate5_tank1(self):
         assert ffc.gate1.position == 100
         assert ffc.gate1.flow_out == 19542.86939891452
         assert ffc.gate1.press_out == 13.109851301499999
 
-        fff.gate2_close()
         assert ffc.gate2.position == 0
         assert ffc.gate2.flow_out == 0.0
         assert ffc.gate2.press_out == 0.0
 
-        fff.gate3_close()
         assert ffc.gate3.position == 0
         assert ffc.gate3.flow_in == 19542.86939891452
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 0.0
         assert ffc.gate3.press_out == 0.0
 
-        fff.gate4_close()
         assert ffc.gate4.position == 0
         assert ffc.gate4.flow_in == 0.0
         assert ffc.gate4.press_in == 0.0
         assert ffc.gate4.flow_out == 0.0
         assert ffc.gate4.press_out == 0.0
 
-        fff.gate5_open()
         assert ffc.gate5.position == 100
         assert ffc.gate5.flow_in == 19542.86939891452
         assert ffc.gate5.press_in == 13.109851301499999
@@ -386,3 +394,42 @@ class TestGate5:
 
         assert ffc.gate6.flow_in == 0.0
         assert ffc.gate6.press_in == 0.0
+
+
+class TestGate3TankLevels:
+    @classmethod
+    def setup_class(cls):
+        ffc.tank2.level = 18.0
+        fff.change_tank_level(ffc.tank2, ffc.tank2.level)
+        fff.gate1_open()
+        fff.gate2_open()
+        fff.gate3_open()
+        fff.gate4_open()
+
+    def test_gate3_tank_levels(self):
+        assert ffc.gate1.position == 100
+        assert ffc.gate1.flow_out == 19542.86939891452
+        assert ffc.gate1.press_out == 13.109851301499999
+
+        assert ffc.gate2.position == 100
+        assert ffc.gate2.flow_out == 19542.86939891452
+        assert ffc.gate2.press_out == 6.5549256507499996
+
+        assert ffc.gate3.position == 100
+        assert ffc.gate3.flow_in == 19542.86939891452
+        assert ffc.gate3.press_in == 13.109851301499999
+        assert ffc.gate3.flow_out == 19542.86939891452
+        assert ffc.gate3.press_out == 13.109851301499999
+        assert ffc.gate6.flow_in == 19542.86939891452
+        assert ffc.gate6.press_in == 13.109851301499999
+
+        assert ffc.gate4.position == 100
+        assert ffc.gate4.flow_in == 0.0
+        assert ffc.gate4.press_in == 0.0
+        assert ffc.gate4.flow_out == 0.0
+        assert ffc.gate4.press_out == 0.0
+
+    @classmethod
+    def teardown_class(cls):
+        ffc.tank2.level = 32.0
+        fff.change_tank_level(ffc.tank2, ffc.tank2.level)

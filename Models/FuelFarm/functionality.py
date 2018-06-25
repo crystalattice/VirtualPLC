@@ -160,3 +160,14 @@ def gate7_open():
 def gate7_close():
     ffc.gate7.close()
     ffc.pump3.head_in = 0.0
+
+
+# Change tank level
+def change_tank_level(tank, level):
+    tank.static_tank_press = level
+    if tank == ffc.tank1:
+        ffc.gate1.press_in = ffc.tank1.static_tank_press
+    elif tank == ffc.tank2:
+        ffc.gate2.press_in = ffc.tank2.static_tank_press
+    else:
+        return "Invalid tank number."
