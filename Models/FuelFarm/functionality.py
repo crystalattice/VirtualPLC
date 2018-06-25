@@ -18,10 +18,20 @@ import Models.FuelFarm.components as ffc
 # Gate valve 1
 def gate1_open():
     ffc.gate1.open()
-    ffc.gate3.press_in = ffc.gate1.press_out
-    ffc.gate3.flow_in = ffc.gate1.flow_out
-    ffc.gate5.press_in = ffc.gate1.press_out
-    ffc.gate5.flow_in = ffc.gate1.flow_out
+    if ffc.gate2.position == 100 and ffc.gate4.position == 100:
+        if ffc.gate2.press_out > ffc.gate1.press_out:
+            ffc.gate3.press_in = ffc.gate4.press_out
+            ffc.gate3.press_in = ffc.gate4.flow_out
+    else:
+        ffc.gate3.press_in = ffc.gate1.press_out
+        ffc.gate3.flow_in = ffc.gate1.flow_out
+    if ffc.gate2.position == 100 and ffc.gate4.position == 100 and ffc.gate3.position == 100:
+        if ffc.gate2.press_out > ffc.gate1.press_out:
+            ffc.gate5.press_in = ffc.gate3.press_out
+            ffc.gate5.flow_in = ffc.gate3.flow_out
+    else:
+        ffc.gate5.press_in = ffc.gate1.press_out
+        ffc.gate5.flow_in = ffc.gate1.flow_out
 
 
 def gate1_close():
@@ -35,16 +45,26 @@ def gate1_close():
 # Gate valve 2
 def gate2_open():
     ffc.gate2.open()
-    ffc.gate4.press_in = ffc.gate2.press_out
-    ffc.gate4.flow_in = ffc.gate2.flow_out
-    ffc.gate7.press_in = ffc.gate2.press_out
-    ffc.gate7.flow_in = ffc.gate2.flow_out
+    if ffc.gate1.position == 100 and ffc.gate3.position == 100:
+        if ffc.gate2.press_out < ffc.gate1.press_out:
+            ffc.gate4.press_in = ffc.gate3.press_out
+            ffc.gate4.press_in = ffc.gate3.flow_out
+    else:
+        ffc.gate4.press_in = ffc.gate2.press_out
+        ffc.gate4.flow_in = ffc.gate2.flow_out
+    if ffc.gate1.position == 100 and ffc.gate4.position == 100 and ffc.gate3.position == 100:
+        if ffc.gate2.press_out < ffc.gate1.press_out:
+            ffc.gate7.press_in = ffc.gate4.press_out
+            ffc.gate7.flow_in = ffc.gate4.flow_out
+    else:
+        ffc.gate7.press_in = ffc.gate2.press_out
+        ffc.gate7.flow_in = ffc.gate2.flow_out
 
 
 def gate2_close():
     ffc.gate2.close()
-    ffc.gate4.press_in = ffc.gate3.press_out
-    ffc.gate4.flow_in = ffc.gate3.flow_out
+    ffc.gate4.press_in = ffc.gate4.press_out
+    ffc.gate4.flow_in = ffc.gate4.flow_out
     ffc.gate7.press_in = ffc.gate4.press_out
     ffc.gate7.flow_in = ffc.gate4.flow_out
 
@@ -52,13 +72,16 @@ def gate2_close():
 # Gate valve 3
 def gate3_open():
     ffc.gate3.open()
-    if ffc.gate3.press_out > ffc.gate4.press_out:
-        ffc.gate6.press_in = ffc.gate3.press_out
-    elif ffc.gate3.press_out < ffc.gate4.press_out:
-        ffc.gate6.press_in = ffc.gate4.press_out
+    if ffc.gate1.position == 100 and ffc.gate2.position == 100 and ffc.gate4.position == 100:
+        if ffc.gate3.press_out > ffc.gate4.press_out:
+            ffc.gate6.press_in = ffc.gate3.press_out
+        elif ffc.gate3.press_out < ffc.gate4.press_out:
+            ffc.gate6.press_in = ffc.gate4.press_out
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate3.press_out
     ffc.gate6.flow_in = ffc.gate3.flow_out + ffc.gate4.flow_out
+    if ffc.gate1.position == 0 and (ffc.gate2.position == 0 or ffc.gate4.position == 0):
+        ffc.gate3.press_in = ffc.gate3.flow_in = ffc.gate3.press_out = ffc.gate3.flow_out = 0.0  # Ensure null values
     if ffc.gate2.position == 0:
         ffc.gate4.press_in = ffc.gate3.press_out
         ffc.gate4.flow_in = ffc.gate3.flow_out
@@ -79,13 +102,16 @@ def gate3_close():
 # Gate valve 4
 def gate4_open():
     ffc.gate4.open()
-    if ffc.gate3.press_out > ffc.gate4.press_out:
-        ffc.gate6.press_in = ffc.gate3.press_out
-    elif ffc.gate3.press_out < ffc.gate4.press_out:
-        ffc.gate6.press_in = ffc.gate4.press_out
+    if ffc.gate2.position == 100 and ffc.gate1.position == 100 and ffc.gate3.position == 100:
+        if ffc.gate3.press_out > ffc.gate4.press_out:
+            ffc.gate6.press_in = ffc.gate3.press_out
+        elif ffc.gate3.press_out < ffc.gate4.press_out:
+            ffc.gate6.press_in = ffc.gate4.press_out
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate4.press_out
     ffc.gate6.flow_in = ffc.gate4.flow_out + ffc.gate3.flow_out
+    if ffc.gate2.position == 0 and (ffc.gate1.position == 0 or ffc.gate4.position == 0):
+        ffc.gate4.press_in = ffc.gate4.flow_in = ffc.gate4.press_out = ffc.gate4.flow_out = 0.0  # Ensure null values
     if ffc.gate1.position == 0:
         ffc.gate3.press_in = ffc.gate4.press_out
         ffc.gate3.flow_in = ffc.gate4.flow_out
