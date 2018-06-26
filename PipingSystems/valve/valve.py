@@ -159,6 +159,7 @@ class Valve:
         self.__position = 0
         self.flow_out = 0
         self.press_out = 0
+        self.deltaP = 0
 
 
 class Gate(Valve):
@@ -219,11 +220,12 @@ class Globe(Valve):
 
         :return: Update outlet flow rate, valve pressure drop, and pressure out.
         """
-        self.__position = new_position
-        if self.position == 0:
-            self.flow_out = 0.0
-            self.deltaP = 0.0
+        if new_position == 100:
+            self.open()
+        elif new_position == 0:
+            self.close()
         else:
+            self.position = new_position
             self.flow_out = self.flow_in * self.position / 100
             self.press_drop(self.flow_out)
             self.get_press_out(self.press_in)
