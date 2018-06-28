@@ -11,6 +11,7 @@ Date: 6/12/18
 Version 0.1
     Initial build
 """
+# TODO: rewrite to use a SQLite database
 import utility_formulas
 
 from PipingSystems.pump import pump
@@ -62,17 +63,17 @@ gate7.calc_coeff(4)
 pump1 = pump.PositiveDisplacement("Pump 1",
                                   flow_rate_out=0.0,
                                   pump_head_in=utility_formulas.press_to_head(gate5.press_out),
-                                  displacement=0.3)
+                                  displacement=0.24)
 
 pump2 = pump.PositiveDisplacement("Pump 2",
                                   flow_rate_out=0.0,
                                   pump_head_in=utility_formulas.press_to_head(gate6.press_out),
-                                  displacement=0.3)
+                                  displacement=0.24)
 
 pump3 = pump.PositiveDisplacement("Pump 3",
                                   flow_rate_out=0.0,
                                   pump_head_in=utility_formulas.press_to_head(gate7.press_out),
-                                  displacement=0.3)
+                                  displacement=0.24)
 
 # Pump outlet manifold
 relief1 = valve.Relief("Relief 1", sys_flow_in=pump1.flow, flow_coeff=0.81)

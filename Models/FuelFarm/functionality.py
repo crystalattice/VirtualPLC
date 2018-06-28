@@ -18,18 +18,13 @@ import Models.FuelFarm.components as ffc
 # Gate valve 1
 def gate1_open():
     ffc.gate1.open()
-    if ffc.gate2.position == 100 and ffc.gate4.position == 100:
-        if ffc.gate2.press_out > ffc.gate1.press_out:
-            ffc.gate3.press_in = ffc.gate4.press_out
-            ffc.gate3.press_in = ffc.gate4.flow_out
+    if ffc.tank2.static_tank_press > ffc.tank1.static_tank_press:
+        ffc.gate1.flow_in = ffc.gate1.flow_out = 0.0
+        ffc.gate3.press_in = ffc.gate4.press_out
+        ffc.gate3.flow_in = 0.0
     else:
         ffc.gate3.press_in = ffc.gate1.press_out
         ffc.gate3.flow_in = ffc.gate1.flow_out
-    if ffc.gate2.position == 100 and ffc.gate4.position == 100 and ffc.gate3.position == 100:
-        if ffc.gate2.press_out > ffc.gate1.press_out:
-            ffc.gate5.press_in = ffc.gate3.press_out
-            ffc.gate5.flow_in = ffc.gate3.flow_out
-    else:
         ffc.gate5.press_in = ffc.gate1.press_out
         ffc.gate5.flow_in = ffc.gate1.flow_out
 
@@ -45,18 +40,13 @@ def gate1_close():
 # Gate valve 2
 def gate2_open():
     ffc.gate2.open()
-    if ffc.gate1.position == 100 and ffc.gate3.position == 100:
-        if ffc.gate2.press_out < ffc.gate1.press_out:
-            ffc.gate4.press_in = ffc.gate3.press_out
-            ffc.gate4.press_in = ffc.gate3.flow_out
+    if ffc.tank2.static_tank_press < ffc.tank1.static_tank_press:
+        ffc.gate2.flow_in = ffc.gate2.flow_out = 0.0
+        ffc.gate4.press_in = ffc.gate3.press_out
+        ffc.gate4.flow_in = 0.0  # No flow because of check valve after gate valve 2
     else:
         ffc.gate4.press_in = ffc.gate2.press_out
         ffc.gate4.flow_in = ffc.gate2.flow_out
-    if ffc.gate1.position == 100 and ffc.gate4.position == 100 and ffc.gate3.position == 100:
-        if ffc.gate2.press_out < ffc.gate1.press_out:
-            ffc.gate7.press_in = ffc.gate4.press_out
-            ffc.gate7.flow_in = ffc.gate4.flow_out
-    else:
         ffc.gate7.press_in = ffc.gate2.press_out
         ffc.gate7.flow_in = ffc.gate2.flow_out
 
@@ -75,7 +65,9 @@ def gate3_open():
     if ffc.gate1.position == 100 and ffc.gate2.position == 100 and ffc.gate4.position == 100:
         if ffc.gate3.press_out > ffc.gate4.press_out:
             ffc.gate6.press_in = ffc.gate3.press_out
+            ffc.gate4.press_in = ffc.gate3.press_out
         elif ffc.gate3.press_out < ffc.gate4.press_out:
+            ffc.gate3.press_in = ffc.gate4.press_out
             ffc.gate6.press_in = ffc.gate4.press_out
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate3.press_out
@@ -105,8 +97,10 @@ def gate4_open():
     if ffc.gate2.position == 100 and ffc.gate1.position == 100 and ffc.gate3.position == 100:
         if ffc.gate3.press_out > ffc.gate4.press_out:
             ffc.gate6.press_in = ffc.gate3.press_out
+            ffc.gate4.press_in = ffc.gate3.press_out
         elif ffc.gate3.press_out < ffc.gate4.press_out:
             ffc.gate6.press_in = ffc.gate4.press_out
+            ffc.gate3.press_in = ffc.gate4.press_out
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate4.press_out
     ffc.gate6.flow_in = ffc.gate4.flow_out + ffc.gate3.flow_out
@@ -164,7 +158,8 @@ def gate7_close():
 
 # Change tank level
 def change_tank_level(tank, level):
-    tank.static_tank_press = level
+    tank.level = level
+    tank.static_tank_press = tank.level
     if tank == ffc.tank1:
         ffc.gate1.press_in = ffc.tank1.static_tank_press
     elif tank == ffc.tank2:
