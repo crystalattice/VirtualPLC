@@ -1,8 +1,14 @@
 #:kivy 1.10.1
 
+<HMIButton@ToggleButton>:
+    color: 0, 0, 0, 1
+    size: 30, 30
+
 <Background>:
-    canvas:
+    canvas.before:
         Rectangle:
             pos: self.pos
             size: self.size
             source: "fuel_schematic.png"
+    HMIButton:
+        pos: 350, 270
