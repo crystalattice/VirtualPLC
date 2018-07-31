@@ -1,14 +1,62 @@
-#:kivy 1.10.1
+#:kivy 1.10.0
 
 <HMIButton@ToggleButton>:
-    color: 0, 0, 0, 1
-    size: 30, 30
+    color: 1, 1, 1, 1
+    size_hint: None, None
+    size: 35, 35
 
-<Background>:
+<HMI>:
     canvas.before:
         Rectangle:
             pos: self.pos
             size: self.size
             source: "fuel_schematic.png"
+
     HMIButton:
-        pos: 350, 270
+        id: gate1
+        text: "1"
+        pos: 347, 325
+        group: "valve1"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate2
+        text: "2"
+        pos: 347, 473
+        group: "valve2"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate3
+        text: "3"
+        pos: 427, 339
+        group: "valve3"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate4
+        text: "4"
+        pos: 427, 460
+        group: "valve4"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate5
+        text: "5"
+        pos: 448, 266
+        group: "valve5"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate6
+        text: "6"
+        pos: 448, 428
+        group: "valve6"
+        on_state: root.on_state(self)
+
+    HMIButton:
+        id: gate7
+        text: "7"
+        pos: 448, 532
+        group: "valve7"
+        on_state: root.on_state(self)

@@ -27,6 +27,7 @@ def gate1_open():
         ffc.gate3.flow_in = ffc.gate1.flow_out
         ffc.gate5.press_in = ffc.gate1.press_out
         ffc.gate5.flow_in = ffc.gate1.flow_out
+    print("Gate 1 open")
 
 
 def gate1_close():
@@ -35,6 +36,7 @@ def gate1_close():
     ffc.gate3.flow_in = ffc.gate4.flow_out
     ffc.gate5.press_in = ffc.gate3.press_out
     ffc.gate5.flow_in = ffc.gate3.flow_out
+    print("Gate 1 closed")
 
 
 # Gate valve 2
