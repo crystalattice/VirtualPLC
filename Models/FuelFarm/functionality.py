@@ -27,7 +27,7 @@ def gate1_open():
         ffc.gate3.flow_in = ffc.gate1.flow_out
         ffc.gate5.press_in = ffc.gate1.press_out
         ffc.gate5.flow_in = ffc.gate1.flow_out
-    print("Gate 1 open")
+    print("Gate 1 opened")
 
 
 def gate1_close():
@@ -51,6 +51,7 @@ def gate2_open():
         ffc.gate4.flow_in = ffc.gate2.flow_out
         ffc.gate7.press_in = ffc.gate2.press_out
         ffc.gate7.flow_in = ffc.gate2.flow_out
+    print("Gate 2 opened")
 
 
 def gate2_close():
@@ -59,6 +60,7 @@ def gate2_close():
     ffc.gate4.flow_in = ffc.gate4.flow_out
     ffc.gate7.press_in = ffc.gate4.press_out
     ffc.gate7.flow_in = ffc.gate4.flow_out
+    print("Gate 2 closed")
 
 
 # Gate valve 3
@@ -82,6 +84,7 @@ def gate3_open():
     if ffc.gate1.position == 0:
         ffc.gate5.press_in = ffc.gate3.press_out
         ffc.gate5.flow_in = ffc.gate3.flow_out
+    print("Gate 3 opened")
 
 
 def gate3_close():
@@ -91,6 +94,7 @@ def gate3_close():
     if ffc.gate2.position == 0:
         ffc.gate4.press_in = 0.0
         ffc.gate4.flow_in = 0.0
+    print("Gate 3 closed")
 
 
 # Gate valve 4
@@ -114,6 +118,7 @@ def gate4_open():
     if ffc.gate2.position == 0:
         ffc.gate7.press_in = ffc.gate4.press_out
         ffc.gate7.flow_out = ffc.gate4.flow_out
+    print("Gate 4 opened")
 
 
 def gate4_close():
@@ -123,39 +128,46 @@ def gate4_close():
     if ffc.gate1.position == 0:
         ffc.gate3.press_in = 0.0
         ffc.gate3.flow_in = 0.0
+    print("Gate 4 closed")
 
 
 # Gate valve 5
 def gate5_open():
     ffc.gate5.open()
     ffc.pump1.head_in = utility_formulas.press_to_head(ffc.gate5.press_out)
+    print("Gate 5 opened")
 
 
 def gate5_close():
     ffc.gate5.close()
     ffc.pump1.head_in = 0.0
+    print("Gate 5 closed")
 
 
 # Gate valve 6
 def gate6_open():
     ffc.gate6.open()
     ffc.pump2.head_in = utility_formulas.press_to_head(ffc.gate6.press_out)
+    print("Gate 6 opened")
 
 
 def gate6_close():
     ffc.gate6.close()
     ffc.pump2.head_in = 0.0
+    print("Gate 6 closed")
 
 
 # Gate valve 7
 def gate7_open():
     ffc.gate7.open()
     ffc.pump3.head_in = utility_formulas.press_to_head(ffc.gate7.press_out)
+    print("Gate 7 opened")
 
 
 def gate7_close():
     ffc.gate7.close()
     ffc.pump3.head_in = 0.0
+    print("Gate 7 closed")
 
 
 # Change tank level

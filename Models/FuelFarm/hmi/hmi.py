@@ -20,11 +20,16 @@ class HMI(FloatLayout):
 
     @staticmethod
     def on_state(valve):  # Get the status of the valve
-        # if valve.group == "valve2":
+        # if valve.group == "valve1":
         if valve.state == "down":
-            print(valve.group, "Opened")
+            # print(valve.group, "Opened")
+            exec("functionality.{}_open()".format(valve.group))  # Dynamically call valve function
+            # functionality.gate1_open()
         else:
-            print(valve.group, "Closed")
+            # print(valve.group, "Closed")
+            exec("functionality.{}_close()".format(valve.group))
+
+
 
 
 class HMIApp(App):
