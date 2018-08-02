@@ -10,6 +10,7 @@ kivy.require("1.10.0")
 
 Config.set("graphics", "width", "1062")
 Config.set("graphics", "height", "849")
+Config.set("graphics", "resizable", False)
 
 # print(components.tank1.level)
 # print(components.tank1.static_tank_press)
