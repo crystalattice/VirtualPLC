@@ -169,6 +169,8 @@ def gate7_close():
     ffc.pump3.head_in = 0.0
     print("Gate 7 closed")
 
+# TODO: Add valves 8-10
+
 
 # Change tank level
 def change_tank_level(tank, level):

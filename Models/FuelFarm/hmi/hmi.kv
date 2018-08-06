@@ -5,79 +5,172 @@
     size_hint: None, None
     size: 35, 35
 
-<HMI>:
+<Row@BoxLayout>:
     canvas.before:
+        Color:
+            rgba: 0.5, 0.5, 0.5, 1
         Rectangle:
-            pos: self.pos
             size: self.size
-            source: "fuel_schematic.png"
+            pos: self.pos
+    value: ''
+    Label:
+        text: root.value
 
-    HMIButton:
-        id: gate1
-        text: "1"
-        pos: 347, 325
-        group: "gate1"
-        on_state: root.on_state(self)
+<MyPageLayout>:
+    rv: rv
+    FloatLayout:
+        canvas.before:
+            Rectangle:
+                pos: self.pos
+                size: self.size
+                source: "fuel_schematic.png"
+        HMIButton:
+            id: gate1
+            text: "1"
+            pos: 347, 325
+            group: "gate1"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate2
-        text: "2"
-        pos: 347, 473
-        group: "gate2"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate2
+            text: "2"
+            pos: 347, 473
+            group: "gate2"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate3
-        text: "3"
-        pos: 427, 339
-        group: "gate3"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate3
+            text: "3"
+            pos: 427, 339
+            group: "gate3"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate4
-        text: "4"
-        pos: 427, 458
-        group: "gate4"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate4
+            text: "4"
+            pos: 427, 458
+            group: "gate4"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate5
-        text: "5"
-        pos: 448, 266
-        group: "gate5"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate5
+            text: "5"
+            pos: 448, 266
+            group: "gate5"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate6
-        text: "6"
-        pos: 449, 429
-        group: "gate6"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate6
+            text: "6"
+            pos: 449, 429
+            group: "gate6"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate7
-        text: "7"
-        pos: 448, 532
-        group: "gate7"
-        on_state: root.on_state(self)
+        HMIButton:
+            id: gate7
+            text: "7"
+            pos: 448, 532
+            group: "gate7"
+            on_state: root.on_state(self)
 
-    HMIButton:
-        id: gate8
-        text: "8"
-        pos: 580, 676
-        group: "gate8"
-        on_state: root.on_state(self)
+    # TODO: Add new valves when functionality added
+    #    HMIButton:
+    #        id: gate8
+    #        text: "8"
+    #        pos: 580, 676
+    #        group: "gate8"
+    #        on_state: root.on_state(self)
+    #
+    #    HMIButton:
+    #        id: gate9
+    #        text: "9"
+    #        pos: 580, 179
+    #        group: "gate9"
+    #        on_state: root.on_state(self)
+    #
+    #    HMIButton:
+    #        id: gate10
+    #        text: "10"
+    #        pos: 865, 676
+    #        group: "gate10"
+    #        on_state: root.on_state(self)
+#    BoxLayout:
+#        canvas:
+#            Color:
+#                rgba: 216/255., 195/255., 88/255., 1
+#            Rectangle:
+#                pos: self.pos
+#                size: self.size
+#
+#        orientation: 'vertical'
+#        Label:
+#            size_hint_y: None
+#            height: 1.5 * self.texture_size[1]
+#            text: 'page 1'
+#
+#        Button:
+#            text: 'test'
+#            on_press: print("test")
+    BoxLayout:
+#        <Test>:
+        canvas:
+            Color:
+                rgba: 0.3, 0.3, 0.3, 1
+            Rectangle:
+                size: self.size
+                pos: self.pos
+        rv: rv
+        orientation: 'vertical'
+        GridLayout:
+            cols: 3
+            rows: 2
+            size_hint_y: None
+            height: dp(108)
+            padding: dp(8)
+            spacing: dp(16)
+            Button:
+                text: 'Populate list'
+                on_press: root.populate()
+            Button:
+                text: 'Sort list'
+                on_press: root.sort()
+            Button:
+                text: 'Clear list'
+                on_press: root.clear()
+            BoxLayout:
+                spacing: dp(8)
+                Button:
+                    text: 'Insert new item'
+                    on_press: root.insert(new_item_input.text)
+                TextInput:
+                    id: new_item_input
+                    size_hint_x: 0.6
+                    hint_text: 'value'
+                    padding: dp(10), dp(10), 0, 0
+            BoxLayout:
+                spacing: dp(8)
+                Button:
+                    text: 'Update first item'
+                    on_press: root.update(update_item_input.text)
+                TextInput:
+                    id: update_item_input
+                    size_hint_x: 0.6
+                    hint_text: 'new value'
+                    padding: dp(10), dp(10), 0, 0
+            Button:
+                text: 'Remove first item'
+                on_press: root.remove()
 
-    HMIButton:
-        id: gate9
-        text: "9"
-        pos: 580, 179
-        group: "gate9"
-        on_state: root.on_state(self)
-
-    HMIButton:
-        id: gate10
-        text: "10"
-        pos: 865, 676
-        group: "gate10"
-        on_state: root.on_state(self)
+        RecycleView:
+            id: rv
+            scroll_type: ['bars', 'content']
+            scroll_wheel_distance: dp(114)
+            bar_width: dp(10)
+            viewclass: 'Row'
+            RecycleBoxLayout:
+                default_size: None, dp(56)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+                spacing: dp(2)
