@@ -16,9 +16,12 @@
     Label:
         text: root.value
 
-<MyPageLayout>:
-    rv: rv
+<HMILayout>:
+    table: table
+    # Allow page turn to occur when it has been moved 20%
+    swipe_threshold: .2
     FloatLayout:
+    # First page (HMI)
         canvas.before:
             Rectangle:
                 pos: self.pos
@@ -94,32 +97,16 @@
     #        pos: 865, 676
     #        group: "gate10"
     #        on_state: root.on_state(self)
-#    BoxLayout:
-#        canvas:
-#            Color:
-#                rgba: 216/255., 195/255., 88/255., 1
-#            Rectangle:
-#                pos: self.pos
-#                size: self.size
-#
-#        orientation: 'vertical'
-#        Label:
-#            size_hint_y: None
-#            height: 1.5 * self.texture_size[1]
-#            text: 'page 1'
-#
-#        Button:
-#            text: 'test'
-#            on_press: print("test")
+
     BoxLayout:
-#        <Test>:
+    # Second page (table layout)
         canvas:
             Color:
                 rgba: 0.3, 0.3, 0.3, 1
             Rectangle:
                 size: self.size
                 pos: self.pos
-        rv: rv
+        table: table
         orientation: 'vertical'
         GridLayout:
             cols: 3
@@ -162,7 +149,7 @@
                 on_press: root.remove()
 
         RecycleView:
-            id: rv
+            id: table
             scroll_type: ['bars', 'content']
             scroll_wheel_distance: dp(114)
             bar_width: dp(10)

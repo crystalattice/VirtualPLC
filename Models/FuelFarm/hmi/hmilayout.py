@@ -17,11 +17,9 @@ Config.set("graphics", "width", "1112")
 Config.set("graphics", "height", "849")
 Config.set("graphics", "resizable", False)
 
-Builder.load_file("test.kv")
 
-
-class MyPageLayout(PageLayout):
-
+class HMILayout(PageLayout):
+    # Methods are associated with their class; each class would have its own .kv file
     @staticmethod
     def on_state(valve):  # Get the status of the valve
         if valve.state == "down":
@@ -31,34 +29,32 @@ class MyPageLayout(PageLayout):
             # print(valve.group, "Closed")
             exec("functionality.{}_close()".format(valve.group))  # Dynamically call valve close()
 
-
-# class Test(BoxLayout):
     def populate(self):
-        self.rv.data = [{'value': ''.join(sample(ascii_lowercase, 6))}
-                        for x in range(50)]
+        self.table.data = [{'value': ''.join(sample(ascii_lowercase, 6))}
+                           for x in range(50)]
 
     def sort(self):
-        self.rv.data = sorted(self.rv.data, key=lambda x: x['value'])
+        self.table.data = sorted(self.table.data, key=lambda x: x['value'])
 
     def clear(self):
-        self.rv.data = []
+        self.table.data = []
 
     def insert(self, value):
-        self.rv.data.insert(0, {'value': value or 'default value'})
+        self.table.data.insert(0, {'value': value or 'default value'})
 
     def update(self, value):
-        if self.rv.data:
-            self.rv.data[0]['value'] = value or 'default new value'
-            self.rv.refresh_from_data()
+        if self.table.data:
+            self.table.data[0]['value'] = value or 'default new value'
+            self.table.refresh_from_data()
 
     def remove(self):
-        if self.rv.data:
-            self.rv.data.pop(0)
+        if self.table.data:
+            self.table.data.pop(0)
 
 
 class HMIApp(App):
     def build(self):
-        return MyPageLayout()
+        return HMILayout()
 
 
 if __name__ == "__main__":
