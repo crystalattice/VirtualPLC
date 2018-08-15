@@ -106,6 +106,7 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
+        # identify this object for reference by other objects
         table: table
         orientation: 'vertical'
         GridLayout:
@@ -149,6 +150,7 @@
                 on_press: root.remove()
 
         RecycleView:
+            # reference to data table
             id: table
             scroll_type: ['bars', 'content']
             scroll_wheel_distance: dp(114)
