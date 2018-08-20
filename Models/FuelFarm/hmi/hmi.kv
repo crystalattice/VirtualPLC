@@ -157,10 +157,12 @@
             bar_width: dp(20)
             viewclass: 'Row'
             RecycleGridLayout:
-#                default_size: None, dp(56)
-#                default_size_hint: 1, None
-#                size_hint_y: None
-#                height: self.minimum_height
-#                orientation: 'vertical'
-#                spacing: dp(2)
-                cols: 4
+                cols: 6
+                # fit table to window
+                default_size: None, dp(56)
+                # fill width
+                default_size_hint: 1, None
+                # fill height
+                height: self.minimum_height
+                # spacing between cells
+                spacing: dp(2)
