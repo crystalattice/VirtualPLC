@@ -30,8 +30,10 @@ class HMILayout(PageLayout):
             exec("functionality.{}_close()".format(valve.group))  # Dynamically call valve close()
 
     def populate(self):
+        # Make dictionaries to populate table
         tank_properties1 = {}
         tank_properties2 = {}
+
         valve_properties1 = {}
         valve_properties2 = {}
         valve_properties3 = {}
@@ -39,6 +41,10 @@ class HMILayout(PageLayout):
         valve_properties5 = {}
         valve_properties6 = {}
         valve_properties7 = {}
+
+        pump_properties1 = {}
+        pump_properties2 = {}
+        pump_properties3 = {}
 
         # Convert instances to dictionaries
         for key, value in vars(components.tank1).items():
@@ -61,6 +67,13 @@ class HMILayout(PageLayout):
         for key, value in vars(components.gate7).items():
             valve_properties7[key] = value
 
+        for key, value in vars(components.pump1).items():
+            pump_properties1[key] = value
+        for key, value in vars(components.pump2).items():
+            pump_properties2[key] = value
+        for key, value in vars(components.pump3).items():
+            pump_properties3[key] = value
+
         # Populate table
         self.table.data = [{"value": "Tank"}, {"value": "Level"}, {"value": "Pressure Out"}, {"value": "Flow Out"},
                            {"value": ""}, {"value": ""},
@@ -78,6 +91,9 @@ class HMILayout(PageLayout):
                            {"value": "{:.2f}".format((tank_properties2["flow_out"]))},
                            {"value": ""},
                            {"value": ""},
+
+                           # Spacer row
+                           {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""},
 
                            {"value": "Valve"}, {"value": "Position"}, {"value": "Pressure In"}, {"value": "Flow In"},
                            {"value": "Pressure Out"}, {"value": "Flow Out"},
@@ -130,25 +146,37 @@ class HMILayout(PageLayout):
                            {"value": "{:.2f}".format((valve_properties7["flow_in"]))},
                            {"value": "{:.2f}".format((valve_properties7["press_out"]))},
                            {"value": "{:.2f}".format((valve_properties7["flow_out"]))},
-                           ]
 
-    def sort(self):
-        self.table.data = sorted(self.table.data, key=lambda x: x['value'])
+                           # Spacer row
+                           {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""},
+
+                           {"value": "Pump"}, {"value": "Speed"}, {"value": "Wattage"}, {"value": "Pressure Out"},
+                           {"value": "Flow Out"}, {"value": ""},
+                           # Pump 1
+                           {"value": pump_properties1["name"]},
+                           {"value": "{:.2f}".format((pump_properties1["_Pump__speed"]))},
+                           {"value": "{:.2f}".format((pump_properties1["_Pump__wattage"]))},
+                           {"value": "{:.2f}".format((pump_properties1["_Pump__outlet_pressure"]))},
+                           {"value": "{:.2f}".format((pump_properties1["_Pump__flow_rate_out"]))},
+                           {"value": ""},
+                           # Pump 2
+                           {"value": pump_properties2["name"]},
+                           {"value": "{:.2f}".format((pump_properties2["_Pump__speed"]))},
+                           {"value": "{:.2f}".format((pump_properties2["_Pump__wattage"]))},
+                           {"value": "{:.2f}".format((pump_properties2["_Pump__outlet_pressure"]))},
+                           {"value": "{:.2f}".format((pump_properties2["_Pump__flow_rate_out"]))},
+                           {"value": ""},
+                           # Pump 3
+                           {"value": pump_properties3["name"]},
+                           {"value": "{:.2f}".format((pump_properties3["_Pump__speed"]))},
+                           {"value": "{:.2f}".format((pump_properties2["_Pump__wattage"]))},
+                           {"value": "{:.2f}".format((pump_properties3["_Pump__outlet_pressure"]))},
+                           {"value": "{:.2f}".format((pump_properties3["_Pump__flow_rate_out"]))},
+                           {"value": ""},
+                           ]
 
     def clear(self):
         self.table.data = []
-
-    def insert(self, value):
-        self.table.data.insert(0, {'value': value or 'default value'})
-
-    def update(self, value):
-        if self.table.data:
-            self.table.data[0]['value'] = value or 'default new value'
-            self.table.refresh_from_data()
-
-    def remove(self):
-        if self.table.data:
-            self.table.data.pop(0)
 
 
 class HMIApp(App):

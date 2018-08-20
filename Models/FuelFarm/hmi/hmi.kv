@@ -120,34 +120,8 @@
                 text: 'Populate list'
                 on_press: root.populate()
             Button:
-                text: 'Sort list'
-                on_press: root.sort()
-            Button:
                 text: 'Clear list'
                 on_press: root.clear()
-            BoxLayout:
-                spacing: dp(8)
-                Button:
-                    text: 'Insert new item'
-                    on_press: root.insert(new_item_input.text)
-                TextInput:
-                    id: new_item_input
-                    size_hint_x: 0.6
-                    hint_text: 'value'
-                    padding: dp(10), dp(10), 0, 0
-            BoxLayout:
-                spacing: dp(8)
-                Button:
-                    text: 'Update first item'
-                    on_press: root.update(update_item_input.text)
-                TextInput:
-                    id: update_item_input
-                    size_hint_x: 0.6
-                    hint_text: 'new value'
-                    padding: dp(10), dp(10), 0, 0
-            Button:
-                text: 'Remove first item'
-                on_press: root.remove()
 
         RecycleView:
             # reference to data table
