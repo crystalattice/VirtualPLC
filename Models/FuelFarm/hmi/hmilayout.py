@@ -30,17 +30,18 @@ class HMILayout(PageLayout):
             exec("functionality.{}_close()".format(valve.group))  # Dynamically call valve close()
 
     def populate(self):
-        values = {}
+        properties = {}
 
         for key, value in vars(components.tank1).items():
-            values[key] = value
-        # self.table.data = [{'value': ''.join(sample(ascii_lowercase, 6))}
-        #                    for x in range(50)]
-        self.table.data = [{"value": "Name"}, {"value": str(values["name"])}, {"value": "Tank Level"}, {"value": str(values["_Tank__level"])}]
+            properties[key] = value
+        self.table.data = [{"value": "Tank"}, {"value": "Level"}, {"value": "Pressure Out"}, {"value": "Flow Out"},
+                           {"value": properties["name"]},
+                           {"value": str(properties["_Tank__level"])},
+                           {"value": "{:.2f}".format((properties["_Tank__tank_press"]))},
+                           {"value": "{:.2f}".format((properties["flow_out"]))},
+                           ]
 
-        print(values)
-
-
+        print(properties)
 
     def sort(self):
         self.table.data = sorted(self.table.data, key=lambda x: x['value'])
