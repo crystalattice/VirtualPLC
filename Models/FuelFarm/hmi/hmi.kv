@@ -156,10 +156,11 @@
             scroll_wheel_distance: dp(114)
             bar_width: dp(10)
             viewclass: 'Row'
-            RecycleBoxLayout:
-                default_size: None, dp(56)
-                default_size_hint: 1, None
-                size_hint_y: None
-                height: self.minimum_height
-                orientation: 'vertical'
-                spacing: dp(2)
+            RecycleGridLayout:
+#                default_size: None, dp(56)
+#                default_size_hint: 1, None
+#                size_hint_y: None
+#                height: self.minimum_height
+#                orientation: 'vertical'
+#                spacing: dp(2)
+                cols: 2
