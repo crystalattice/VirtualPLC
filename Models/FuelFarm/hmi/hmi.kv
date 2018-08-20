@@ -108,14 +108,10 @@
                 pos: self.pos
         # identify this object for reference by other objects
         table: table
-        orientation: 'vertical'
-        GridLayout:
-            cols: 3
-            rows: 2
-            size_hint_y: None
-            height: dp(108)
-            padding: dp(8)
-            spacing: dp(16)
+        orientation: 'horizontal'
+        BoxLayout:
+            orientation: "vertical"
+            size_hint_x: .2
             Button:
                 text: 'Populate list'
                 on_press: root.populate()
