@@ -60,6 +60,7 @@ gate7 = valve.Gate("Gate valve 7")
 gate7.calc_coeff(4)
 
 # Fuel pumps
+# 1480 rpm
 pump1 = pump.PositiveDisplacement("Pump 1",
                                   flow_rate_out=0.0,
                                   pump_head_in=utility_formulas.press_to_head(gate5.press_out),

@@ -1,7 +1,6 @@
 #:kivy 1.10.0
 
 <HMIButton@ToggleButton>:
-    color: 1, 1, 1, 1
     size_hint: None, None
     size: 35, 35
 
@@ -28,49 +27,49 @@
                 source: "fuel_schematic.png"
         HMIButton:
             id: gate1
-            text: "1"
+            text: "G1"
             pos: 347, 325
             group: "gate1"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate2
-            text: "2"
+            text: "G2"
             pos: 347, 473
             group: "gate2"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate3
-            text: "3"
+            text: "G3"
             pos: 427, 339
             group: "gate3"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate4
-            text: "4"
+            text: "G4"
             pos: 427, 458
             group: "gate4"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate5
-            text: "5"
+            text: "G5"
             pos: 448, 266
             group: "gate5"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate6
-            text: "6"
+            text: "G6"
             pos: 449, 429
             group: "gate6"
             on_state: root.on_state(self)
 
         HMIButton:
             id: gate7
-            text: "7"
+            text: "G7"
             pos: 448, 532
             group: "gate7"
             on_state: root.on_state(self)
@@ -96,6 +95,30 @@
     #        pos: 865, 676
     #        group: "gate10"
     #        on_state: root.on_state(self)
+
+        HMIButton:
+            id: pump1
+            text: "P1"
+            pos: 545, 294
+            group: "pump1"
+            on_state: root.on_state(self)
+            color: 1, .5, .5, 1
+
+        HMIButton:
+            id: pump2
+            text: "P2"
+            pos: 545, 403
+            group: "pump2"
+            on_state: root.on_state(self)
+            color: 1, .5, .5, 1
+
+        HMIButton:
+            id: pump3
+            text: "P3"
+            pos: 545, 505
+            group: "pump3"
+            on_state: root.on_state(self)
+            color: 1, .5, .5, 1
 
     BoxLayout:
     # Second page (table layout)
