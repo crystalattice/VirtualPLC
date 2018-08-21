@@ -18,8 +18,7 @@
 
 <HMILayout>:
     table: table
-    # Allow page turn to occur when it has been moved 20%
-    swipe_threshold: .2
+    swipe_threshold: .2  # Allow page turn to occur when it has been moved 20%
     FloatLayout:
     # First page (HMI)
         canvas.before:
@@ -106,33 +105,27 @@
             Rectangle:
                 size: self.size
                 pos: self.pos
-        # identify this object for reference by other objects
-        table: table
-        orientation: 'horizontal'
+        table: table  # identify this object for reference by other objects
+        orientation: 'horizontal'  # place the following layouts side-by-side
         BoxLayout:
-            orientation: "vertical"
-            size_hint_x: .2
+            orientation: "vertical"  # stack buttons
+            size_hint_x: .15  # buttons should be 15% window width
             Button:
                 text: 'Populate list'
                 on_press: root.populate()
             Button:
                 text: 'Clear list'
                 on_press: root.clear()
-
         RecycleView:
             # reference to data table
             id: table
-            scroll_type: ['bars', 'content']
-            scroll_wheel_distance: dp(114)
-            bar_width: dp(20)
-            viewclass: 'Row'
+            scroll_type: ['bars', 'content']  # table is scrolled by using scroll bars or touching content directly
+            bar_width: dp(20)  # sets scroll bar width to 20 px
+            viewclass: 'Row'  # Refer back to Row@BoxLayout for grid appearance
             RecycleGridLayout:
+                size_hint: 1, None  # Force scrolling
                 cols: 6
-                # fit table to window
-                default_size: None, dp(56)
-                # fill width
-                default_size_hint: 1, None
-                # fill height
-                height: self.minimum_height
-                # spacing between cells
-                spacing: dp(2)
+                default_size: None, dp(56)  # fit table to window
+                default_size_hint: 1, None  # fill width
+                height: self.minimum_height  # fill height
+                spacing: dp(2)  # spacing between cells
