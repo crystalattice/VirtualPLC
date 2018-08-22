@@ -133,7 +133,6 @@ def gate5_open():
 
 def gate5_close():
     ffc.gate5.close()
-    ffc.pump1.head_in = 0.0
 
 
 # Gate valve 6
@@ -175,7 +174,10 @@ def change_tank_level(tank, level):
 # Pump 1
 def pump1_on():
     ffc.pump1.adjust_speed(1480)
-    ffc.pump1.outlet_pressure = 50
+    if ffc.pump1.head_in == 0.0:
+        ffc.pump1.outlet_pressure = 0
+    else:
+        ffc.pump1.outlet_pressure = 50
 
 
 def pump1_off():

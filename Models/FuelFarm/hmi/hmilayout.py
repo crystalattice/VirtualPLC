@@ -68,10 +68,16 @@ class HMILayout(PageLayout):
 
         for key, value in vars(components.pump1).items():
             pump_properties1[key] = value
+        if valve_properties5["flow_out"] == 0.0:
+            pump_properties1["_Pump__flow_rate_out"] = pump_properties1["_Pump__outlet_pressure"] = 0.0
         for key, value in vars(components.pump2).items():
             pump_properties2[key] = value
+        if valve_properties6["flow_out"] == 0.0:
+            pump_properties2["_Pump__flow_rate_out"] = pump_properties2["_Pump__outlet_pressure"] = 0.0
         for key, value in vars(components.pump3).items():
             pump_properties3[key] = value
+        if valve_properties7["flow_out"] == 0.0:
+            pump_properties3["_Pump__flow_rate_out"] = pump_properties3["_Pump__outlet_pressure"] = 0.0
 
         # Populate table
         self.table.data = [{"value": "Tank"}, {"value": "Level"}, {"value": "Pressure Out"}, {"value": "Flow Out"},
