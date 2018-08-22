@@ -206,7 +206,7 @@ class HMILayout(PageLayout):
                            # Pump 3
                            {"value": pump_properties3["name"]},
                            {"value": "{:.2f}".format((pump_properties3["_Pump__speed"]))},
-                           {"value": "{:.2f}".format((pump_properties2["_Pump__wattage"]))},
+                           {"value": "{:.2f}".format((pump_properties3["_Pump__wattage"]))},
                            {"value": "{:.2f}".format((pump_properties3["_Pump__outlet_pressure"]))},
                            {"value": "{:.2f}".format((pump_properties3["_Pump__flow_rate_out"]))},
                            {"value": ""},

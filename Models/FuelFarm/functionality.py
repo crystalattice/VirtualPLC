@@ -106,7 +106,7 @@ def gate4_open():
     else:  # Pout from valves 3 & 4 is equal
         ffc.gate6.press_in = ffc.gate4.press_out  # doesn't matter which Pout to use
     # ffc.gate6.flow_in = ffc.gate4.flow_out + ffc.gate3.flow_out  # combined flow from valves 3 & 4
-    if ffc.gate2.position == 0 and (ffc.gate1.position == 0 or ffc.gate4.position == 0):  # no input flow
+    if ffc.gate2.position == 0 and (ffc.gate1.position == 0 or ffc.gate3.position == 0):  # no input flow
         ffc.gate4.press_in = ffc.gate4.flow_in = ffc.gate4.press_out = ffc.gate4.flow_out = 0.0  # ensure null values
     if ffc.gate1.position == 0:  # valve 4 provides flow to valve 3
         ffc.gate3.press_in = ffc.gate4.press_out
@@ -231,4 +231,4 @@ def pump3_on():
 
 def pump3_off():
     ffc.pump3.adjust_speed(0)
-    ffc.pump3.outlet_pressure = 50
+    ffc.pump3.outlet_pressure = 0
