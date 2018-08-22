@@ -40,6 +40,9 @@ class HMILayout(PageLayout):
         valve_properties5 = {}
         valve_properties6 = {}
         valve_properties7 = {}
+        valve_properties8 = {}
+        valve_properties9 = {}
+        valve_properties10 = {}
 
         pump_properties1 = {}
         pump_properties2 = {}
@@ -65,15 +68,23 @@ class HMILayout(PageLayout):
             valve_properties6[key] = value
         for key, value in vars(components.gate7).items():
             valve_properties7[key] = value
+        for key, value in vars(components.gate8).items():
+            valve_properties8[key] = value
+        for key, value in vars(components.gate9).items():
+            valve_properties9[key] = value
+        for key, value in vars(components.gate10).items():
+            valve_properties10[key] = value
 
         for key, value in vars(components.pump1).items():
             pump_properties1[key] = value
-        if valve_properties5["flow_out"] == 0.0:
-            pump_properties1["_Pump__flow_rate_out"] = pump_properties1["_Pump__outlet_pressure"] = 0.0
+        # if valve_properties5["flow_out"] == 0.0:  # if inlet valve closed, ensure no flow through pump
+        #     pump_properties1["_Pump__flow_rate_out"] = pump_properties1["_Pump__outlet_pressure"] = 0.0
+
         for key, value in vars(components.pump2).items():
             pump_properties2[key] = value
         if valve_properties6["flow_out"] == 0.0:
             pump_properties2["_Pump__flow_rate_out"] = pump_properties2["_Pump__outlet_pressure"] = 0.0
+
         for key, value in vars(components.pump3).items():
             pump_properties3[key] = value
         if valve_properties7["flow_out"] == 0.0:
@@ -151,6 +162,27 @@ class HMILayout(PageLayout):
                            {"value": "{:.2f}".format((valve_properties7["flow_in"]))},
                            {"value": "{:.2f}".format((valve_properties7["press_out"]))},
                            {"value": "{:.2f}".format((valve_properties7["flow_out"]))},
+                           # Valve 8
+                           {"value": valve_properties8["name"]},
+                           {"value": str(valve_properties8["_Valve__position"])},
+                           {"value": "{:.2f}".format((valve_properties8["press_in"]))},
+                           {"value": "{:.2f}".format((valve_properties8["flow_in"]))},
+                           {"value": "{:.2f}".format((valve_properties8["press_out"]))},
+                           {"value": "{:.2f}".format((valve_properties8["flow_out"]))},
+                           # Valve 9
+                           {"value": valve_properties9["name"]},
+                           {"value": str(valve_properties9["_Valve__position"])},
+                           {"value": "{:.2f}".format((valve_properties9["press_in"]))},
+                           {"value": "{:.2f}".format((valve_properties9["flow_in"]))},
+                           {"value": "{:.2f}".format((valve_properties9["press_out"]))},
+                           {"value": "{:.2f}".format((valve_properties9["flow_out"]))},
+                           # Valve 10
+                           {"value": valve_properties10["name"]},
+                           {"value": str(valve_properties10["_Valve__position"])},
+                           {"value": "{:.2f}".format((valve_properties10["press_in"]))},
+                           {"value": "{:.2f}".format((valve_properties10["flow_in"]))},
+                           {"value": "{:.2f}".format((valve_properties10["press_out"]))},
+                           {"value": "{:.2f}".format((valve_properties10["flow_out"]))},
 
                            # Spacer row
                            {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""}, {"value": ""},
