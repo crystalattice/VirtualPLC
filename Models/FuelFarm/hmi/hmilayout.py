@@ -77,8 +77,6 @@ class HMILayout(PageLayout):
 
         for key, value in vars(components.pump1).items():
             pump_properties1[key] = value
-        # if valve_properties5["flow_out"] == 0.0:  # if inlet valve closed, ensure no flow through pump
-        #     pump_properties1["_Pump__flow_rate_out"] = pump_properties1["_Pump__outlet_pressure"] = 0.0
 
         for key, value in vars(components.pump2).items():
             pump_properties2[key] = value
