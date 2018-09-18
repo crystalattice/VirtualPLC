@@ -2,10 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Test</title>
+    <title>Fuel Storage & Transfer Schematic</title>
+    <style>
+        button {
+            display: block;
+            width: 40px;
+            height: 40px;
+            line-height: 35px;
+            border: 2px solid #f5f5f5;
+            border-radius: 50%;
+            color: #f5f5f5;
+            text-align: center;
+            text-decoration: none;
+            background: #464646;
+            box-shadow: 0 0 3px gray;
+            font-size: 20px;
+            font-weight: bold;
+        }
+        #button1 {
+            position: absolute;
+            top: 496px;
+            left: 352px;
+        }
+
+    </style>
 </head>
 <body>
     {% load static %}
     <img src="{% static 'img/fuel_schematic.png' %}" alt="schematic diagram" />
+    <button id="button1">1</button>
 </body>
 </html>
