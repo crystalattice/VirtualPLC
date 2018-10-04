@@ -74,7 +74,10 @@
 </head>
 <body>
     {% load static %}
+    <!--Use the following image when Django server is running-->
     <img src="{% static 'img/fuel_schematic.png' %}" alt="schematic diagram" />
+    <!--Use the following image to view when server is not running; buttons will not be in correct locations-->
+    <!--<img src="../../staticfiles/img/fuel_schematic.png" height="849" width="1062"/>-->
     <button id="button1">1</button>
     <button id="button2">2</button>
     <button id="button3">3</button>
