@@ -1,4 +1,6 @@
 import pytest
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
 from PipingSystems.pump.pump import PositiveDisplacement
 
 

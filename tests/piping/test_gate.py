@@ -1,3 +1,5 @@
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
 from PipingSystems.valve.valve import Gate
 
 

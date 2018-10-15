@@ -8,10 +8,14 @@ Author: Cody Jackson
 
 Date: 5/28/18
 #################################
+Version 0.2
+    Added path extension to alleviate errors
 Version 0.1
     Initial build
 """
-import utility_formulas
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
+from Utilities import utility_formulas
 import numbers
 
 
