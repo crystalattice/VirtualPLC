@@ -34,6 +34,8 @@ def gate1_open():
         ffc.gate5.press_in = ffc.gate1.press_out
         ffc.gate5.flow_in = ffc.gate1.flow_out
 
+# TODO: ensure that one tank on service allows flow
+
 
 def gate1_close():
     ffc.gate1.close()
