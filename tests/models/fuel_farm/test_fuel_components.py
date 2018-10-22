@@ -370,7 +370,7 @@ class TestGate5:
         assert ffc.gate3.press_in == 13.109851301499999
         assert ffc.gate3.flow_out == 19542.86939891452
         assert ffc.gate3.press_out == 13.109851301499999
-        assert ffc.gate6.flow_in == 39085.73879782904
+        assert ffc.gate6.flow_in == 19542.86939891452  # Not doubled as only tank 2 supplying
         assert ffc.gate6.press_in == 13.109851301499999
 
         fff.gate5_open()
