@@ -1,3 +1,6 @@
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
+
 import pytest
 import Models.FuelFarm.components as ffc
 import Models.FuelFarm.functionality as fff
