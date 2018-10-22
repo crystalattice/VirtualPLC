@@ -13,13 +13,16 @@ Author: Cody Jackson
 
 Date: 4/12/18
 #################################
+Version 0.2
+        Added path extension to alleviate errors
 Version 0.1
     Initial build
 """
-
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
 import math
 import numbers
-import utility_formulas
+from Utilities import utility_formulas
 
 GRAVITY = 9.81  # m/s^2
 

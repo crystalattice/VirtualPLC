@@ -8,11 +8,15 @@ Author: Cody Jackson
 
 Date: 6/12/18
 #################################
+Version 0.2
+    Added path extension for utility formulas
 Version 0.1
     Initial build
 """
 # TODO: rewrite to use a SQLite database
-import utility_formulas
+import sys
+sys.path.extend(["/home/cody/PycharmProjects/VirtualPLC"])
+from Utilities import utility_formulas
 
 from PipingSystems.pump import pump
 from PipingSystems.valve import valve
@@ -60,6 +64,7 @@ gate7 = valve.Gate("Gate valve 7")
 gate7.calc_coeff(4)
 
 # Fuel pumps
+# 1480 rpm
 pump1 = pump.PositiveDisplacement("Pump 1",
                                   flow_rate_out=0.0,
                                   pump_head_in=utility_formulas.press_to_head(gate5.press_out),
