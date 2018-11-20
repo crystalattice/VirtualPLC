@@ -12,7 +12,7 @@ Version 0.1
     Initial build
 """
 # TODO: rewrite to use a SQLite database
-import utility_formulas
+from Utilities import utility_formulas
 
 from PipingSystems.pump import pump
 from PipingSystems.valve import valve

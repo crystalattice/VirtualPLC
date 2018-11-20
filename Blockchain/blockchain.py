@@ -14,17 +14,8 @@ Version 0.1
 
 import hashlib
 import json
-import netifaces
 from time import time
-
-
-def get_ip(interface):
-    """Get the IP address of the current device
-
-    Currently retrieves the IPv4 address, but IPv6 is available by setting netifaces method call to AF_INET6.
-    """
-    addrs = netifaces.ifaddresses(interface)
-    return addrs[netifaces.AF_INET][0]["addr"]
+from Utilities import nw_addresses
 
 
 class Blockchain:
@@ -254,4 +245,4 @@ if __name__ == "__main__":
     # print(blockchain.add_transaction(sender=node_identifier, recipient="someone_else", command=5))
     # print(json.dumps(blockchain.full_chain(), sort_keys=True, indent=4))  # Pretty print blockchain
 
-    print(get_ip("enp110s0"))
+    print(nw_addresses.get_ip("enp110s0"))

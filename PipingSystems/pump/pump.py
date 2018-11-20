@@ -19,7 +19,7 @@ Version 0.1
 
 import math
 import numbers
-import utility_formulas
+from Utilities import utility_formulas
 
 GRAVITY = 9.81  # m/s^2
 

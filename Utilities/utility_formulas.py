@@ -1,4 +1,16 @@
 #!/usr/bin/env python3
+"""
+VirtualPLC utility_formulas.py
+
+Purpose: Provides mathematical calculations for various physics models
+
+Author: Cody Jackson
+
+Date: 4/12/18
+#################################
+Version 0.1
+    Initial build
+"""
 
 import math
 

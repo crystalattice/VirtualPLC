@@ -5,7 +5,7 @@
 Assumes valves in series, with the first supplied by a tank 10 feet above the valve with a pipe length of 6 feet.
 Water level is 4 feet above tank bottom; total water head = 14 feet.
 """
-import utility_formulas
+from Utilities import utility_formulas
 
 from PipingSystems.pump.pump import CentrifPump, PositiveDisplacement
 from PipingSystems.valve.valve import Gate, Globe, Relief

@@ -11,7 +11,7 @@ Date: 6/18/18
 Version 0.1
     Initial build
 """
-import utility_formulas
+from Utilities import utility_formulas
 import Models.FuelFarm.components as ffc
 
 # TODO: log valve/pump changes

@@ -11,7 +11,7 @@ Date: 5/28/18
 Version 0.1
     Initial build
 """
-import utility_formulas
+from Utilities import utility_formulas
 import numbers
 
 
