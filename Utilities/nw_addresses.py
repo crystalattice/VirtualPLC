@@ -16,7 +16,7 @@ import socket
 
 
 def get_ip(interface):
-    """Get the IP address of the current device. Must be
+    """Get the IP address of the current device.
 
     Currently retrieves the IPv4 address, but IPv6 is available by setting netifaces method call to AF_INET6.
     """
@@ -42,7 +42,6 @@ def local_interfaces():
 def interface_type(interface):
     """Returns the indicated network interfaces on the local machine"""
     interfaces = local_interfaces()
-    print(interfaces)
     if interface == "Ethernet":
         conn = "enp"  # Check for Ethernet interfaces
     elif interface == "WiFi":

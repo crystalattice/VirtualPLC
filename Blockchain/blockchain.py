@@ -68,11 +68,13 @@ class Blockchain:
 
         return block
 
-    def new_transaction(self, sender, recipient, command):
+    def new_transaction(self, sender, recipient, command, interface="eth0"):
         """Adds a new transaction to the list of transactions.
 
         The returned index is the index of the next transaction to be mined.
         """
+        if not sender:
+            sender = nw_addresses.get_ip(interface)  # Assumes Ethernet port name
         self.current_transactions.append({"sender": sender, "recipient": recipient, "command": command})
 
         return self.last_block["index"] + 1  # Block index of this new transaction
