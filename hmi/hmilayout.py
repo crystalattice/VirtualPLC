@@ -1,3 +1,6 @@
+import sys
+sys.path.extend(["c:/Users/cryst/PycharmProjects/VirtualPLC"])
+
 import Models.FuelFarm.components as components
 import Models.FuelFarm.functionality as functionality
 
