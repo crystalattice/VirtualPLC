@@ -14,19 +14,26 @@ Version 0.1
 import utility_formulas
 import numbers
 
+from dataclasses import dataclass
 
+
+@dataclass
 class Tank:
-    """Generic storage tank."""
-    def __init__(self, name="", level=0.0, fluid_density=1.94, spec_gravity=1.0, outlet_diam=0.0, outlet_slope=0.0):
-        self.name = name
-        self.__level = float(level)  # feet
-        self.fluid_density = fluid_density  # slugs/ft3
-        self.spec_grav = spec_gravity
-        self.__tank_press = 0.0
-        self.flow_out = 0.0
-        self.pipe_diam = outlet_diam
-        self.pipe_slope = outlet_slope
-        self.pipe_coeff = 140
+    """Generic storage tank. Default numbers assume water is the liquid.
+
+    Coefficient values from https://www.engineeringtoolbox.com/hazen-williams-coefficients-d_798.html
+    """
+    name: str = ""
+    __level: float = 0.0
+    fluid_density: float = 1.94
+    spec_gravity: float = 1.0
+    outlet_diam: float = 0.0
+    outlet_slope: float = 0.0
+    __tank_press: float = 0.0
+    flow_out: float = 0.0
+    pipe_diam: float = outlet_diam
+    pipe_slope: float = outlet_slope
+    pipe_coeff: int = 140  # Assume steel pipe
 
     @property
     def static_tank_press(self):
