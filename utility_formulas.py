@@ -8,7 +8,7 @@ WATER_DENSITY = 1.94  # slugs/ft^3
 WATER_SPEC_GRAV = 1.0
 
 
-def gravity_flow_rate(diameter, slope, rough_coeff=140):
+def gravity_flow_rate(diameter: float, slope: float, rough_coeff: float = 140) -> float:
     """Calculates approximate fluid flow due to gravity.
 
     Should be within 5% of actual value.
@@ -25,10 +25,11 @@ def gravity_flow_rate(diameter, slope, rough_coeff=140):
     coeff = math.pow(rough_coeff, 1.852)
     diam = math.pow(diameter, 4.8704)
     root_flow = math.sqrt(((coeff * diam * slope) / 4.52))
+
     return root_flow
 
 
-def static_press(height, density=WATER_DENSITY):
+def static_press(height: float, density: float = WATER_DENSITY) -> float:
     """Calculate static pressure for any fluid.
 
     :param height: Fluid height, in feet
@@ -40,7 +41,7 @@ def static_press(height, density=WATER_DENSITY):
     return press
 
 
-def press_to_head(press, spec_grav=WATER_SPEC_GRAV):
+def press_to_head(press: float, spec_grav: float = WATER_SPEC_GRAV) -> float:
     """Calculate fluid head from pressure.
 
     :param press: Fluid pressure, in psi
@@ -52,7 +53,7 @@ def press_to_head(press, spec_grav=WATER_SPEC_GRAV):
     return head
 
 
-def head_to_press(head, spec_grav=WATER_SPEC_GRAV):
+def head_to_press(head: float, spec_grav: float = WATER_SPEC_GRAV) -> float:
     """Calculate pressure from fluid head.
 
     :param head: Fluid head, in feet

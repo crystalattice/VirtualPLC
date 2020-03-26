@@ -2,7 +2,7 @@ import pytest
 from PipingSystems.pump.pump import CentrifPump
 
 
-class TestPumpSpeed():
+class TestPumpSpeed:
     def test_get_speed_expected(self):
         p = CentrifPump(pump_speed=450)
         assert p.get_speed_str() == "The pump is running at 450 rpm."
