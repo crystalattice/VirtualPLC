@@ -188,8 +188,8 @@ def gate10_close():
 
 # Change tank level
 def change_tank_level(tank, level):
-    tank.level = level
-    tank.static_tank_press = tank.level
+    tank.tank_level = level
+    tank.static_tank_press = tank.tank_level
     if tank == ffc.tank1:
         ffc.gate1.press_in = ffc.tank1.static_tank_press
     elif tank == ffc.tank2:

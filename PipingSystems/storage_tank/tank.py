@@ -24,12 +24,12 @@ class Tank:
     Coefficient values from https://www.engineeringtoolbox.com/hazen-williams-coefficients-d_798.html
     """
     name: str = ""
-    __level: float = 0.0
+    level: float = 0.0
     fluid_density: float = 1.94
     spec_gravity: float = 1.0
     outlet_diam: float = 0.0
     outlet_slope: float = 0.0
-    __tank_press: float = 0.0
+    tank_press: float = 0.0
     flow_out: float = 0.0
     pipe_diam: float = outlet_diam
     pipe_slope: float = outlet_slope
@@ -38,7 +38,7 @@ class Tank:
     @property
     def static_tank_press(self):
         """Return hydrostatic tank pressure."""
-        return self.__tank_press
+        return self.tank_press
 
     @static_tank_press.setter
     def static_tank_press(self, level):
@@ -47,35 +47,35 @@ class Tank:
             if not isinstance(level, numbers.Number):
                 raise TypeError("Numeric values only.")
             elif level <= 0:
-                self.__tank_press = 0.0
+                self.tank_press = 0.0
             else:
-                self.__tank_press = utility_formulas.static_press(self.level, self.fluid_density)
+                self.tank_press = utility_formulas.static_press(self.tank_level, self.fluid_density)
         except TypeError:
             raise  # Re-raise for testing
 
     @property
-    def level(self):
+    def tank_level(self):
         """Return fluid level in tank."""
-        return self.__level
+        return self.level
 
-    @level.setter
-    def level(self, level):
+    @tank_level.setter
+    def tank_level(self, level):
         """Set the level in the tank."""
         try:
             if not isinstance(level, numbers.Number):
                 raise TypeError("Numeric values only.")
             elif level <= 0:
-                self.__level = 0.0
+                self.level = 0.0
             else:
-                self.__level = level
+                self.level = level
         except TypeError:
             raise  # Re-raise error for testing
         finally:
-            self.static_tank_press = self.level
+            self.static_tank_press = self.tank_level
             self.gravity_flow(self.pipe_diam, self.pipe_slope, self.pipe_coeff)
 
     def gravity_flow(self, diameter, slope, pipe_coeff):
-        if self.level > 0:
+        if self.tank_level > 0:
             self.flow_out = utility_formulas.gravity_flow_rate(diameter, slope, pipe_coeff)
         else:
             self.flow_out = 0.0
@@ -83,12 +83,12 @@ class Tank:
 
 if __name__ == "__main__":
     tank1 = Tank("tank1", 10)
-    print(tank1.level)
-    tank1.static_tank_press = tank1.level
+    print(tank1.tank_level)
+    tank1.static_tank_press = tank1.tank_level
     print(tank1.static_tank_press)
-    tank1.level = 8.0
-    print(tank1.level)
-    tank1.static_tank_press = tank1.level
+    tank1.tank_level = 8.0
+    print(tank1.tank_level)
+    tank1.static_tank_press = tank1.tank_level
     print(tank1.static_tank_press)
-    tank1.level = "a"
-    print(tank1.level)
+    tank1.tank_level = "a"
+    print(tank1.tank_level)
