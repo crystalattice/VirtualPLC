@@ -253,19 +253,19 @@ class PositiveDisplacement(Pump):
         if self.speed == 0:
                 return "The pump is stopped."
         else:
-            return "The pump is running at {speed} rpm.".format(speed=self.speed)
+            return f"The pump is running at {self.speed} rpm."
 
     def get_flow_str(self):
         """Get the current flow rate of the pump."""
-        return "The pump outlet flow rate is {flow} gpm.".format(flow=self.flow)
+        return f"The pump outlet flow rate is {self.flow} gpm."
 
     def get_press_str(self):
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press:.2f} psi.".format(press=self.outlet_pressure)
+        return f"The pump pressure is {self.outlet_pressure} psi."
 
     def get_power_str(self):
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.power)
+        return f"The power usage for the pump is {self.power:.2f} kW."
 
     def adjust_speed(self, new_speed):
         """Modify the speed of the pump, assuming constant outlet pressure.
