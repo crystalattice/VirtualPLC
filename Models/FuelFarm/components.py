@@ -28,12 +28,12 @@ SPEC_GRAVITY = 0.840
 tank1 = tank.Tank("Tank 1", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY, outlet_diam=16,
                   outlet_slope=0.25)
 tank1.static_tank_press = tank1.tank_level
-tank1.gravity_flow(tank1.pipe_diam, tank1.pipe_slope, tank1.pipe_coeff)
+tank1.gravity_flow(tank1.outlet_diam, tank1.outlet_slope, tank1.pipe_coeff)
 
 tank2 = tank.Tank("Tank 2", level=36.0, fluid_density=DENSITY, spec_gravity=SPEC_GRAVITY, outlet_diam=16,
                   outlet_slope=0.25)
 tank2.static_tank_press = tank2.tank_level
-tank2.gravity_flow(tank2.pipe_diam, tank2.pipe_slope, tank2.pipe_coeff)
+tank2.gravity_flow(tank2.outlet_diam, tank2.outlet_slope, tank2.pipe_coeff)
 
 # Pump inlet manifold
 # 16 inch to 4 inch connections
