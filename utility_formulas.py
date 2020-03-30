@@ -53,7 +53,7 @@ def press_to_head(press: float, spec_grav: float = WATER_SPEC_GRAV) -> float:
     return head
 
 
-def head_to_press(head: float, spec_grav: float = WATER_SPEC_GRAV) -> float:
+def head_to_press(head: int, spec_grav: float = WATER_SPEC_GRAV) -> float:
     """Calculate pressure from fluid head.
 
     :param head: Fluid head, in feet

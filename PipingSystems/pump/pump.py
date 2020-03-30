@@ -34,7 +34,9 @@ class Pump:
 
     Methods: set_speed(), cls_read_speed(), cls_read_press(), cls_read_flow(), cls_read_power(), hp_to_watts()
     """
-    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0):
+
+    def __init__(self, name: str = "", flow_rate_out: float = 0.0, pump_head_in: float = 0.0, press_out: float = 0.0,
+                 pump_speed: int = 0) -> None:
         """Set initial parameters.
 
         :param name: Instance name
@@ -43,12 +45,13 @@ class Pump:
         :param press_out: Pressure created by the pump (psi)
         :param pump_speed: Rotational speed of the pump (rpm)
         """
-        self.name = name
-        self.__flow_rate_out = float(flow_rate_out)
-        self.head_in = float(pump_head_in)
-        self.__outlet_pressure = float(press_out)
-        self.__speed = pump_speed
-        self.__wattage = self.pump_power(self.__flow_rate_out, self.diff_press_psi(self.head_in, self.outlet_pressure))
+        self.name: str = name
+        self.__flow_rate_out: float = flow_rate_out
+        self.head_in: float = pump_head_in
+        self.__outlet_pressure: float = press_out
+        self.__speed: int = pump_speed
+        self.__wattage: float = self.pump_power(self.__flow_rate_out,
+                                                self.diff_press_psi(self.head_in, self.outlet_pressure))
 
     @property
     def speed(self):
@@ -109,7 +112,7 @@ class Pump:
         """Set the pump power."""
         self.__wattage = power
 
-    def pump_power(self, flow_rate, diff_head, fluid_spec_weight=62.4):
+    def pump_power(self, flow_rate: float, diff_head: float, fluid_spec_weight: float = 62.4) -> float:
         """Calculate pump power in kW.
 
         Formula from https://www.engineeringtoolbox.com/pumps-power-d_505.html.
@@ -124,14 +127,14 @@ class Pump:
         :rtype: float
         """
         flow_rate = flow_rate / 15852
-        density = fluid_spec_weight / 0.0624
-        head = diff_head / 3.2808
-        hyd_power = (100 * (flow_rate * density * GRAVITY * head) / 1000) / 100
+        density: float = fluid_spec_weight / 0.0624
+        head: float = diff_head / 3.2808
+        hyd_power: float = (100 * (flow_rate * density * GRAVITY * head) / 1000) / 100
         self.power = hyd_power
         return self.power
 
     @staticmethod
-    def diff_press_ft(in_press_ft, out_press_ft):
+    def diff_press_ft(in_press_ft: int, out_press_ft: int) -> float:
         """Calculate differential head across pump, converted from feet."""
         in_press = utility_formulas.head_to_press(in_press_ft)
         out_press = utility_formulas.head_to_press(out_press_ft)
@@ -139,9 +142,9 @@ class Pump:
         return delta_p
 
     @staticmethod
-    def diff_press_psi(press_in, press_out):
+    def diff_press_psi(press_in: float, press_out: float) -> float:
         """Calculate differential pump head."""
-        delta_p = abs(press_out - press_in)  # Account for Pout < Pin
+        delta_p: float = abs(press_out - press_in)  # Account for Pout < Pin
         return delta_p
 
 
@@ -159,26 +162,26 @@ class CentrifPump(Pump):
         pump_laws()
     """
 
-    def get_speed_str(self):
+    def get_speed_str(self) -> str:
         """Get the current speed of the pump, in rpm."""
         if self.speed == 0:
             return "The pump is stopped."
         else:
-            return "The pump is running at {speed} rpm.".format(speed=self.speed)
+            return f"The pump is running at {self.speed} rpm."
 
-    def get_flow_str(self):
+    def get_flow_str(self) -> str:
         """Get the current flow rate of the pump."""
-        return "The pump output flow rate is {flow} gpm.".format(flow=self.flow)
+        return f"The pump output flow rate is {self.flow} gpm."
 
-    def get_press_str(self):
+    def get_press_str(self) -> str:
         """Get the current output pressure for the pump."""
-        return "The pump pressure is {press:.2f} psi.".format(press=self.outlet_pressure)
+        return f"The pump pressure is {self.outlet_pressure:.2f} psi."
 
-    def get_power_str(self):
+    def get_power_str(self) -> str:
         """Get the current power draw for the pump."""
-        return "The power usage for the pump is {pow:.2f} kW.".format(pow=self.power)
+        return f"The power usage for the pump is {self.power:.2f} kW."
 
-    def adjust_speed(self, new_speed):
+    def adjust_speed(self, new_speed: int) -> None:
         """Defines pump characteristics that are based on pump speed.
 
         Only applies to variable displacement (centrifugal) pumps. Variable names match pump law equations.
@@ -188,22 +191,22 @@ class CentrifPump(Pump):
         :return: Pump speed, flow rate, outlet pressure, and power
         :rtype: tuple
         """
-        n2 = new_speed  # Validate input
+        n2: int = new_speed  # Validate input
 
         if self.speed == 0:  # Pump initially stopped
-            n1 = 1
+            n1: int = 1
         else:
             n1 = self.speed
-        v1 = self.flow
-        hp1 = self.outlet_pressure
+        v1: float = self.flow
+        hp1: float = self.outlet_pressure
 
         self.flow = v1 * (n2 / n1)  # New flow rate
         self.outlet_pressure = hp1 * math.pow((n2 / n1), 2)  # New outlet pressure
         self.speed = n2  # Replace old speed with new value
-        delta_p = self.diff_press_psi(self.head_in, utility_formulas.press_to_head(self.outlet_pressure))
+        delta_p: float = self.diff_press_psi(self.head_in, utility_formulas.press_to_head(self.outlet_pressure))
         self.power = self.pump_power(self.flow, delta_p)
 
-    def start_pump(self, speed, flow, out_press=0.0, out_ft=0.0):
+    def start_pump(self, speed: int, flow: float, out_press: float = 0.0, out_ft: float = 0.0) -> tuple:
         """System characteristics when a pump is initially started.
 
         Assumes all valves fully open, i.e. maximum flow rate.
@@ -244,30 +247,31 @@ class PositiveDisplacement(Pump):
         adjust_speed()
     """
 
-    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0, displacement=0.0):
+    def __init__(self, name="", flow_rate_out=0.0, pump_head_in=0.0, press_out=0.0, pump_speed=0,
+                 displacement: float = 0.0):
         super(PositiveDisplacement, self).__init__(name, flow_rate_out, pump_head_in, press_out, pump_speed)
-        self.displacement = displacement
+        self.displacement: float = displacement
 
-    def get_speed_str(self):
+    def get_speed_str(self) -> str:
         """Get the current speed of the pump, in rpm."""
         if self.speed == 0:
                 return "The pump is stopped."
         else:
             return f"The pump is running at {self.speed} rpm."
 
-    def get_flow_str(self):
+    def get_flow_str(self) -> str:
         """Get the current flow rate of the pump."""
         return f"The pump outlet flow rate is {self.flow} gpm."
 
-    def get_press_str(self):
+    def get_press_str(self) -> str:
         """Get the current output pressure for the pump."""
         return f"The pump pressure is {self.outlet_pressure} psi."
 
-    def get_power_str(self):
+    def get_power_str(self) -> str:
         """Get the current power draw for the pump."""
         return f"The power usage for the pump is {self.power:.2f} kW."
 
-    def adjust_speed(self, new_speed):
+    def adjust_speed(self, new_speed: int) -> None:
         """Modify the speed of the pump, assuming constant outlet pressure.
 
         Affects the outlet flow rate and power requirements for the pump.

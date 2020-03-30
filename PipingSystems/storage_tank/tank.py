@@ -36,12 +36,12 @@ class Tank:
     pipe_coeff: int = 140  # Assume steel pipe
 
     @property
-    def static_tank_press(self):
+    def static_tank_press(self) -> float:
         """Return hydrostatic tank pressure."""
         return self.tank_press
 
     @static_tank_press.setter
-    def static_tank_press(self, level):
+    def static_tank_press(self, level: float) -> None:
         """Calculate the static fluid pressure based on tank level."""
         try:
             if not isinstance(level, numbers.Number):
@@ -54,12 +54,12 @@ class Tank:
             raise  # Re-raise for testing
 
     @property
-    def tank_level(self):
+    def tank_level(self) -> float:
         """Return fluid level in tank."""
         return self.level
 
     @tank_level.setter
-    def tank_level(self, level):
+    def tank_level(self, level: float) -> None:
         """Set the level in the tank."""
         try:
             if not isinstance(level, numbers.Number):
@@ -74,7 +74,7 @@ class Tank:
             self.static_tank_press = self.tank_level
             self.gravity_flow(self.pipe_diam, self.pipe_slope, self.pipe_coeff)
 
-    def gravity_flow(self, diameter, slope, pipe_coeff):
+    def gravity_flow(self, diameter: float, slope: float, pipe_coeff: float) -> None:
         if self.tank_level > 0:
             self.flow_out = utility_formulas.gravity_flow_rate(diameter, slope, pipe_coeff)
         else:
