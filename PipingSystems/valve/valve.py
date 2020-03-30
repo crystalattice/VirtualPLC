@@ -178,11 +178,11 @@ class Gate(Valve):
         :rtype: str
         """
         if self.position == 0:
-            return "{name} is closed.".format(name=self.name)
+            return f"{self.name} is closed."
         elif self.position == 100:
-            return "{name} is open.".format(name=self.name)
+            return f"{self.name} is open."
         else:  # bad condition
-            return "Warning! {name} is partially open.".format(name=self.name)
+            return f"Warning! {self.name} is partially open."
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -211,7 +211,7 @@ class Globe(Valve):
 
     def read_position(self):
         """Identify the position of the valve."""
-        return "{name} is {position}% open.".format(name=self.name, position=self.position)
+        return f"{self.name} is {self.position}% open."
 
     def turn_handle(self, new_position):
         """Change the status of the valve.
@@ -262,9 +262,9 @@ class Relief(Valve):
         :rtype: str
         """
         if self.position == 0:
-            return "{name} is closed.".format(name=self.name)
+            return f"{self.name} is closed."
         elif self.position == 100:
-            return "{name} is open.".format(name=self.name)
+            return f"{self.name} is open."
         else:   # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)
 
@@ -311,7 +311,7 @@ if __name__ == "__main__":
     # Functional test_valves
     # name="", sys_flow_in=0.0, position=0, flow_coeff=0.0, drop=0.0, open_press=0, close_press=0
     gate1 = Gate("Pump inlet")
-    print("{} created".format(gate1.name))
+    print(f"{gate1.name} created")
     print(gate1.read_position())
     gate1.turn_handle(100)
     print(gate1.read_position())
@@ -321,7 +321,7 @@ if __name__ == "__main__":
     print(gate1.read_position())
 
     globe1 = Globe("\nThrottle valve", flow_coeff=21, press_in=10, sys_flow_in=15)
-    print("{} created".format(globe1.name))
+    print(f"{globe1.name} created")
     print(globe1.read_position())
     globe1.open()
     print(globe1.read_position())
@@ -331,14 +331,14 @@ if __name__ == "__main__":
     print(globe1.read_position())
 
     relief1 = Relief("\nPressure relief", open_press=25, close_press=20)
-    print("{} created".format(relief1.name))
+    print(f"{relief1.name} created")
     print(relief1.read_position())
-    print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
-    print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
+    print(f"The open setpoint is {relief1.read_open_pressure()} psi.")
+    print(f"The close setpoint is {relief1.read_close_pressure()} psi.")
     relief1.set_open_pressure(75)
     relief1.set_close_press(73)
-    print("The open setpoint is {} psi.".format(relief1.read_open_pressure()))
-    print("The close setpoint is {} psi.".format(relief1.read_close_pressure()))
+    print(f"The open setpoint is {relief1.read_open_pressure()} psi.")
+    print(f"The close setpoint is {relief1.read_close_pressure()} psi.")
     relief1.valve_operation(75)
     print(relief1.read_position())
     relief1.valve_operation(73)
