@@ -33,7 +33,8 @@ class Valve:
     close()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0, press_in=0.0):
+    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0, position: int = 0, flow_coeff: float = 0.0,
+                 press_in: float = 0.0) -> None:
         """Initialize valve.
 
         :param sys_flow_out: Fluid flow out of the valve
@@ -53,7 +54,7 @@ class Valve:
         self.press_out = 0.0
         self.press_in = press_in
 
-    def calc_coeff(self, diameter):
+    def calc_coeff(self, diameter: float) -> None:
         """Roughly calculate Cv based on valve diameter.
 
         :param diameter: Valve diameter
@@ -62,7 +63,7 @@ class Valve:
         """
         self.Cv = 15 * math.pow(diameter, 2)
 
-    def press_drop(self, flow_out, spec_grav=1.0):
+    def press_drop(self, flow_out: float, spec_grav: float = 1.0) -> None:
         """Calculate the pressure drop across a valve, given a flow rate.
 
         Pressure drop = ((system flow rate / valve coefficient) ** 2) * spec. gravity of fluid
@@ -84,8 +85,9 @@ class Valve:
             self.deltaP = math.pow(x, 2) * spec_grav
         except ZeroDivisionError:
             return "The valve coefficient must be > 0."
+# TODO: change return type to exception
 
-    def valve_flow_out(self, flow_coeff, press_drop, spec_grav=1.0):
+    def valve_flow_out(self, flow_coeff: float, press_drop: float, spec_grav: float = 1.0) -> float:
         """Calculate the system flow rate through a valve, given a pressure drop.
 
         Flow rate = valve coefficient / sqrt(spec. grav. / press. drop)
@@ -109,7 +111,7 @@ class Valve:
         except ValueError:
             raise  # Re-raise error for testing
 
-    def get_press_out(self, press_in):
+    def get_press_out(self, press_in: float) -> None:
         """Get the valve outlet pressure, calculated from inlet pressure.
 
         :param press_in:  Pressure at valve inlet
@@ -123,12 +125,12 @@ class Valve:
         self.press_out = self.press_in - self.deltaP
 
     @property
-    def position(self):
+    def position(self) -> int:
         """Get position of valve, in percent open."""
         return self.__position
 
     @position.setter
-    def position(self, new_position):
+    def position(self, new_position: int) -> None:
         """Change the valve's position.
 
         If new position is not an integer, an error is raised.
@@ -148,13 +150,13 @@ class Valve:
         except TypeError:
             raise  # Re-raise for testing
 
-    def open(self):
+    def open(self) -> None:
         """Open the valve"""
         self.__position = 100
         self.flow_out = self.flow_in
         self.press_out = self.press_in
 
-    def close(self):
+    def close(self) -> None:
         """Close the valve"""
         self.__position = 0
         self.flow_out = 0
@@ -171,7 +173,7 @@ class Gate(Valve):
         read_position()
         turn_handle()
     """
-    def read_position(self):
+    def read_position(self) -> str:
         """Identify the position of the valve.
 
         :return: Indication of whether the valve is open or closed.
@@ -184,7 +186,7 @@ class Gate(Valve):
         else:  # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)
 
-    def turn_handle(self, new_position):
+    def turn_handle(self, new_position: int) -> None:
         """Change the status of the valve.
         
         :param new_position: New valve position
@@ -197,6 +199,7 @@ class Gate(Valve):
             self.open()
         else:  # Shouldn't get here
             return "Warning: Invalid valve position."
+# TODO: change return type to exception
 
 
 class Globe(Valve):
@@ -209,11 +212,11 @@ class Globe(Valve):
         turn_handle()
     """
 
-    def read_position(self):
+    def read_position(self) -> str:
         """Identify the position of the valve."""
         return "{name} is {position}% open.".format(name=self.name, position=self.position)
 
-    def turn_handle(self, new_position):
+    def turn_handle(self, new_position: int) -> None:
         """Change the status of the valve.
         
         :param new_position: New valve position
@@ -248,14 +251,14 @@ class Relief(Valve):
         valve_operation()
     """
 
-    def __init__(self, name="", sys_flow_in=0.0, sys_flow_out=0.0, drop=0.0, position=0, flow_coeff=0.0,
-                 press_in=0.0, open_press=0, close_press=0):
+    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0, position: int = 0, flow_coeff: float = 0.0,
+                 press_in: float = 0.0, open_press: float = 0, close_press: int = 0) -> None:
         """Inherits base initialization and adds valve open/close pressure values."""
         super(Relief, self).__init__(name, sys_flow_in, sys_flow_out, drop, position, flow_coeff, press_in)
-        self.setpoint_open = open_press
-        self.setpoint_close = close_press
+        self.setpoint_open: float = open_press
+        self.setpoint_close: float = close_press
 
-    def read_position(self):
+    def read_position(self) -> str:
         """Identify the status of the valve.
 
         :return: The open/closed status of the valve.
@@ -268,7 +271,7 @@ class Relief(Valve):
         else:   # bad condition
             return "Warning! {name} is partially open.".format(name=self.name)
 
-    def set_open_pressure(self, open_set):
+    def set_open_pressure(self, open_set: float) -> None:
         """Set the pressure setpoint where the valve opens.
 
         :param: open_set: Opening set point
@@ -277,15 +280,15 @@ class Relief(Valve):
         """
         self.setpoint_open = open_set
 
-    def read_open_pressure(self):
+    def read_open_pressure(self) -> float:
         """Read the high pressure setpoint."""
         return self.setpoint_open
 
-    def read_close_pressure(self):
+    def read_close_pressure(self) -> float:
         """Read the low pressure setpoint."""
         return self.setpoint_close
 
-    def set_close_press(self, close_set):
+    def set_close_press(self, close_set: float) -> None:
         """Set the pressure setpoint where the valve closes.
 
         :param close_set: Closing set point
@@ -294,7 +297,7 @@ class Relief(Valve):
         """
         self.setpoint_close = close_set
 
-    def valve_operation(self, press_in):
+    def valve_operation(self, press_in: float) -> None:
         """Open the valve if pressure is too high; close the valve when pressure lowers.
 
         :param press_in: Valve input pressure
