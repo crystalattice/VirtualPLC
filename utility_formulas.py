@@ -1,4 +1,7 @@
-#!/usr/bin/env python3
+# !/usr/bin/env python3
+"""
+General formulas used when calculating flow rates and pressure. Assumes fluid is liquid and not gas.
+"""
 
 import math
 from typing import Any
@@ -66,7 +69,7 @@ def head_to_press(head: float, spec_grav: float = WATER_SPEC_GRAV) -> float:
 
 
 if __name__ == "__main__":
-    print(gravity_flow_rate(2, 0.6))
-    print(static_press(150))
-    print(press_to_head(65.0))
-    print(head_to_press(150))
+    print(f"Gravity flow rate (gpm) @ 2in and 0.6 slope = {gravity_flow_rate(2, 0.6)}")
+    print(f"Static pressure (psi) @ 150ft = {static_press(150)}")
+    print(f"Head pressure (feet) @ 65psi = {press_to_head(65.0)}")
+    print(f"Pressure (psi) @ 150ft = {head_to_press(150)}")
