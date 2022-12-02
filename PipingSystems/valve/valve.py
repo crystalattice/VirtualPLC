@@ -84,8 +84,7 @@ class Valve:
             x = (flow_out / self.Cv)
             self.deltaP = math.pow(x, 2) * spec_grav
         except ZeroDivisionError:
-            return "The valve coefficient must be > 0."
-# TODO: change return type to exception
+            raise ZeroDivisionError("The valve coefficient must be > 0.")
 
     def valve_flow_out(self, flow_coeff: float, press_drop: float, spec_grav: float = 1.0) -> float:
         """Calculate the system flow rate through a valve, given a pressure drop.
@@ -198,8 +197,7 @@ class Gate(Valve):
         elif new_position == 100:
             self.open()
         else:  # Shouldn't get here
-            return "Warning: Invalid valve position."
-# TODO: change return type to exception
+            raise ValueError("Warning: Invalid valve position.")
 
 
 class Globe(Valve):
