@@ -14,8 +14,8 @@ Author: Cody Jackson
 
 Date: 4/9/18
 #################################
-Version 0.1
-    Initial build
+Version 0.1: Initial build
+Version 0.1.1: Add typehints
 """
 
 import math
@@ -33,8 +33,8 @@ class Valve:
     close()
     """
 
-    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0, position: int = 0, flow_coeff: float = 0.0,
-                 press_in: float = 0.0) -> None:
+    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0,
+                 position: int = 0, flow_coeff: float = 0.0, press_in: float = 0.0) -> None:
         """Initialize valve.
 
         :param sys_flow_out: Fluid flow out of the valve
@@ -235,7 +235,7 @@ class Globe(Valve):
 class Relief(Valve):
     """Pressure relieving valve.
 
-    Assumes full open when open set point reached and fully closed when close set point reached. Does not affect flow
+    Assumes full open when open set point reached and fully closed when close setpoint reached. Does not affect flow
     rate or system pressure; those parameters must be adjusted elsewhere.
 
     Subclasses Valve.
@@ -249,8 +249,9 @@ class Relief(Valve):
         valve_operation()
     """
 
-    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0, position: int = 0, flow_coeff: float = 0.0,
-                 press_in: float = 0.0, open_press: float = 0, close_press: int = 0) -> None:
+    def __init__(self, name: str = "", sys_flow_in: float = 0.0, sys_flow_out: float = 0.0, drop: float = 0.0,
+                 position: int = 0, flow_coeff: float = 0.0, press_in: float = 0.0, open_press: float = 0,
+                 close_press: int = 0) -> None:
         """Inherits base initialization and adds valve open/close pressure values."""
         super(Relief, self).__init__(name, sys_flow_in, sys_flow_out, drop, position, flow_coeff, press_in)
         self.setpoint_open: float = open_press

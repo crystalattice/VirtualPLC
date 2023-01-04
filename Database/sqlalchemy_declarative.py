@@ -25,4 +25,26 @@ class Tanks(Base):
 
 class GateValves(Base):
     """Create a database table for gate valves"""
-    pass
+    __tablename__ = "gate_valves"
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(length=250), nullable=False)
+    position: str = Column(String(length=10))
+
+
+class GlobeValves(Base):
+    """Create a database table for globe valves"""
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(length=250), nullable=False)
+    flow_coeff: int = Column(Integer)
+    press_in: int = Column(Integer)
+    sys_flow_in: int = Column(Integer)
+    position: str = Column(String(length=10))
+
+
+class ReliefValves(Base):
+    """Create a database table for relief valves"""
+    id: int = Column(Integer, primary_key=True)
+    name: str = Column(String(length=250), nullable=False)
+    open_press: int = Column(Integer)
+    close_press: int = Column(Integer)
+    position: str = Column(String(length=10))
