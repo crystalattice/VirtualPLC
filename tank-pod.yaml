@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tanks-demo
+spec:
+  containers:
+  - image: crystalattice/virtualplc:v0.1
+    name: tanks-demo
