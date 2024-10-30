@@ -19,6 +19,7 @@ Version 0.1
 """
 
 import math
+import os
 
 
 class Valve:
@@ -44,14 +45,14 @@ class Valve:
         :param position: Percentage valve is open
         :param flow_coeff: Affect valve has on flow rate; assumes a 2 inch, wide open valve
         """
-        self.name = name
+        self.name = os.getenv("VALVE_NAME") or name
         self.__position = int(position)  # Truncate float values for ease of calculations
-        self.Cv = float(flow_coeff)
-        self.flow_in = float(sys_flow_in)
+        self.Cv = float(os.getenv("FLOW_COEFF") or flow_coeff)
+        self.flow_in = float(os.getenv("SYS_FLOW_IN") or sys_flow_in)
         self.deltaP = float(drop)
         self.flow_out = float(sys_flow_out)
         self.press_out = 0.0
-        self.press_in = press_in
+        self.press_in = float(os.getenv("SYS_FLOW_IN") or press_in)
 
     def calc_coeff(self, diameter):
         """Roughly calculate Cv based on valve diameter.
