@@ -3,9 +3,6 @@ services:
     # Main Fuel Farm service
     fuel_farm:
     build: .
-    environment:
-      - DENSITY=1.629869
-      - SPEC_GRAVITY=0.840
     command: "Models/FuelFarm/components.py"
     networks:
       - fuel-network
@@ -13,43 +10,109 @@ services:
     # Tank services
     tank1:
         build: .
-        environment:
-            - TANK_NAME="Tank 1"
-            - FLUID_LEVEL=0.0
-            - FLUID_DENSITY=0.0
-            - SPECIFIC_GRAVITY=0.0
-            - OUTLET_DIAMETER=0
-            - OUTLET_SLOPE=0.0
+        command: "PipingSystems/tank/tank.py"
+        networks:
+          - fuel-network
 
     tank2:
         build: .
-        environment:
-            - TANK_NAME="Tank 2"
-            - FLUID_LEVEL=0.0
-            - FLUID_DENSITY=0.0
-            - SPECIFIC_GRAVITY=0.0
-            - OUTLET_DIAMETER=0
-            - OUTLET_SLOPE=0.0
+        command: "PipingSystems/tank/tank.py"
+        networks:
+          - fuel-network
 
     # Valve services
-    gate_valve_1:
+    gate1:
         build: .
-        environment:
-          - VALVE_NAME="Gate valve 1"
-          - SYS_FLOW_IN=0.0  # Replace with appropriate value
-          - PRESS_IN=36.0
-          - FLOW_COEFF=1.5
         command: "PipingSystems/valve/valve.py"
         networks:
           - fuel-network
 
-    gate_valve_2:
+    gate2:
         build: .
-        environment:
-          - VALVE_NAME="Gate valve 2"
-          - SYS_FLOW_IN=0.0  # Replace with appropriate value
-          - PRESS_IN=36.0
-          - FLOW_COEFF=1.5
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate3:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate4:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate5:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate6:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate7:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate8:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate9:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate10:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    relief1:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    relief2:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    relief3:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    throttle1:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    throttle2:
+        build: .
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    throttle3:
+        build: .
         command: "PipingSystems/valve/valve.py"
         networks:
           - fuel-network
@@ -57,11 +120,18 @@ services:
     # Pump services
     pump1:
         build: .
-        environment:
-          - PUMP_NAME="Pump 1"
-          - FLOW_RATE_OUT=0.0
-          - PUMP_HEAD_IN=0.0  # Placeholder for calculated value
-          - DISPLACEMENT=0.24
+        command: "PipingSystems/pump/pump.py"
+        networks:
+          - fuel-network
+
+    pump2:
+        build: .
+        command: "PipingSystems/pump/pump.py"
+        networks:
+          - fuel-network
+
+    pump3:
+        build: .
         command: "PipingSystems/pump/pump.py"
         networks:
           - fuel-network
