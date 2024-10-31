@@ -3,157 +3,157 @@ services:
     fuel_farm:
         build:
             context: .
-        command: python Models/FuelFarm/components.py
+            dockerfile: ./Models/FuelFarm/Dockerfile
         networks:
           - fuel-network
 
     # Tank services
     tank1:
         build:
-            context: ./PipingSystems/storage_tank
-        command: python tank.py
+            context: .
+            dockerfile: ./PipingSystems/storage_tank/Dockerfile
         networks:
           - fuel-network
 
     tank2:
         build:
-            context: ./PipingSystems/storage_tank
-        command: python tank.py
+            context: .
+            dockerfile: ./PipingSystems/storage_tank/Dockerfile
         networks:
           - fuel-network
 
     # Valve services
     gate1:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate2:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate3:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate4:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate5:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate6:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate7:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate8:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate9:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     gate10:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     relief1:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     relief2:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     relief3:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     throttle1:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     throttle2:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     throttle3:
         build:
-            context: ./PipingSystems/valve
-        command: python valve.py
+            context: .
+            dockerfile: ./PipingSystems/valve/Dockerfile
         networks:
             - fuel-network
 
     # Pump services
     pump1:
         build:
-            context: ./PipingSystems/pump
-        command: python pump.py
+            context: .
+            dockerfile: ./PipingSystems/pump/Dockerfile
         networks:
           - fuel-network
 
     pump2:
         build:
-            context: ./PipingSystems/pump
-        command: python pump.py
+            context: .
+            dockerfile: ./PipingSystems/pump/Dockerfile
         networks:
           - fuel-network
 
     pump3:
         build:
-            context: ./PipingSystems/pump
-        command: python pump.py
+            context: .
+            dockerfile: PipingSystems/pump/Dockerfile
         networks:
           - fuel-network
 
