@@ -1,0 +1,73 @@
+version: '3.8'
+services:
+    # Main Fuel Farm service
+    fuel_farm:
+    build: .
+    environment:
+      - DENSITY=1.629869
+      - SPEC_GRAVITY=0.840
+    command: "Models/FuelFarm/components.py"
+    networks:
+      - fuel-network
+
+    # Tank services
+    tank1:
+        build: .
+        environment:
+            - TANK_NAME="Tank 1"
+            - FLUID_LEVEL=0.0
+            - FLUID_DENSITY=0.0
+            - SPECIFIC_GRAVITY=0.0
+            - OUTLET_DIAMETER=0
+            - OUTLET_SLOPE=0.0
+
+    tank2:
+        build: .
+        environment:
+            - TANK_NAME="Tank 2"
+            - FLUID_LEVEL=0.0
+            - FLUID_DENSITY=0.0
+            - SPECIFIC_GRAVITY=0.0
+            - OUTLET_DIAMETER=0
+            - OUTLET_SLOPE=0.0
+
+    # Valve services
+    gate_valve_1:
+        build: .
+        environment:
+          - VALVE_NAME="Gate valve 1"
+          - SYS_FLOW_IN=0.0  # Replace with appropriate value
+          - PRESS_IN=36.0
+          - FLOW_COEFF=1.5
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    gate_valve_2:
+        build: .
+        environment:
+          - VALVE_NAME="Gate valve 2"
+          - SYS_FLOW_IN=0.0  # Replace with appropriate value
+          - PRESS_IN=36.0
+          - FLOW_COEFF=1.5
+        command: "PipingSystems/valve/valve.py"
+        networks:
+          - fuel-network
+
+    # Pump services
+    pump1:
+        build: .
+        environment:
+          - PUMP_NAME="Pump 1"
+          - FLOW_RATE_OUT=0.0
+          - PUMP_HEAD_IN=0.0  # Placeholder for calculated value
+          - DISPLACEMENT=0.24
+        command: "PipingSystems/pump/pump.py"
+        networks:
+          - fuel-network
+
+  # Additional pumps, valves, and tanks can be added similarly
+
+networks:
+    fuel-network:
+        driver: bridge

@@ -1,0 +1,15 @@
+FROM python:3.12-slim
+LABEL authors="codyjackson"
+WORKDIR /app
+
+COPY tank.py .
+
+ENV TANK_NAME="Generic tank"
+ENV FLUID_LEVEL=0.0
+ENV FLUID_DENSITY=0.0
+ENV SPECIFIC_GRAVITY=0.0
+ENV OUTLET_DIAMETER=0
+ENV OUTLET_SLOPE=0.0
+
+ENTRYPOINT ["python"]
+CMD ["tank.py"]
